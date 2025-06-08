@@ -1,2 +1,2 @@
 all:
-	pmpm run dev 
+	pnpm run dev 
