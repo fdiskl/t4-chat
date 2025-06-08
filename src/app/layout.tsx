@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className={`${montserrat.className} antialiased`}>
         <div className="flex h-screen">
           <HomeSidebar />
-          <main className="flex-1 overflow-auto">
+          <main className="flex-1 overflow-auto bg-[var(--chat-bg)]">
             {children}
           </main>
         </div>
