@@ -6,13 +6,14 @@ import MessageItem from "./MessageItem";
 interface MessageListProps {
   messages: Message[];
   isLoading?: boolean;
+  chatId: string;
 }
 
-function MessageList({ messages, isLoading }: MessageListProps) {
+function MessageList({ messages, isLoading, chatId }: MessageListProps) {
   return (
     <div className="space-y-4">
       {messages.map((message) => (
-        <MessageItem key={message.id} message={message} />
+        <MessageItem key={message.id} message={message} chatId={chatId} />
       ))}
       {isLoading && (
         <span className="relative flex h-3 w-3">

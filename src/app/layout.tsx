@@ -22,11 +22,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${bricolage.variable}`}>
-      <body className="dark font-sans antialiased">
-        <SidebarLayout sidebar={<Sidebar />} navbar={<Navbar />}>
-          {children}
-        </SidebarLayout>
-      </body>
+      <head>
+        <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
+      </head>
+      <body className="dark font-sans antialiased">{children}</body>
     </html>
   );
 }

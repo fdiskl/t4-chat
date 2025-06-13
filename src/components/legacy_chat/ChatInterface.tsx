@@ -42,13 +42,13 @@ function ChatInterface({ chatId }: ChatInterfaceProps) {
           ref={scrollContainerRef}
           className="scrollbar-w-2 h-[100dvh] overflow-y-auto pb-[180px] pt-16 scrollbar scrollbar-track-transparent scrollbar-thumb-gray-700 hover:scrollbar-thumb-gray-600">
           <div className="mx-auto flex w-full max-w-3xl flex-col space-y-12 p-4">
-            <MessageList messages={messages} isLoading={isLoading} />
+            <MessageList messages={messages} isLoading={isLoading} chatId={chatId || ""} />
           </div>
         </div>
       </div>
 
       <div className="absolute bottom-0 w-full pr-2">
-        <div className="bg-card mx-auto flex w-full max-w-3xl flex-col">
+        <div className="mx-auto flex w-full max-w-3xl flex-col bg-card">
           <InputArea
             input={input}
             handleInputChange={handleInputChange}
