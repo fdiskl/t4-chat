@@ -31,7 +31,7 @@ export default function Main() {
 
   return (
     <SidebarProvider>
-      <Sidebar />
+      <Sidebar nav={persistenChatInfo.nav} />
       <SidebarInset className="flex h-screen flex-col overflow-y-auto">
         <header className="border-1 sticky top-0 flex shrink-0 items-center justify-between gap-2 border-b border-primary/35 bg-background py-1">
           <div className="flex flex-1 items-center gap-2 px-3">

@@ -15,22 +15,43 @@ import {
 } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { NavUser } from "@/components/nav-user";
-import { MessageCircle, SquarePen } from "lucide-react";
-import type { ComponentProps } from "react";
+import { MessageCircle, Pin, SquarePen, TrashIcon } from "lucide-react";
+import { useCallback, type ComponentProps } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
-import { Link, useNavigate } from "react-router";
+import { Link, NavigateFunction, useLocation, useNavigate } from "react-router";
 
-export function Sidebar({ ...props }: ComponentProps<typeof SidebarPrimitive>) {
+export interface SidebarProps {
+  nav: NavigateFunction;
+}
+
+export function Sidebar({ nav, ...props }: ComponentProps<typeof SidebarPrimitive> & SidebarProps) {
   const chats = useLiveQuery(() => db.getChats(), []);
 
-  const nav = useNavigate();
+  const pathname = useLocation().pathname;
 
   const newChatHandler = async () => {
     await db.deleteEmptyChats();
     const c = await db.createChat();
     nav(`/chat/${c.id}`);
   };
+
+  const handleDeleteChat = useCallback(
+    async (e: React.MouseEvent, chatId: string) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      try {
+        await db.deleteChat(chatId);
+        if (pathname === `/chat/${chatId}`) {
+          nav("/chat");
+        }
+      } catch (error) {
+        console.error("Error deleting chat:", error);
+      }
+    },
+    [pathname]
+  );
 
   return (
     <SidebarPrimitive className="border-r-0" {...props}>
@@ -58,10 +79,19 @@ export function Sidebar({ ...props }: ComponentProps<typeof SidebarPrimitive>) {
               {chats?.map((chat) => (
                 <SidebarMenuItem key={chat.id}>
                   <SidebarMenuButton className="w-full justify-start" asChild>
-                    <Link to={`/chat/${chat.id}`}>
-                      <MessageCircle className="mr-2 h-4 w-4" />
-                      {chat.title}
-                    </Link>
+                    <div className="group flex w-full flex-row items-center justify-between">
+                      <Link to={`/chat/${chat.id}`} className="flex w-full flex-row items-center">
+                        {chat.title}
+                      </Link>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => handleDeleteChat(e, chat.id)}
+                        className="text-white/70 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 hover:text-red-600">
+                        <TrashIcon />
+                      </Button>
+                    </div>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
