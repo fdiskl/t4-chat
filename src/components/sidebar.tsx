@@ -80,7 +80,9 @@ export function Sidebar({ nav, ...props }: ComponentProps<typeof SidebarPrimitiv
                 <SidebarMenuItem key={chat.id}>
                   <SidebarMenuButton className="w-full justify-start" asChild>
                     <div className="group flex w-full flex-row items-center justify-between">
-                      <Link to={`/chat/${chat.id}`} className="flex w-full flex-row items-center">
+                      <Link
+                        to={`/chat/${chat.id}`}
+                        className="flex w-full flex-row items-center overflow-hidden truncate whitespace-nowrap">
                         {chat.title}
                       </Link>
 

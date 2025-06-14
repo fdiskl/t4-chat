@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { PersistentChatOptions } from "@/types/chat";
 import { Chat, StoredMessage } from "@/types/database";
+import { modelId } from "@/types/models";
 import { UIMessage } from "ai";
 import { useChat } from "ai/react";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -49,7 +50,7 @@ export function usePersistentChat({
     id: chatId,
     body: {
       model,
-      systemPromptId: "default", // We start with the default system prompt
+      systemPromptId: "default",
     },
     initialMessages:
       storedMessages?.map((msg) => ({
@@ -59,19 +60,25 @@ export function usePersistentChat({
       })) || [],
     onFinish: async (message) => {
       if (currentChat) {
-        await persistMessage(message.content, "assistant", currentChat.id);
+        await persistMessage(message.content, "assistant", currentChat.id, model);
       }
     },
   });
 
   // Handle message persistence
   const persistMessage = useCallback(
-    async (content: string, role: "user" | "assistant", chatId: string): Promise<StoredMessage> => {
+    async (
+      content: string,
+      role: "user" | "assistant",
+      chatId: string,
+      model: modelId | "user"
+    ): Promise<StoredMessage> => {
       try {
         const message = await db.addMessage({
           chatId,
           content,
           role,
+          model,
         });
         return message;
       } catch (error) {
@@ -139,9 +146,10 @@ export function usePersistentChat({
         await originalHandleSubmit(e, { body: updatedBody });
 
         if (currentChat) {
-          await persistMessage(input, "user", currentChat.id);
+          await persistMessage(input, "user", currentChat.id, "user");
 
           if (!currentChat.title) {
+            // TODO : gen title
             const title = input.slice(0, 50) + (input.length > 50 ? "..." : "");
             await db.updateChatTitle(currentChat.id, title);
           }

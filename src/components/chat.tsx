@@ -16,6 +16,10 @@ export interface ChatProps {
   setModel: Dispatch<SetStateAction<modelId>>;
 }
 
+const ModelTypeByMsgId = ({ id }: { id: string }) => {
+  return <div>{id}</div>;
+};
+
 export const Chat: React.FC<ChatProps> = ({ id, info, model, setModel }) => {
   const { isLoading, messages, handleSubmit, input, handleInputChange } = info;
 
@@ -73,7 +77,9 @@ export const Chat: React.FC<ChatProps> = ({ id, info, model, setModel }) => {
                         </Button>
 
                         {/* TODO: actual model */}
-                        <span className="text-base text-white/80">Gpt 699</span>
+                        <span className="text-base text-white/80">
+                          <ModelTypeByMsgId id={message.id} />
+                        </span>
                       </div>
                     </div>
                   );

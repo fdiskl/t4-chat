@@ -1,12 +1,11 @@
-import { ModelId } from "./models";
+import { modelId } from "./models";
 
 export interface PersistentChatOptions {
   id?: string;
-  model: ModelId;
+  model: modelId;
 }
 
 export interface ChatBody {
-  model: ModelId;
   systemPromptId: string;
   messages: ChatMessage[];
 }
@@ -15,4 +14,5 @@ export interface ChatMessage {
   id: string;
   content: string;
   role: "user" | "assistant" | "system";
+  model: modelId;
 }

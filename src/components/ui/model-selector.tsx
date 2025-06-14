@@ -1,3 +1,5 @@
+"use client";
+
 import { type ElementType, type SVGProps } from "react";
 import {
   DropdownMenu,

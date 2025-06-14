@@ -1,4 +1,4 @@
-import { idToModelMap } from "@/types/models";
+import { idToModelMap, ModelConfig } from "@/types/models";
 import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { NextResponse } from "next/server";
@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const { messages, model } = await req.json();
 
-  let m;
+  let m: ModelConfig;
   try {
     m = idToModelMap[model as string];
   } catch (e) {
