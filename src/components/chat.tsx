@@ -6,7 +6,7 @@ import { useChat } from "ai/react";
 import { useEffect, type ComponentPropsWithoutRef } from "react";
 import { ModelSelector } from "./ui/model-selector";
 import { Button } from "./ui/button";
-import { Globe, Paperclip, Search } from "lucide-react";
+import { Copy, GitBranch, Globe, Paperclip, RefreshCw, Search } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 import { usePersistentChat, usePersistentChatReturnType } from "@/hooks/usePersistentChat";
 import { db } from "@/lib/db";
@@ -42,9 +42,28 @@ export const Chat: React.FC<ChatProps> = ({ id, info }) => {
               {messages.map((message) => {
                 if (message.role !== "user") {
                   return (
-                    <ChatMessage key={message.id} id={message.id}>
-                      <ChatMessageContent content={message.content} className="max-w-3xl" />
-                    </ChatMessage>
+                    <div key={message.id}>
+                      <ChatMessage id={message.id}>
+                        <ChatMessageContent content={message.content} className="max-w-3xl" />
+                      </ChatMessage>
+
+                      <div className="mt-2 flex flex-row items-center justify-start gap-x-2">
+                        <Button variant="outline" size="icon">
+                          <Copy />
+                        </Button>
+
+                        <Button variant="outline" size="icon">
+                          <GitBranch />
+                        </Button>
+
+                        <Button variant="outline" size="icon">
+                          <RefreshCw />
+                        </Button>
+
+                        {/* TODO: actual model */}
+                        <span className="text-base text-white/80">Gpt 699</span>
+                      </div>
+                    </div>
                   );
                 }
                 return (
