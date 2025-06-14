@@ -1,16 +1,7 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import type { SelectProps } from "@radix-ui/react-select";
-import { useState, type ElementType, type SVGProps } from "react";
+import { type ElementType, type SVGProps } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuPortal,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -22,185 +13,49 @@ import {
 import { Button } from "./button";
 import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { ChevronDown } from "lucide-react";
-
-export const MODELS = ["test"] as const;
-
-export interface Model_t {
-  Name: string;
-  // todo: capabilities, choose reasoning amount
-}
-
-export interface ModelGroup_t {
-  Icon: string;
-  Name: string;
-  models: Model_t[];
-}
-
-export const MODELS_t: ModelGroup_t[] = [
-  {
-    Icon: "openai",
-    Name: "OpenAI",
-    models: [
-      {
-        Name: "GPT-4o Mini",
-      },
-      {
-        Name: "GPT-4o",
-      },
-      {
-        Name: "GPT-4.1",
-      },
-      {
-        Name: "GPT-4.1 Mini",
-      },
-      {
-        Name: "GPT-4.1 Nano",
-      },
-      {
-        Name: "o3 Mini",
-      },
-      {
-        Name: "o4 Mini",
-      },
-      {
-        Name: "o3",
-      },
-    ],
-  },
-  {
-    Icon: "gemini",
-    Name: "Gemini",
-    models: [
-      {
-        Name: "Gemini 2.0 Flash",
-      },
-      {
-        Name: "Gemini 2.0 Flash Lite",
-      },
-      {
-        Name: "Gemini 2.5 Flash",
-      },
-      {
-        Name: "Gemini 2.5 Flash (Thinking)",
-      },
-      {
-        Name: "Gemini 2.5 Pro",
-      },
-    ],
-  },
-  {
-    Icon: "deepseek",
-    Name: "Deepseek",
-    models: [
-      {
-        Name: "DeepSeek v3",
-      },
-      {
-        Name: "DeepSeek R1",
-      },
-    ],
-  },
-  {
-    Icon: "claude",
-    Name: "Claude",
-    models: [
-      {
-        Name: "Claude 3.5 Sonnet",
-      },
-      {
-        Name: "Claude 3.7 Sonnet",
-      },
-      {
-        Name: "Claude 3.7 Sonnet (Reasoning)",
-      },
-      {
-        Name: "Claude 4 Sonnet",
-      },
-      {
-        Name: "Claude 4 Sonnet (Reasoning)",
-      },
-    ],
-  },
-  {
-    Icon: "llama",
-    Name: "Llama",
-    models: [
-      {
-        Name: "Llama 3.3 70b",
-      },
-      {
-        Name: "Llama 4 Scout",
-      },
-      {
-        Name: "Llama 4 Maverick",
-      },
-    ],
-  },
-  {
-    Icon: "grok",
-    Name: "Grok",
-    models: [
-      {
-        Name: "Grok 3",
-      },
-      {
-        Name: "Grok 3 Mini",
-      },
-    ],
-  },
-] as const;
-
-// TODO
-
-export type Model = (typeof MODELS)[number];
+import { allProviders, idToModelMap, modelId, provider, providerToModels } from "@/types/models";
 
 interface ModelSelectorProps extends DropdownMenuProps {
-  value: Model_t;
-  onChange: (value: Model_t) => void;
-  disabledModels?: Model[];
+  value: modelId;
+  onChange: (value: modelId) => void;
 }
 
-export function getModelByName(s: string): Model_t {
-  return {
-    Name: s,
-  };
-}
-
-export function ModelSelector({ value, onChange, disabledModels, ...props }: ModelSelectorProps) {
+export function ModelSelector({ value, onChange, ...props }: ModelSelectorProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="nodrag flex w-36 flex-row items-center justify-center">
+        <Button variant="outline" className="nodrag flex w-48 flex-row items-center justify-center">
           <span className="overflow-hidden truncate text-ellipsis whitespace-nowrap">
-            {value.Name}
+            {idToModelMap[value].name}
           </span>
           <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuRadioGroup
-          value={value.Name}
+          value={value}
           onValueChange={(s) => {
-            onChange(getModelByName(s));
+            onChange(s as modelId);
           }}>
-          {MODELS_t.map((g) => {
-            const Icon = ModelIcons[g.Icon];
+          {allProviders.map((p) => {
+            const models = providerToModels[p];
+            const Icon = ModelIcons[p];
 
             return (
-              <DropdownMenuSub key={g.Name}>
+              <DropdownMenuSub key={p}>
                 <DropdownMenuSubTrigger>
-                  <Icon /> {g.Name}
+                  <Icon /> {p}
                 </DropdownMenuSubTrigger>
 
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    {g.models.map((m) => (
+                    {models.map((m) => (
                       <DropdownMenuRadioItem
-                        key={m.Name}
-                        value={m.Name}
+                        key={m.name}
+                        value={m.id}
                         className="flex flex-row items-center justify-start gap-x-2">
                         <Icon />
-                        {m.Name}
+                        {m.name}
                       </DropdownMenuRadioItem>
                     ))}
                   </DropdownMenuSubContent>
@@ -375,11 +230,11 @@ const Meta = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const ModelIcons: Record<string, ElementType> = {
-  gemini: Gemini,
-  openai: OpenAI,
-  deepseek: DeepSeek,
-  claude: ClaudeAI,
-  grok: Grok,
-  llama: Meta,
+const ModelIcons: Record<provider, ElementType> = {
+  Gemini: Gemini,
+  Openai: OpenAI,
+  Deepseek: DeepSeek,
+  Anthropic: ClaudeAI,
+  Grok: Grok,
+  Llama: Meta,
 };

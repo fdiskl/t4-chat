@@ -1,27 +1,19 @@
 import { ChatInput, ChatInputSubmit, ChatInputTextArea } from "@/components/ui/chat-input";
-import { ChatMessage, ChatMessageAvatar, ChatMessageContent } from "@/components/ui/chat-message";
+import { ChatMessage, ChatMessageContent } from "@/components/ui/chat-message";
 import { ChatMessageArea } from "@/components/ui/chat-message-area";
-import { useChat } from "ai/react";
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-  type ComponentPropsWithoutRef,
-} from "react";
-import { Model_t, ModelSelector } from "./ui/model-selector";
+import { Dispatch, SetStateAction } from "react";
+import { ModelSelector } from "./ui/model-selector";
 import { Button } from "./ui/button";
-import { Copy, GitBranch, Globe, Paperclip, RefreshCw, Search } from "lucide-react";
-import { useNavigate, useParams } from "react-router";
-import { usePersistentChat, usePersistentChatReturnType } from "@/hooks/usePersistentChat";
-import { db } from "@/lib/db";
+import { Copy, GitBranch, Globe, Paperclip, RefreshCw } from "lucide-react";
+import { usePersistentChatReturnType } from "@/hooks/usePersistentChat";
 import { toast } from "sonner";
+import { modelId } from "@/types/models";
 
 export interface ChatProps {
   id: string | undefined;
   info: usePersistentChatReturnType;
-  model: Model_t;
-  setModel: Dispatch<SetStateAction<Model_t>>;
+  model: modelId;
+  setModel: Dispatch<SetStateAction<modelId>>;
 }
 
 export const Chat: React.FC<ChatProps> = ({ id, info, model, setModel }) => {

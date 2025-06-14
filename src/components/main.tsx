@@ -16,19 +16,17 @@ import { TooltipContent, TooltipTrigger, Tooltip } from "./ui/tooltip";
 import { useParams } from "react-router";
 import { usePersistentChat } from "@/hooks/usePersistentChat";
 import { useEffect, useState } from "react";
-import { Model_t } from "./ui/model-selector";
+import { modelId } from "@/types/models";
 
 export default function Main() {
   const { id } = useParams();
 
   // TODO: pull from dexie
-  const [model, setModel] = useState<Model_t>({
-    Name: "GPT-4.1 Nano",
-  });
+  const [model, setModel] = useState<modelId>("4.1-nano");
 
   const persistenChatInfo = usePersistentChat({
     id,
-    model: model.Name,
+    model: model,
   });
 
   useEffect(() => {
