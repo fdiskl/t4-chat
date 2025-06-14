@@ -1,4 +1,4 @@
-import ChatInterface from "@/components/chat/ChatInterface";
+import ChatInterface from "@/components/legacy_chat/ChatInterface";
 import type { Metadata } from "next";
 
 interface ChatPageProps {
