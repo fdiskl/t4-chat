@@ -170,7 +170,7 @@ export function ModelSelector({ value, onChange, disabledModels, ...props }: Mod
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="nodrag flex w-48 flex-row items-center justify-center">
+        <Button variant="outline" className="nodrag flex w-36 flex-row items-center justify-center">
           <span className="overflow-hidden truncate text-ellipsis whitespace-nowrap">
             {value.Name}
           </span>
