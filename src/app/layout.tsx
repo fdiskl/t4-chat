@@ -1,6 +1,3 @@
-import { Navbar } from "@/components/layout/Navbar";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -15,8 +12,8 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata = {
-  title: "Fast ⚡️ Next Chat",
-  description: "A fast and simple chat application built with Next.js",
+  title: "todo",
+  description: "",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
