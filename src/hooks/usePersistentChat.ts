@@ -27,7 +27,6 @@ export function usePersistentChat({ id: chatId, model }: PersistentChatOptions) 
     input,
     handleInputChange,
     handleSubmit: originalHandleSubmit,
-    //setMessages,
   } = useChat({
     api: "/api/chat",
     id: chatId,
@@ -96,7 +95,7 @@ export function usePersistentChat({ id: chatId, model }: PersistentChatOptions) 
   };
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: React.KeyboardEvent | React.MouseEvent) => {
       e.preventDefault();
 
       if (!input.trim()) return;

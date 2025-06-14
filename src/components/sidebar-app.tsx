@@ -19,6 +19,7 @@ import { MessageCircle, SquarePen } from "lucide-react";
 import type { ComponentProps } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
+import { Link } from "react-router";
 
 export function SidebarApp({ ...props }: ComponentProps<typeof Sidebar>) {
   const chats = useLiveQuery(() => db.getChats(), []);
@@ -46,9 +47,11 @@ export function SidebarApp({ ...props }: ComponentProps<typeof Sidebar>) {
             <SidebarMenu>
               {chats?.map((chat) => (
                 <SidebarMenuItem key={chat.id}>
-                  <SidebarMenuButton className="w-full justify-start">
-                    <MessageCircle className="mr-2 h-4 w-4" />
-                    {chat.title}
+                  <SidebarMenuButton className="w-full justify-start" asChild>
+                    <Link to={`/chat/${chat.id}`}>
+                      <MessageCircle className="mr-2 h-4 w-4" />
+                      {chat.title}
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
