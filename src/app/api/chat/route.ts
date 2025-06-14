@@ -14,11 +14,22 @@ export async function POST(req: Request) {
     return new NextResponse("Invalid model", { status: 400 });
   }
 
-  const result = streamText({
-    model: openai("gpt-4.1-nano"),
-    system: "You are a helpful assistant",
-    messages,
-  });
+  // TODO: api keys
 
-  return result.toDataStreamResponse();
+  if (m.openaiProvider) {
+    console.log(m.openaiProvider);
+    const result = streamText({
+      model: openai(m.openaiProvider),
+      system: "You are a helpful assistant",
+      messages,
+    });
+
+    return result.toDataStreamResponse();
+  }
+
+  if (m.openRouterProvider) {
+    // TODO: open router
+  }
+
+  return new NextResponse("No provider found for this model, sorry", { status: 500 });
 }
