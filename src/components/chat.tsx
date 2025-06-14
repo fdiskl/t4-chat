@@ -1,13 +1,15 @@
 import { ChatInput, ChatInputSubmit, ChatInputTextArea } from "@/components/ui/chat-input";
 import { ChatMessage, ChatMessageContent } from "@/components/ui/chat-message";
 import { ChatMessageArea } from "@/components/ui/chat-message-area";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { ModelSelector } from "./ui/model-selector";
 import { Button } from "./ui/button";
 import { Copy, GitBranch, Globe, Paperclip, RefreshCw } from "lucide-react";
 import { usePersistentChatReturnType } from "@/hooks/usePersistentChat";
 import { toast } from "sonner";
-import { modelId } from "@/types/models";
+import { idToModelMap, modelId } from "@/types/models";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/lib/db";
 
 export interface ChatProps {
   id: string | undefined;
@@ -17,7 +19,13 @@ export interface ChatProps {
 }
 
 const ModelTypeByMsgId = ({ id }: { id: string }) => {
-  return <div>{id}</div>;
+  const msg = useLiveQuery(async () => {
+    return await db.getMsgById(id);
+  }, [id]);
+
+  if (!msg) return null;
+
+  return <div>{idToModelMap[msg.model].name}</div>;
 };
 
 export const Chat: React.FC<ChatProps> = ({ id, info, model, setModel }) => {

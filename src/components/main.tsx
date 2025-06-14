@@ -29,9 +29,7 @@ export default function Main() {
     model: model,
   });
 
-  useEffect(() => {
-    console.log(persistenChatInfo.currentChat?.title);
-  }, [persistenChatInfo]);
+  // TODO: move out of here
 
   return (
     <SidebarProvider>

@@ -69,6 +69,10 @@ class ChatDatabase extends Dexie {
     return await this.messages.where("chatId").equals(chatId).sortBy("created_at");
   }
 
+  async getMsgById(chatId: string): Promise<StoredMessage | undefined> {
+    return await this.messages.get(chatId);
+  }
+
   async getChats(): Promise<Chat[]> {
     return await this.chats
       .orderBy("updated_at")
