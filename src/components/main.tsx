@@ -15,6 +15,7 @@ import { Share } from "lucide-react";
 import { TooltipContent, TooltipTrigger, Tooltip } from "./ui/tooltip";
 import { useParams } from "react-router";
 import { usePersistentChat } from "@/hooks/usePersistentChat";
+import { useEffect } from "react";
 
 export default function Main() {
   const { id } = useParams();
@@ -23,6 +24,10 @@ export default function Main() {
     id: id,
     model: "",
   });
+
+  useEffect(() => {
+    console.log(persistenChatInfo.currentChat?.title);
+  }, [persistenChatInfo]);
 
   return (
     <SidebarProvider>
@@ -36,15 +41,7 @@ export default function Main() {
               <BreadcrumbList>
                 <BreadcrumbItem>
                   <BreadcrumbPage className="line-clamp-1">
-                    {persistenChatInfo.currentChat ? (
-                      <>
-                        {persistenChatInfo.currentChat.title === ""
-                          ? persistenChatInfo.currentChat.title
-                          : "New chat"}
-                      </>
-                    ) : (
-                      "New chat"
-                    )}
+                    {persistenChatInfo.currentChat?.title}
                   </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
