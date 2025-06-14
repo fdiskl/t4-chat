@@ -60,7 +60,7 @@ export function usePersistentChat({
       })) || [],
     onFinish: async (message) => {
       if (currentChat) {
-        await persistMessage(message.content, "assistant", currentChat.id, model);
+        await persistMessage(message.content, "assistant", currentChat.id, model, message.id);
       }
     },
   });
@@ -71,15 +71,22 @@ export function usePersistentChat({
       content: string,
       role: "user" | "assistant",
       chatId: string,
-      model: modelId | "user"
+      model: modelId | "user",
+      id?: string
     ): Promise<StoredMessage> => {
       try {
-        const message = await db.addMessage({
-          chatId,
-          content,
-          role,
-          model,
-        });
+        const message = await db.addMessage(
+          {
+            chatId,
+            content,
+            role,
+            model,
+          },
+          id
+        );
+
+        console.log("persisting msg");
+
         return message;
       } catch (error) {
         console.error(`Error persisting ${role} message:`, error);

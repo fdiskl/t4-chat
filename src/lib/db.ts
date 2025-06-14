@@ -49,10 +49,13 @@ class ChatDatabase extends Dexie {
     await this.chats.filter((c) => c.empty == true).delete();
   }
 
-  async addMessage(message: Omit<StoredMessage, "id" | "created_at">): Promise<StoredMessage> {
+  async addMessage(
+    message: Omit<StoredMessage, "id" | "created_at">,
+    id?: string
+  ): Promise<StoredMessage> {
     const storedMessage: StoredMessage = {
       ...message,
-      id: nanoid(),
+      id: id ? id : nanoid(),
       created_at: new Date(),
     };
 

@@ -20,6 +20,7 @@ export interface ChatProps {
 
 const ModelTypeByMsgId = ({ id }: { id: string }) => {
   const msg = useLiveQuery(async () => {
+    console.log(id);
     return await db.getMsgById(id);
   }, [id]);
 
