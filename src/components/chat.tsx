@@ -3,8 +3,8 @@ import { ChatInput, ChatInputSubmit, ChatInputTextArea } from "@/components/ui/c
 import { ChatMessage, ChatMessageAvatar, ChatMessageContent } from "@/components/ui/chat-message";
 import { ChatMessageArea } from "@/components/ui/chat-message-area";
 import { useChat } from "ai/react";
-import { useEffect, type ComponentPropsWithoutRef } from "react";
-import { ModelSelector } from "./ui/model-selector";
+import { useEffect, useState, type ComponentPropsWithoutRef } from "react";
+import { Model_t, ModelSelector } from "./ui/model-selector";
 import { Button } from "./ui/button";
 import { Copy, GitBranch, Globe, Paperclip, RefreshCw, Search } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
@@ -26,6 +26,11 @@ export const Chat: React.FC<ChatProps> = ({ id, info }) => {
 
     handleSubmit(e);
   };
+
+  // TODO: pull from dexie
+  const [model, setModel] = useState<Model_t>({
+    Name: "GPT-4.1 Nano",
+  });
 
   return (
     <div className="flex h-full flex-1 flex-col overflow-y-auto">
@@ -87,7 +92,13 @@ export const Chat: React.FC<ChatProps> = ({ id, info }) => {
             <ChatInputTextArea placeholder="Type a message..." />
             <div className="flex w-full flex-row justify-between">
               <div className="flex flex-row gap-x-2">
-                <ModelSelector onChange={() => {}} value="test" />
+                <ModelSelector
+                  value={model}
+                  onChange={(v) => {
+                    console.log(v);
+                    setModel(v);
+                  }}
+                />
                 <Button size="default" variant="outline">
                   <Globe />
                   Search

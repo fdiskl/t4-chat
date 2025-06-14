@@ -20,46 +20,179 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { Button } from "./button";
+import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 export const MODELS = ["test"] as const;
 
+export interface Model_t {
+  Name: string;
+  // todo: capabilities, choose reasoning amount
+}
+
+export interface ModelGroup_t {
+  Icon: string;
+  Name: string;
+  models: Model_t[];
+}
+
+export const MODELS_t: ModelGroup_t[] = [
+  {
+    Icon: "openai",
+    Name: "OpenAI",
+    models: [
+      {
+        Name: "GPT-4o Mini",
+      },
+      {
+        Name: "GPT-4o",
+      },
+      {
+        Name: "GPT-4.1",
+      },
+      {
+        Name: "GPT-4.1 Mini",
+      },
+      {
+        Name: "GPT-4.1 Nano",
+      },
+      {
+        Name: "o3 Mini",
+      },
+      {
+        Name: "o4 Mini",
+      },
+      {
+        Name: "o3",
+      },
+    ],
+  },
+  {
+    Icon: "gemini",
+    Name: "Gemini",
+    models: [
+      {
+        Name: "Gemini 2.0 Flash",
+      },
+      {
+        Name: "Gemini 2.0 Flash Lite",
+      },
+      {
+        Name: "Gemini 2.5 Flash",
+      },
+      {
+        Name: "Gemini 2.5 Flash (Thinking)",
+      },
+      {
+        Name: "Gemini 2.5 Pro",
+      },
+    ],
+  },
+  {
+    Icon: "deepseek",
+    Name: "Deepseek",
+    models: [
+      {
+        Name: "DeepSeek v3",
+      },
+      {
+        Name: "DeepSeek R1",
+      },
+    ],
+  },
+] as const;
+
+// TODO
+
 export type Model = (typeof MODELS)[number];
 
-interface ModelSelectorProps extends SelectProps {
-  value: Model;
-  onChange: (value: Model) => void;
+interface ModelSelectorProps extends DropdownMenuProps {
+  value: Model_t;
+  onChange: (value: Model_t) => void;
   disabledModels?: Model[];
 }
 
-export function ModelSelector({ value, onChange, disabledModels, ...props }: ModelSelectorProps) {
-  const [t, setT] = useState("test");
+export function getModelByName(s: string): Model_t {
+  return {
+    Name: s,
+  };
+}
 
+export function ModelSelector({ value, onChange, disabledModels, ...props }: ModelSelectorProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="nodrag w-48" variant="outline">
-          {t}
+        <Button variant="outline" className="nodrag flex w-48 flex-row items-center justify-center">
+          <span className="overflow-hidden truncate text-ellipsis whitespace-nowrap">
+            {value.Name}
+          </span>
+          <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="min-w-48">
-        <DropdownMenuRadioGroup value={t} onValueChange={setT}>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="flex flex-row items-center">
-              <OpenAI /> OpenAI
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuRadioItem value={"gpt 669"}>gpt 669</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value={"gpt 6692"}>gpt 6692</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value={"gpt 6691"}>gpt 6691</DropdownMenuRadioItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
+      <DropdownMenuContent>
+        <DropdownMenuRadioGroup
+          value={value.Name}
+          onValueChange={(s) => {
+            onChange(getModelByName(s));
+          }}>
+          {MODELS_t.map((g) => {
+            const Icon = ModelIcons[g.Icon];
+
+            return (
+              <DropdownMenuSub key={g.Name}>
+                <DropdownMenuSubTrigger>
+                  <Icon /> {g.Name}
+                </DropdownMenuSubTrigger>
+
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    {g.models.map((m) => (
+                      <DropdownMenuRadioItem
+                        key={m.Name}
+                        value={m.Name}
+                        className="flex flex-row items-center justify-start gap-x-2">
+                        <Icon />
+                        {m.Name}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+            );
+          })}
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+
+/*
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button className="nodrag w-48" variant="outline">
+      {t}
+    </Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent className="min-w-48">
+    <DropdownMenuRadioGroup value={t} onValueChange={setT}>
+      <DropdownMenuSub>
+        <DropdownMenuSubTrigger className="flex flex-row items-center">
+          <OpenAI /> OpenAI
+        </DropdownMenuSubTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuSubContent>
+            <DropdownMenuRadioItem value={"gpt 669"}>gpt 669</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value={"gpt 6692"}>gpt 6692</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value={"gpt 6691"}>gpt 6691</DropdownMenuRadioItem>
+          </DropdownMenuSubContent>
+        </DropdownMenuPortal>
+      </DropdownMenuSub>
+    </DropdownMenuRadioGroup>
+  </DropdownMenuContent>
+</DropdownMenu>
+
+*/
 
 // Icons obtained from https://svgl.app/
 
@@ -109,6 +242,35 @@ const DeepSeek = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const ModelIcons: Record<Model, ElementType> = {
-  test: OpenAI,
+const Gemini = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    height="1em"
+    style={{
+      flex: "none",
+      lineHeight: 1,
+    }}
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    {...props}>
+    <title>{"Gemini"}</title>
+    <defs>
+      <linearGradient id="lobe-icons-gemini-fill" x1="0%" x2="68.73%" y1="100%" y2="30.395%">
+        <stop offset="0%" stopColor="#1C7DFF" />
+        <stop offset="52.021%" stopColor="#1C69FF" />
+        <stop offset="100%" stopColor="#F0DCD6" />
+      </linearGradient>
+    </defs>
+    <path
+      d="M12 24A14.304 14.304 0 000 12 14.304 14.304 0 0012 0a14.305 14.305 0 0012 12 14.305 14.305 0 00-12 12"
+      fill="url(#lobe-icons-gemini-fill)"
+      fillRule="nonzero"
+    />
+  </svg>
+);
+
+const ModelIcons: Record<string, ElementType> = {
+  gemini: Gemini,
+  openai: OpenAI,
+  deepseek: DeepSeek,
 };
