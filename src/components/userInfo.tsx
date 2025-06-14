@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { db } from "@/lib/db";
 import { useRouter } from "next/navigation";
 import { liveQuery } from "dexie";
+import { useNavigate } from "react-router";
 
 export default function UserInfo() {
   const [user, setUser] = useState<{
@@ -12,12 +13,12 @@ export default function UserInfo() {
     userId?: string;
   } | null>(null);
 
-  const router = useRouter();
+  const nav = useNavigate();
 
   const test_logout = useCallback(async () => {
     try {
       await db.clearToken();
-      router.push("/login");
+      nav("/login");
     } catch (err) {
       console.error("Logout failed:", err);
       alert("Logout failed");

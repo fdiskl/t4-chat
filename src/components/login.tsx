@@ -1,13 +1,12 @@
 "use client";
 
-import { useCallback } from "react";
 import { db } from "@/lib/db";
 import { loginWithGithub } from "@/lib/login";
-import UserInfo from "@/components/userInfo";
-import { useRouter } from "next/navigation";
+import { useCallback } from "react";
+import { useNavigate } from "react-router";
 
-export default function Page() {
-  const router = useRouter();
+export default function Login() {
+  const nav = useNavigate();
 
   const handleLogin = useCallback(async () => {
     try {
@@ -22,7 +21,7 @@ export default function Page() {
         avatarUrl: user.avatar_url,
       });
 
-      router.push("/");
+      nav("/chat");
     } catch (err) {
       console.error("Login failed:", err);
       alert("Login failed. ");
