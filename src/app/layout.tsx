@@ -1,5 +1,6 @@
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,7 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
       </head>
-      <body className="dark font-sans antialiased">{children}</body>
+      <body className="dark font-sans antialiased">
+        {children} <Toaster />
+      </body>
     </html>
   );
 }

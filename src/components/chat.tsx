@@ -15,6 +15,7 @@ import { Copy, GitBranch, Globe, Paperclip, RefreshCw, Search } from "lucide-rea
 import { useNavigate, useParams } from "react-router";
 import { usePersistentChat, usePersistentChatReturnType } from "@/hooks/usePersistentChat";
 import { db } from "@/lib/db";
+import { toast } from "sonner";
 
 export interface ChatProps {
   id: string | undefined;
@@ -55,7 +56,19 @@ export const Chat: React.FC<ChatProps> = ({ id, info, model, setModel }) => {
                       </ChatMessage>
 
                       <div className="mt-2 flex flex-row items-center justify-start gap-x-2">
-                        <Button variant="outline" size="icon">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={async () => {
+                            // TODO: make anim instead
+                            try {
+                              await navigator.clipboard.writeText(message.content);
+                              toast.success("Copied");
+                            } catch (e) {
+                              console.error(e);
+                              toast.error("Couldn't copy");
+                            }
+                          }}>
                           <Copy />
                         </Button>
 
