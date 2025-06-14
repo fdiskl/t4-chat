@@ -19,7 +19,7 @@ class ChatDatabase extends Dexie {
   constructor() {
     super("ChatDatabase");
     this.version(1).stores({
-      chats: "id, created_at, updated_at",
+      chats: "id, created_at, updated_at, empty",
       messages: "id, chatId, created_at",
       tokens: "id",
     });
@@ -31,6 +31,7 @@ class ChatDatabase extends Dexie {
       title,
       created_at: new Date(),
       updated_at: new Date(),
+      empty: true,
     };
 
     await this.chats.add(chat);
@@ -44,6 +45,10 @@ class ChatDatabase extends Dexie {
     });
   }
 
+  async deleteEmptyChats(): Promise<void> {
+    await this.chats.filter((c) => c.empty == true).delete();
+  }
+
   async addMessage(message: Omit<StoredMessage, "id" | "created_at">): Promise<StoredMessage> {
     const storedMessage: StoredMessage = {
       ...message,
@@ -54,6 +59,7 @@ class ChatDatabase extends Dexie {
     await this.messages.add(storedMessage);
     await this.chats.update(message.chatId, {
       updated_at: new Date(),
+      empty: false,
     });
 
     return storedMessage;
@@ -64,7 +70,11 @@ class ChatDatabase extends Dexie {
   }
 
   async getChats(): Promise<Chat[]> {
-    return await this.chats.orderBy("updated_at").reverse().toArray();
+    return await this.chats
+      .orderBy("updated_at")
+      .reverse()
+      .filter((c) => c.empty == false)
+      .toArray();
   }
 
   async deleteChat(chatId: string): Promise<void> {

@@ -111,12 +111,14 @@ const CodeBlock = ({ children, language, className, ...props }: CodeBlockProps) 
           <code className="whitespace-pre-wrap">{children}</code>
         </pre>
       }>
-      <HighlightedPre language={language} {...props}>
+      <HighlightedPre language={language} {...props} className="max-w-3xl">
         {children}
       </HighlightedPre>
     </Suspense>
   );
 };
+
+// TODO: copy btn
 
 CodeBlock.displayName = "CodeBlock";
 

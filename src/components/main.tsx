@@ -9,7 +9,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Chat } from "@/components/chat";
-import { SidebarApp } from "@/components/sidebar-app";
+import { Sidebar } from "@/components/sidebar";
 import { Button } from "./ui/button";
 import { Share } from "lucide-react";
 import { TooltipContent, TooltipTrigger, Tooltip } from "./ui/tooltip";
@@ -17,7 +17,7 @@ import { TooltipContent, TooltipTrigger, Tooltip } from "./ui/tooltip";
 export default function Main() {
   return (
     <SidebarProvider>
-      <SidebarApp />
+      <Sidebar />
       <SidebarInset className="flex h-screen flex-col overflow-y-auto">
         <header className="border-1 sticky top-0 flex shrink-0 items-center justify-between gap-2 border-b border-primary/35 bg-background py-1">
           <div className="flex flex-1 items-center gap-2 px-3">

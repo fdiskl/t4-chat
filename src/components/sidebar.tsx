@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Sidebar,
+  Sidebar as SidebarPrimitive,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
@@ -19,13 +19,21 @@ import { MessageCircle, SquarePen } from "lucide-react";
 import type { ComponentProps } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
-export function SidebarApp({ ...props }: ComponentProps<typeof Sidebar>) {
+export function Sidebar({ ...props }: ComponentProps<typeof SidebarPrimitive>) {
   const chats = useLiveQuery(() => db.getChats(), []);
 
+  const nav = useNavigate();
+
+  const newChatHandler = async () => {
+    await db.deleteEmptyChats();
+    const c = await db.createChat();
+    nav(`/chat/${c.id}`);
+  };
+
   return (
-    <Sidebar className="border-r-0" {...props}>
+    <SidebarPrimitive className="border-r-0" {...props}>
       <SidebarHeader>
         <div className="flex flex-col">
           <div className="flex items-center justify-between p-2">
@@ -35,7 +43,9 @@ export function SidebarApp({ ...props }: ComponentProps<typeof Sidebar>) {
           </div>
           {/* New Chat Button */}
           <div className="w-full px-2">
-            <Button className="w-full">New chat</Button>
+            <Button className="w-full" onClick={newChatHandler}>
+              New chat
+            </Button>
           </div>
         </div>
       </SidebarHeader>
@@ -63,6 +73,6 @@ export function SidebarApp({ ...props }: ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>
-    </Sidebar>
+    </SidebarPrimitive>
   );
 }

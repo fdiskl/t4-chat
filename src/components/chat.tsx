@@ -3,25 +3,27 @@ import { ChatInput, ChatInputSubmit, ChatInputTextArea } from "@/components/ui/c
 import { ChatMessage, ChatMessageAvatar, ChatMessageContent } from "@/components/ui/chat-message";
 import { ChatMessageArea } from "@/components/ui/chat-message-area";
 import { useChat } from "ai/react";
-import type { ComponentPropsWithoutRef } from "react";
+import { useEffect, type ComponentPropsWithoutRef } from "react";
 import { ModelSelector } from "./ui/model-selector";
 import { Button } from "./ui/button";
 import { Globe, Paperclip, Search } from "lucide-react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { usePersistentChat } from "@/hooks/usePersistentChat";
+import { db } from "@/lib/db";
 
 export function Chat({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   const { id } = useParams();
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = usePersistentChat({
+  const { messages, input, handleInputChange, handleSubmit, isLoading, nav } = usePersistentChat({
     id: id,
     model: "",
   });
 
-  const handleSubmitMessage = (e: React.KeyboardEvent | React.MouseEvent) => {
+  const handleSubmitMessage = async (e: React.KeyboardEvent | React.MouseEvent) => {
     if (isLoading) {
       return;
     }
+
     handleSubmit(e);
   };
 
@@ -29,20 +31,30 @@ export function Chat({ className, ...props }: ComponentPropsWithoutRef<"div">) {
     <div className="flex h-full flex-1 flex-col overflow-y-auto" {...props}>
       <ChatMessageArea scrollButtonAlignment="center">
         <div className="mx-auto w-full max-w-3xl space-y-4 px-4 py-8">
-          {messages.map((message) => {
-            if (message.role !== "user") {
-              return (
-                <ChatMessage key={message.id} id={message.id}>
-                  <ChatMessageContent content={message.content} />
-                </ChatMessage>
-              );
-            }
-            return (
-              <ChatMessage key={message.id} id={message.id} variant="bubble" type="outgoing">
-                <ChatMessageContent content={message.content} className="max-w-xl" />
-              </ChatMessage>
-            );
-          })}
+          {messages.length == 0 ? (
+            <div className="mt-80 flex w-full items-center justify-center">
+              <div className="mx-auto">
+                <h1 className="text-2xl font-semibold">How can i help you today?</h1>
+              </div>
+            </div>
+          ) : (
+            <>
+              {messages.map((message) => {
+                if (message.role !== "user") {
+                  return (
+                    <ChatMessage key={message.id} id={message.id}>
+                      <ChatMessageContent content={message.content} className="max-w-3xl" />
+                    </ChatMessage>
+                  );
+                }
+                return (
+                  <ChatMessage key={message.id} id={message.id} variant="bubble" type="outgoing">
+                    <ChatMessageContent content={message.content} className="max-w-xl" />
+                  </ChatMessage>
+                );
+              })}
+            </>
+          )}
         </div>
       </ChatMessageArea>
       <div className="mx-auto w-full max-w-3xl px-2 py-4">

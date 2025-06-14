@@ -3,12 +3,12 @@ import { PersistentChatOptions } from "@/types/chat";
 import { StoredMessage } from "@/types/database";
 import { useChat } from "ai/react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { useNavigate } from "react-router";
 
 export function usePersistentChat({ id: chatId, model }: PersistentChatOptions) {
   const [error, setError] = useState<Error | null>(null);
-  const router = useRouter();
+  const nav = useNavigate();
 
   // Use reactive queries for chat and messages
   const currentChat = useLiveQuery(async () => {
@@ -105,7 +105,7 @@ export function usePersistentChat({ id: chatId, model }: PersistentChatOptions) 
 
         if (!chatId) {
           const newChat = await db.createChat();
-          router.push(`/chat/${newChat.id}`);
+          nav(`/chat/${newChat.id}`);
           return;
         }
 
@@ -134,7 +134,7 @@ export function usePersistentChat({ id: chatId, model }: PersistentChatOptions) 
         setError(error instanceof Error ? error : new Error("Failed to process message"));
       }
     },
-    [currentChat, chatId, input, originalHandleSubmit, persistMessage, router]
+    [currentChat, chatId, input, originalHandleSubmit, persistMessage]
   );
 
   const isLoading = currentChat === undefined && !!chatId;
@@ -147,5 +147,6 @@ export function usePersistentChat({ id: chatId, model }: PersistentChatOptions) 
     isLoading,
     error,
     currentChat,
+    nav,
   };
 }
