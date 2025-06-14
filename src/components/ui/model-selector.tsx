@@ -6,7 +6,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { SelectProps } from "@radix-ui/react-select";
-import type { ElementType, SVGProps } from "react";
+import { useState, type ElementType, type SVGProps } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
+import { Button } from "./button";
 
 export const MODELS = ["test"] as const;
 
@@ -19,25 +32,32 @@ interface ModelSelectorProps extends SelectProps {
 }
 
 export function ModelSelector({ value, onChange, disabledModels, ...props }: ModelSelectorProps) {
+  const [t, setT] = useState("test");
+
   return (
-    <Select value={value} onValueChange={onChange} {...props}>
-      <SelectTrigger className="nodrag w-48">
-        <SelectValue placeholder="Select model" />
-      </SelectTrigger>
-      <SelectContent>
-        {MODELS.map((model) => {
-          const Icon = ModelIcons[model];
-          return (
-            <SelectItem key={model} value={model} disabled={disabledModels?.includes(model)}>
-              <div className="flex items-center gap-2">
-                <Icon className="h-4 w-4" />
-                <span>{model}</span>
-              </div>
-            </SelectItem>
-          );
-        })}
-      </SelectContent>
-    </Select>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button className="nodrag w-48" variant="outline">
+          {t}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="min-w-48">
+        <DropdownMenuRadioGroup value={t} onValueChange={setT}>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger className="flex flex-row items-center">
+              <OpenAI /> OpenAI
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuRadioItem value={"gpt 669"}>gpt 669</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value={"gpt 6692"}>gpt 6692</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value={"gpt 6691"}>gpt 6691</DropdownMenuRadioItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
