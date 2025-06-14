@@ -4,6 +4,9 @@ import { ChatMessage, ChatMessageAvatar, ChatMessageContent } from "@/components
 import { ChatMessageArea } from "@/components/ui/chat-message-area";
 import { useChat } from "ai/react";
 import type { ComponentPropsWithoutRef } from "react";
+import { ModelSelector } from "./ui/model-selector";
+import { Button } from "./ui/button";
+import { Globe, Paperclip, Search } from "lucide-react";
 
 export function Chat({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   const { messages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat({
@@ -72,7 +75,7 @@ export function Chat({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   return (
     <div className="flex h-full flex-1 flex-col overflow-y-auto" {...props}>
       <ChatMessageArea scrollButtonAlignment="center">
-        <div className="mx-auto w-full max-w-4xl space-y-4 px-4 py-8">
+        <div className="mx-auto w-full max-w-3xl space-y-4 px-4 py-8">
           {messages.map((message) => {
             if (message.role !== "user") {
               return (
@@ -89,15 +92,29 @@ export function Chat({ className, ...props }: ComponentPropsWithoutRef<"div">) {
           })}
         </div>
       </ChatMessageArea>
-      <div className="mx-auto w-full max-w-2xl px-2 py-4">
+      <div className="mx-auto w-full max-w-3xl px-2 py-4">
         <ChatInput
           value={input}
           onChange={handleInputChange}
           onSubmit={handleSubmitMessage}
           loading={isLoading}
           onStop={stop}>
-          <ChatInputTextArea placeholder="Type a message..." />
-          <ChatInputSubmit />
+          <div className="flex w-full flex-col">
+            <ChatInputTextArea placeholder="Type a message..." />
+            <div className="flex w-full flex-row justify-between">
+              <div className="flex flex-row gap-x-2">
+                <ModelSelector onChange={() => {}} value="test" />
+                <Button size="default" variant="outline">
+                  <Globe />
+                  Search
+                </Button>
+                <Button size="icon" variant="outline">
+                  <Paperclip />
+                </Button>
+              </div>
+              <ChatInputSubmit />
+            </div>
+          </div>
         </ChatInput>
       </div>
     </div>
