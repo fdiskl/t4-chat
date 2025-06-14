@@ -1,9 +1,14 @@
-"use client";
 import { ChatInput, ChatInputSubmit, ChatInputTextArea } from "@/components/ui/chat-input";
 import { ChatMessage, ChatMessageAvatar, ChatMessageContent } from "@/components/ui/chat-message";
 import { ChatMessageArea } from "@/components/ui/chat-message-area";
 import { useChat } from "ai/react";
-import { useEffect, useState, type ComponentPropsWithoutRef } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  type ComponentPropsWithoutRef,
+} from "react";
 import { Model_t, ModelSelector } from "./ui/model-selector";
 import { Button } from "./ui/button";
 import { Copy, GitBranch, Globe, Paperclip, RefreshCw, Search } from "lucide-react";
@@ -14,9 +19,11 @@ import { db } from "@/lib/db";
 export interface ChatProps {
   id: string | undefined;
   info: usePersistentChatReturnType;
+  model: Model_t;
+  setModel: Dispatch<SetStateAction<Model_t>>;
 }
 
-export const Chat: React.FC<ChatProps> = ({ id, info }) => {
+export const Chat: React.FC<ChatProps> = ({ id, info, model, setModel }) => {
   const { isLoading, messages, handleSubmit, input, handleInputChange } = info;
 
   const handleSubmitMessage = async (e: React.KeyboardEvent | React.MouseEvent) => {
@@ -26,11 +33,6 @@ export const Chat: React.FC<ChatProps> = ({ id, info }) => {
 
     handleSubmit(e);
   };
-
-  // TODO: pull from dexie
-  const [model, setModel] = useState<Model_t>({
-    Name: "GPT-4.1 Nano",
-  });
 
   return (
     <div className="flex h-full flex-1 flex-col overflow-y-auto">

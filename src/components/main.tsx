@@ -15,14 +15,20 @@ import { Share } from "lucide-react";
 import { TooltipContent, TooltipTrigger, Tooltip } from "./ui/tooltip";
 import { useParams } from "react-router";
 import { usePersistentChat } from "@/hooks/usePersistentChat";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Model_t } from "./ui/model-selector";
 
 export default function Main() {
   const { id } = useParams();
 
+  // TODO: pull from dexie
+  const [model, setModel] = useState<Model_t>({
+    Name: "GPT-4.1 Nano",
+  });
+
   const persistenChatInfo = usePersistentChat({
-    id: id,
-    model: "",
+    id,
+    model: model.Name,
   });
 
   useEffect(() => {
@@ -60,7 +66,7 @@ export default function Main() {
             </Tooltip>
           </div>
         </header>
-        <Chat id={id} info={persistenChatInfo} />
+        <Chat id={id} info={persistenChatInfo} model={model} setModel={setModel} />
       </SidebarInset>
     </SidebarProvider>
   );
