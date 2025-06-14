@@ -8,16 +8,16 @@ import { ModelSelector } from "./ui/model-selector";
 import { Button } from "./ui/button";
 import { Globe, Paperclip, Search } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
-import { usePersistentChat } from "@/hooks/usePersistentChat";
+import { usePersistentChat, usePersistentChatReturnType } from "@/hooks/usePersistentChat";
 import { db } from "@/lib/db";
 
-export function Chat({ className, ...props }: ComponentPropsWithoutRef<"div">) {
-  const { id } = useParams();
+export interface ChatProps {
+  id: string | undefined;
+  info: usePersistentChatReturnType;
+}
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, nav } = usePersistentChat({
-    id: id,
-    model: "",
-  });
+export const Chat: React.FC<ChatProps> = ({ id, info }) => {
+  const { isLoading, messages, handleSubmit, input, handleInputChange } = info;
 
   const handleSubmitMessage = async (e: React.KeyboardEvent | React.MouseEvent) => {
     if (isLoading) {
@@ -28,7 +28,7 @@ export function Chat({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   };
 
   return (
-    <div className="flex h-full flex-1 flex-col overflow-y-auto" {...props}>
+    <div className="flex h-full flex-1 flex-col overflow-y-auto">
       <ChatMessageArea scrollButtonAlignment="center">
         <div className="mx-auto w-full max-w-3xl space-y-4 px-4 py-8">
           {messages.length == 0 ? (
@@ -84,4 +84,4 @@ export function Chat({ className, ...props }: ComponentPropsWithoutRef<"div">) {
       </div>
     </div>
   );
-}
+};

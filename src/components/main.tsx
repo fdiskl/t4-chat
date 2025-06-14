@@ -13,8 +13,17 @@ import { Sidebar } from "@/components/sidebar";
 import { Button } from "./ui/button";
 import { Share } from "lucide-react";
 import { TooltipContent, TooltipTrigger, Tooltip } from "./ui/tooltip";
+import { useParams } from "react-router";
+import { usePersistentChat } from "@/hooks/usePersistentChat";
 
 export default function Main() {
+  const { id } = useParams();
+
+  const persistenChatInfo = usePersistentChat({
+    id: id,
+    model: "",
+  });
+
   return (
     <SidebarProvider>
       <Sidebar />
@@ -26,7 +35,17 @@ export default function Main() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="line-clamp-1">todo</BreadcrumbPage>
+                  <BreadcrumbPage className="line-clamp-1">
+                    {persistenChatInfo.currentChat ? (
+                      <>
+                        {persistenChatInfo.currentChat.title === ""
+                          ? persistenChatInfo.currentChat.title
+                          : "New chat"}
+                      </>
+                    ) : (
+                      "New chat"
+                    )}
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -44,7 +63,7 @@ export default function Main() {
             </Tooltip>
           </div>
         </header>
-        <Chat />
+        <Chat id={id} info={persistenChatInfo} />
       </SidebarInset>
     </SidebarProvider>
   );

@@ -1,12 +1,29 @@
 import { db } from "@/lib/db";
 import { PersistentChatOptions } from "@/types/chat";
-import { StoredMessage } from "@/types/database";
+import { Chat, StoredMessage } from "@/types/database";
+import { UIMessage } from "ai";
 import { useChat } from "ai/react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useCallback, useState } from "react";
-import { useNavigate } from "react-router";
+import { NavigateFunction, useNavigate } from "react-router";
 
-export function usePersistentChat({ id: chatId, model }: PersistentChatOptions) {
+export interface usePersistentChatReturnType {
+  messages: UIMessage[];
+  input: string;
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>
+  ) => void;
+  handleSubmit: (e: React.KeyboardEvent | React.MouseEvent) => Promise<void>;
+  isLoading: boolean;
+  error: Error | null;
+  currentChat: Chat | undefined;
+  nav: NavigateFunction;
+}
+
+export function usePersistentChat({
+  id: chatId,
+  model,
+}: PersistentChatOptions): usePersistentChatReturnType {
   const [error, setError] = useState<Error | null>(null);
   const nav = useNavigate();
 
