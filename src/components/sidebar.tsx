@@ -78,34 +78,35 @@ export function Sidebar({ nav, ...props }: ComponentProps<typeof SidebarPrimitiv
             <SidebarMenu>
               {chats?.map((chat) => (
                 <SidebarMenuItem key={chat.id}>
-                  <SidebarMenuButton className="w-full justify-start" asChild>
-                    <div className="group flex w-full flex-row items-center justify-between">
-                      <div className="flex h-full w-full items-center justify-start">
-                        {chat.parentId && (
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button size="icon" variant="ghost" asChild>
-                                <Link to={`/chat/${chat.parentId}`}>
-                                  <GitBranch className="mr-2 h-8 w-8 text-white/50" />
-                                </Link>
-                              </Button>
-                            </TooltipTrigger>
+                  <SidebarMenuButton className="w-full justify-start gap-1" asChild>
+                    <div className="group flex w-full flex-row items-center">
+                      {/* Thread Button (if present) */}
+                      {chat.parentId && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button size="icon" variant="ghost" asChild>
+                              <Link to={`/chat/${chat.parentId}`}>
+                                <GitBranch className="h-8 w-8 text-white/50" />
+                              </Link>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Go to original chat</TooltipContent>
+                        </Tooltip>
+                      )}
 
-                            <TooltipContent>Go to original chat</TooltipContent>
-                          </Tooltip>
-                        )}
+                      {/* Title (truncated) */}
+                      <Link
+                        to={`/chat/${chat.id}`}
+                        className="flex min-w-0 flex-1 items-center overflow-hidden">
+                        <span className="truncate">{chat.title}</span>
+                      </Link>
 
-                        <Link
-                          to={`/chat/${chat.id}`}
-                          className="flex w-full flex-row items-center overflow-hidden truncate whitespace-nowrap">
-                          {chat.title}
-                        </Link>
-                      </div>
+                      {/* Delete Button (always at right) */}
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={(e) => handleDeleteChat(e, chat.id)}
-                        className="text-white/70 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 hover:text-red-600">
+                        className="ml-2 text-white/70 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 hover:text-red-600">
                         <TrashIcon />
                       </Button>
                     </div>
