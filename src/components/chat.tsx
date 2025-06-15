@@ -17,7 +17,7 @@ export interface ChatProps {
 }
 
 const MessageList = ({ id }: { id?: string }) => {
-  const messages = usePersistentChatMessages({ id });
+  const { messages, reload } = usePersistentChatMessages({ id });
 
   if (messages.length === 0) {
     return (
@@ -56,15 +56,14 @@ const MessageList = ({ id }: { id?: string }) => {
                   <Copy />
                 </Button>
 
+                <Button variant="outline" size="icon" onClick={() => reload()}>
+                  <RefreshCw />
+                </Button>
+
                 <Button variant="outline" size="icon">
                   <GitBranch />
                 </Button>
 
-                <Button variant="outline" size="icon">
-                  <RefreshCw />
-                </Button>
-
-                {/* TODO: actual model */}
                 <span className="text-base text-white/80">
                   <ModelTypeByMsgId id={message.id} />
                 </span>
@@ -102,7 +101,7 @@ export const InputWrapper = ({
   setModel: (a: modelId) => void;
   id?: string;
 }) => {
-  const { isLoading, handleSubmit, input, handleInputChange, setInput } = usePersistentChat({
+  const { isLoading, handleSubmit, input, handleInputChange, status } = usePersistentChat({
     id: id,
     model: model,
   });
@@ -133,7 +132,7 @@ export const InputWrapper = ({
               <Paperclip />
             </Button>
           </div>
-          <ChatInputSubmit />
+          <ChatInputSubmit loading={status === "streaming" || status === "submitted"} />
         </div>
       </div>
     </ChatInput>

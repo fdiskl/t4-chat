@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { Chat, StoredMessage } from "@/types/database";
 import { modelId } from "@/types/models";
-import { UIMessage } from "ai";
+import { ChatRequestOptions, UIMessage } from "ai";
 import { useChat } from "ai/react";
 import { useLiveQuery } from "dexie-react-hooks";
 import React from "react";
@@ -19,6 +19,8 @@ export interface usePersistentChatReturnType {
   currentChat: Chat | undefined;
   nav: NavigateFunction;
   setInput: (a: string) => void;
+  status: "error" | "submitted" | "streaming" | "ready";
+  stop: () => void;
 }
 
 export interface PersistentChatOptions {
@@ -40,7 +42,7 @@ export function usePersistentChatMessages({ id: chatId }: PersistentChatMessages
     return await db.getChatMessages(chatId);
   }, [chatId]);
 
-  const { messages } = useChat({
+  const { messages, reload } = useChat({
     api: "/api/chat",
     id: chatId,
     initialMessages:
@@ -51,7 +53,7 @@ export function usePersistentChatMessages({ id: chatId }: PersistentChatMessages
       })) || [],
   });
 
-  return messages;
+  return { messages, reload };
 }
 
 export function usePersistentChat({
@@ -76,6 +78,8 @@ export function usePersistentChat({
     handleInputChange: originalHandleInputChange,
     handleSubmit: originalHandleSubmit,
     setInput,
+    status,
+    stop,
   } = useChat({
     api: "/api/chat",
     id: chatId,
@@ -221,5 +225,7 @@ export function usePersistentChat({
     currentChat,
     setInput,
     nav,
+    status,
+    stop,
   };
 }
