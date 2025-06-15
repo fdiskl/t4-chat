@@ -72,7 +72,9 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
             </>
           ) : (
             <>
-              {messages.map((message) => {
+              {messages.map((message, idx) => {
+                const isLastMessage = idx === messages.length - 1;
+
                 if (message.role !== "user") {
                   return (
                     <div key={message.id}>
@@ -97,9 +99,11 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                           <Copy />
                         </Button>
 
-                        <Button variant="outline" size="icon" onClick={() => reload()}>
-                          <RefreshCw />
-                        </Button>
+                        {isLastMessage && (
+                          <Button variant="outline" size="icon" onClick={() => reload()}>
+                            <RefreshCw />
+                          </Button>
+                        )}
 
                         <Button variant="outline" size="icon" onClick={handleBranchButton}>
                           <GitBranch />

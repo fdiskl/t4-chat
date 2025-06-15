@@ -4,6 +4,7 @@ export interface Chat {
   created_at: Date;
   updated_at: Date;
   empty: boolean;
+  parentId: string | undefined;
 }
 
 export interface StoredMessage {

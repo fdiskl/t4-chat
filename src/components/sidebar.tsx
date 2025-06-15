@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { NavUser } from "@/components/nav-user";
-import { MessageCircle, Pin, SquarePen, TrashIcon } from "lucide-react";
+import { GitBranch, MessageCircle, Pin, SquarePen, TrashIcon } from "lucide-react";
 import { useCallback, type ComponentProps } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
@@ -80,12 +80,27 @@ export function Sidebar({ nav, ...props }: ComponentProps<typeof SidebarPrimitiv
                 <SidebarMenuItem key={chat.id}>
                   <SidebarMenuButton className="w-full justify-start" asChild>
                     <div className="group flex w-full flex-row items-center justify-between">
-                      <Link
-                        to={`/chat/${chat.id}`}
-                        className="flex w-full flex-row items-center overflow-hidden truncate whitespace-nowrap">
-                        {chat.title}
-                      </Link>
+                      <div className="flex h-full w-full items-center justify-start">
+                        {chat.parentId && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button size="icon" variant="ghost" asChild>
+                                <Link to={`/chat/${chat.parentId}`}>
+                                  <GitBranch className="mr-2 h-8 w-8 text-white/50" />
+                                </Link>
+                              </Button>
+                            </TooltipTrigger>
 
+                            <TooltipContent>Go to original chat</TooltipContent>
+                          </Tooltip>
+                        )}
+
+                        <Link
+                          to={`/chat/${chat.id}`}
+                          className="flex w-full flex-row items-center overflow-hidden truncate whitespace-nowrap">
+                          {chat.title}
+                        </Link>
+                      </div>
                       <Button
                         variant="ghost"
                         size="icon"

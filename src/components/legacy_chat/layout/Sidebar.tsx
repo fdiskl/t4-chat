@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Plus, Trash } from "lucide-react";
+import { GitBranch, Plus, Trash } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
@@ -65,8 +65,10 @@ export function Sidebar() {
               href={`/chat/${chat.id}`}
               className={`group flex items-center rounded-lg px-3 py-2 text-sm transition-colors`}>
               <div className="flex-1">
-                <span className="line-clamp-1 block font-medium">{chat.title || "New Chat"}</span>
-                <span className="block text-xs">{formatDate(chat.updated_at)}</span>
+                <span className="line-clamp-1 block font-medium">
+                  {chat.title || "New Chat"}
+                  {chat.id}
+                </span>
               </div>
               <button
                 onClick={(e) => handleDeleteChat(e, chat.id)}

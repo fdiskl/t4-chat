@@ -7,6 +7,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import React from "react";
 import { useCallback, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router";
+import { toast } from "sonner";
 
 export interface usePersistentChatReturnType {
   input: string;
@@ -73,6 +74,9 @@ export function usePersistentChat({
       if (currentChat) {
         await persistMessage(message.content, "assistant", currentChat.id, model, message.id);
       }
+    },
+    onError: (err) => {
+      toast.error(String(err));
     },
   });
 

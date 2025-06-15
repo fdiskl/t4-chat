@@ -34,9 +34,11 @@ class ChatDatabase extends Dexie {
       throw new Error("chat not found");
     }
 
-    const { id: _, ...rest } = chat;
+    const { id: oldId, parentId: _, ...rest } = chat;
 
-    const newId = await db.chats.add({ id: nanoid(), ...rest });
+    const newId = await db.chats.add({ id: nanoid(), parentId: oldId, ...rest });
+
+    console.log(await db.chats.get(newId));
 
     const msgs = await db.getChatMessages(id);
 
@@ -58,6 +60,7 @@ class ChatDatabase extends Dexie {
       created_at: new Date(),
       updated_at: new Date(),
       empty: true,
+      parentId: undefined,
     };
 
     await this.chats.add(chat);
