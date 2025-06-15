@@ -18,6 +18,7 @@ export interface usePersistentChatReturnType {
   error: Error | null;
   currentChat: Chat | undefined;
   nav: NavigateFunction;
+  setInput: (a: string) => void;
 }
 
 export interface PersistentChatOptions {
@@ -74,6 +75,7 @@ export function usePersistentChat({
     input,
     handleInputChange: originalHandleInputChange,
     handleSubmit: originalHandleSubmit,
+    setInput,
   } = useChat({
     api: "/api/chat",
     id: chatId,
@@ -217,6 +219,7 @@ export function usePersistentChat({
     isLoading,
     error,
     currentChat,
+    setInput,
     nav,
   };
 }

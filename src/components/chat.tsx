@@ -102,10 +102,20 @@ export const InputWrapper = ({
   setModel: (a: modelId) => void;
   id?: string;
 }) => {
-  const { isLoading, handleSubmit, input, handleInputChange } = usePersistentChat({
+  const { isLoading, handleSubmit, input, handleInputChange, setInput } = usePersistentChat({
     id: id,
     model: model,
   });
+
+  return (
+    <button
+      onClick={(e) => {
+        setInput("Write aoc 2022 day 17");
+        handleSubmit(e);
+      }}>
+      SEND
+    </button>
+  );
 
   return (
     <ChatInput
