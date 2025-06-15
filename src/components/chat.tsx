@@ -82,40 +82,45 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                         <ChatMessageContent content={message.content} className="max-w-3xl" />
                       </ChatMessage>
 
-                      <div className="mt-2 flex flex-row items-center justify-start gap-x-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={async () => {
-                            // TODO: make anim instead
-                            try {
-                              await navigator.clipboard.writeText(message.content);
-                              toast.success("Copied", { position: "top-center" });
-                            } catch (e) {
-                              console.error(e);
-                              toast.error("Couldn't copy", { position: "top-center" });
-                            }
-                          }}>
-                          <Copy />
-                        </Button>
+                      {status != "streaming" && status != "submitted" && (
+                        <>
+                          {/* BUTTONS */}
+                          <div className="mt-2 flex flex-row items-center justify-start gap-x-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={async () => {
+                                // TODO: make anim instead
+                                try {
+                                  await navigator.clipboard.writeText(message.content);
+                                  toast.success("Copied", { position: "top-center" });
+                                } catch (e) {
+                                  console.error(e);
+                                  toast.error("Couldn't copy", { position: "top-center" });
+                                }
+                              }}>
+                              <Copy />
+                            </Button>
 
-                        {isLastMessage && (
-                          <Button variant="outline" size="icon" onClick={() => reload()}>
-                            <RefreshCw />
-                          </Button>
-                        )}
+                            {isLastMessage && (
+                              <Button variant="outline" size="icon" onClick={() => reload()}>
+                                <RefreshCw />
+                              </Button>
+                            )}
 
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleBranchButton(message.id)}>
-                          <GitBranch />
-                        </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => handleBranchButton(message.id)}>
+                              <GitBranch />
+                            </Button>
 
-                        <span className="text-base text-white/80">
-                          <ModelTypeByMsgId id={message.id} />
-                        </span>
-                      </div>
+                            <span className="text-base text-white/80">
+                              <ModelTypeByMsgId id={message.id} />
+                            </span>
+                          </div>
+                        </>
+                      )}
                     </div>
                   );
                 }

@@ -6,6 +6,9 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { Button } from "./button";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
 
 const DEFAULT_PRE_BLOCK_CLASS =
   "overflow-x-auto w-fit rounded-xl bg-zinc-950 text-zinc-50 dark:bg-zinc-900 border border-border p-4";
@@ -17,33 +20,65 @@ interface CodeBlockProps extends React.HTMLAttributes<HTMLPreElement> {
 const CodeBlock = ({ children, language, className, ...props }: CodeBlockProps) => {
   const codeText = String(children);
 
-  // Check if the code is complete or likely to be incomplete
   const isComplete = codeText.trim().endsWith("\n") || codeText.length > 0;
 
-  if (isComplete) {
-    try {
+  const renderCode = () => {
+    if (isComplete) {
+      try {
+        return (
+          <SyntaxHighlighter
+            language={language}
+            style={vscDarkPlus}
+            customStyle={{ marginTop: 0, paddingTop: 0 }}
+            {...props}>
+            {codeText}
+          </SyntaxHighlighter>
+        );
+      } catch (error) {
+        console.error("Error rendering syntax highlighter:", error);
+        // Fallback to plain code block
+        return (
+          <pre {...props} className={cn(DEFAULT_PRE_BLOCK_CLASS, className, "!mt-0")}>
+            <code className="whitespace-pre-wrap">{codeText}</code>
+          </pre>
+        );
+      }
+    } else {
+      // Incomplete code, render as plain text
       return (
-        <SyntaxHighlighter language={language} style={vscDarkPlus} {...props}>
-          {codeText}
-        </SyntaxHighlighter>
-      );
-    } catch (error) {
-      console.error("Error rendering syntax highlighter:", error);
-      // Fallback to plain code block
-      return (
-        <pre {...props} className={cn(DEFAULT_PRE_BLOCK_CLASS, className)}>
+        <pre {...props} className={cn(DEFAULT_PRE_BLOCK_CLASS, className, "!mt-0")}>
           <code className="whitespace-pre-wrap">{codeText}</code>
         </pre>
       );
     }
-  } else {
-    // Incomplete code, render as plain text
-    return (
-      <pre {...props} className={cn(DEFAULT_PRE_BLOCK_CLASS, className)}>
-        <code className="whitespace-pre-wrap">{codeText}</code>
-      </pre>
-    );
-  }
+  };
+
+  return (
+    <div className="relative overflow-hidden rounded-md border">
+      <div className="flex items-center justify-between bg-[#1e1e1e] px-2 text-sm text-white">
+        <div className="font-mono">{language}</div>
+        <Button
+          variant="outline"
+          className="bg-[#1e1e1e]"
+          size="icon"
+          onClick={async () => {
+            // TODO: make anim instead
+            try {
+              await navigator.clipboard.writeText(codeText);
+              toast.success("Copied", { position: "top-center" });
+            } catch (e) {
+              console.error(e);
+              toast.error("Couldn't copy", { position: "top-center" });
+            }
+          }}>
+          <Copy />
+        </Button>
+      </div>
+
+      {/* Code Content */}
+      {renderCode()}
+    </div>
+  );
 };
 
 CodeBlock.displayName = "CodeBlock";
