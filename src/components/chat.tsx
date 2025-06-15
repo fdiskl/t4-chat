@@ -11,6 +11,7 @@ import { idToModelMap, modelId } from "@/types/models";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 import { UIMessage } from "ai";
+import { useNavigate } from "react-router";
 
 export interface ChatProps {
   id: string | undefined;
@@ -35,6 +36,27 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
       id: id,
       model: model,
     });
+
+  const nav = useNavigate();
+
+  const handleBranchButton = async () => {
+    if (!id) {
+      toast.error("Can't branch off if not in chat");
+      return;
+    }
+
+    try {
+      const newChatId = await db.copyChat(id);
+
+      nav(`/chat/${newChatId}`);
+
+      toast.success("New branch created!", {
+        position: "top-center",
+      });
+    } catch (e) {
+      toast.error(String(e), { position: "top-center" });
+    }
+  };
 
   return (
     <div className="flex h-full flex-1 flex-col overflow-y-auto">
@@ -66,10 +88,10 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                             // TODO: make anim instead
                             try {
                               await navigator.clipboard.writeText(message.content);
-                              toast.success("Copied");
+                              toast.success("Copied", { position: "top-center" });
                             } catch (e) {
                               console.error(e);
-                              toast.error("Couldn't copy");
+                              toast.error("Couldn't copy", { position: "top-center" });
                             }
                           }}>
                           <Copy />
@@ -79,7 +101,7 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                           <RefreshCw />
                         </Button>
 
-                        <Button variant="outline" size="icon">
+                        <Button variant="outline" size="icon" onClick={handleBranchButton}>
                           <GitBranch />
                         </Button>
 

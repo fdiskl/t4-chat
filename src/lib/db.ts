@@ -25,6 +25,32 @@ class ChatDatabase extends Dexie {
     });
   }
 
+  // copies chat and all underlying messages, returns new id
+  // throws and error if invalid id or smth btw
+  async copyChat(id: string): Promise<string> {
+    const chat = await this.chats.get(id);
+
+    if (!chat) {
+      throw new Error("chat not found");
+    }
+
+    const { id: _, ...rest } = chat;
+
+    const newId = await db.chats.add({ id: nanoid(), ...rest });
+
+    const msgs = await db.getChatMessages(id);
+
+    const newMsgs = msgs.map((m) => ({
+      ...m,
+      id: nanoid(),
+      chatId: newId,
+    }));
+
+    await db.messages.bulkAdd(newMsgs);
+
+    return newId;
+  }
+
   async createChat(title?: string): Promise<Chat> {
     const chat: Chat = {
       id: nanoid(),
