@@ -64,6 +64,7 @@ export function usePersistentChat({
       model,
       systemPromptId: "default",
     },
+    experimental_throttle: 50,
     initialMessages:
       storedMessages?.map((msg) => ({
         id: msg.id,
