@@ -75,9 +75,9 @@ export function usePersistentChat({
         await persistMessage(message.content, "assistant", currentChat.id, model, message.id);
       }
     },
-    onError: (err) => {
-      toast.error(String(err));
-    },
+    // onError: (err) => {
+    //   // toast.error(String(err));
+    // }, Would be cool, but when stopping chat err is thrown so i wont log it
   });
 
   const persistMessage = useCallback(

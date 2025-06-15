@@ -155,7 +155,10 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                   <Paperclip />
                 </Button>
               </div>
-              <ChatInputSubmit loading={status === "streaming" || status === "submitted"} />
+              <ChatInputSubmit
+                loading={status === "streaming" || status === "submitted"}
+                onStop={stop}
+              />
             </div>
           </div>
         </ChatInput>
