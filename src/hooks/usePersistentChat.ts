@@ -175,8 +175,32 @@ export function usePersistentChat({
           await persistMessage(input, "user", currentChat.id, "user");
 
           if (!currentChat.title) {
-            // TODO : gen title
-            const title = input.slice(0, 50) + (input.length > 50 ? "..." : "");
+            let title = "";
+            try {
+              const titleResp = await fetch("/api/title", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ msg: input }),
+              });
+
+              if (titleResp.status != 200 || !titleResp.ok) {
+                title = input.slice(0, 50) + (input.length > 50 ? "..." : "");
+              } else {
+                const data = await titleResp.json();
+                console.log(data);
+                if (data && data.result) {
+                  title = String(data.result);
+                } else {
+                  title = input.slice(0, 50) + (input.length > 50 ? "..." : "");
+                }
+              }
+            } catch (e) {
+              console.error(e);
+              title = input.slice(0, 50) + (input.length > 50 ? "..." : "");
+            }
+
             await db.updateChatTitle(currentChat.id, title);
           }
         }
