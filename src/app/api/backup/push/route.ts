@@ -1,6 +1,8 @@
 import { PrismaClient } from "@/generated/prisma";
 import { NextResponse } from "next/server";
 
+// TODO: delete all prev info
+
 export async function POST(req: Request) {
   const { chats: allChats, messages: allMessages, tok } = await req.json();
   const prisma = new PrismaClient();

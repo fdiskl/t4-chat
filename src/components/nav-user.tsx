@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  ArrowDown,
+  ArrowUp,
   BadgeCheck,
   Bell,
   ChevronsUpDown,
@@ -33,7 +35,7 @@ import { NavigateFunction, useNavigate } from "react-router";
 import { db } from "@/lib/db";
 import { liveQuery } from "dexie";
 import { toast } from "sonner";
-import { backupToServer } from "@/lib/realdb/real";
+import { backupToServer, updateLocalData } from "@/lib/realdb/real";
 
 const NotLoggedInDropdown = ({ nav }: { nav: NavigateFunction }) => {
   return (
@@ -57,9 +59,21 @@ const LoggedInDropdown = ({ nav }: { nav: NavigateFunction }) => {
     }
   }, []);
 
-  const handleBackup = async () => {
+  const handleBackupPush = async () => {
     try {
+      toast.info("Working on it....");
       await backupToServer();
+      toast.success("Pushed!");
+    } catch (e) {
+      toast.error(String(e));
+    }
+  };
+
+  const handleBackupPull = async () => {
+    try {
+      toast.info("Working on it....");
+      await updateLocalData();
+      toast.success("Pulled!");
     } catch (e) {
       toast.error(String(e));
     }
@@ -68,17 +82,13 @@ const LoggedInDropdown = ({ nav }: { nav: NavigateFunction }) => {
   return (
     <>
       <DropdownMenuGroup>
-        <DropdownMenuItem onClick={() => handleBackup()}>
-          <RefreshCw />
-          Sync all data
+        <DropdownMenuItem onClick={() => handleBackupPush()}>
+          <ArrowUp />
+          Push
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <CreditCard />
-          Billing
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Bell />
-          Notifications
+        <DropdownMenuItem onClick={() => handleBackupPull()}>
+          <ArrowDown />
+          Pull
         </DropdownMenuItem>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />

@@ -1,6 +1,8 @@
 import { Chat, StoredMessage } from "@/types/database";
 import Dexie, { Table } from "dexie";
 import { nanoid } from "nanoid";
+import { $Enums, Chat as PrismChat, StoredMessage as PrismMsg } from "@/generated/prisma";
+import { Message } from "ai";
 
 export interface AuthToken {
   id: "auth";
@@ -10,6 +12,8 @@ export interface AuthToken {
   login: string;
   avatarUrl?: string;
 }
+
+// TODO: make deleting thread delete msgs
 
 class ChatDatabase extends Dexie {
   chats!: Table<Chat>;
@@ -154,6 +158,59 @@ class ChatDatabase extends Dexie {
 
   async clearToken(): Promise<void> {
     await this.tokens.delete("auth");
+  }
+
+  async createOrUpdateChat(chatId: string, chat: PrismChat): Promise<void> {
+    const c = await this.chats.get(chatId);
+
+    const o = {
+      created_at: chat.created_at,
+      empty: chat.empty,
+      lastSynced: new Date(),
+      parentId: chat.parentId === null ? undefined : chat.parentId,
+      title: chat.title === null ? undefined : chat.title,
+      updated_at: chat.updated_at,
+    };
+
+    if (c) {
+      await this.chats.update(chatId, o);
+    } else {
+      await this.chats.add({
+        id: chatId,
+        ...o,
+      });
+    }
+  }
+
+  async createOrUpdateMsg(id: string, msg: PrismMsg): Promise<void> {
+    const c = await this.messages.get(id);
+
+    const o: Partial<StoredMessage> = {
+      chatId: msg.chatId,
+      content: msg.content,
+      created_at: msg.created_at,
+      isPartial: msg.isPartial === null ? undefined : msg.isPartial,
+      lastModified: msg.lastModified === null ? undefined : msg.lastModified,
+      model: msg.model,
+      role: msg.role === $Enums.Role.user ? "user" : "assistant",
+    };
+
+    if (c) {
+      await this.messages.update(id, o);
+    } else {
+      const cc: StoredMessage = {
+        id: id,
+        chatId: msg.chatId,
+        content: msg.content,
+        created_at: msg.created_at,
+        isPartial: msg.isPartial === null ? undefined : msg.isPartial,
+        lastModified: msg.lastModified === null ? undefined : msg.lastModified,
+        model: msg.model,
+        role: msg.role === $Enums.Role.user ? "user" : "assistant",
+      };
+
+      await this.messages.add(cc);
+    }
   }
 }
 
