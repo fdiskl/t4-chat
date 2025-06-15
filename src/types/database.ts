@@ -3,8 +3,9 @@ export interface Chat {
   title?: string;
   created_at: Date;
   updated_at: Date;
+  lastSynced?: Date; // optional
   empty: boolean;
-  parentId: string | undefined;
+  parentId?: string;
 }
 
 export interface StoredMessage {
@@ -14,5 +15,6 @@ export interface StoredMessage {
   role: "user" | "assistant";
   created_at: Date;
   isPartial?: boolean;
-  model: string | "user";
+  model: string;
+  lastModified?: Date; // optional
 }

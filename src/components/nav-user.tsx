@@ -7,6 +7,7 @@ import {
   CreditCard,
   LogIn,
   LogOut,
+  RefreshCw,
   Sparkles,
   User,
 } from "lucide-react";
@@ -31,6 +32,8 @@ import { useCallback, useEffect, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router";
 import { db } from "@/lib/db";
 import { liveQuery } from "dexie";
+import { toast } from "sonner";
+import { backupToServer } from "@/lib/realdb/real";
 
 const NotLoggedInDropdown = ({ nav }: { nav: NavigateFunction }) => {
   return (
@@ -54,12 +57,20 @@ const LoggedInDropdown = ({ nav }: { nav: NavigateFunction }) => {
     }
   }, []);
 
+  const handleBackup = async () => {
+    try {
+      await backupToServer();
+    } catch (e) {
+      toast.error(String(e));
+    }
+  };
+
   return (
     <>
       <DropdownMenuGroup>
-        <DropdownMenuItem>
-          <BadgeCheck />
-          Account
+        <DropdownMenuItem onClick={() => handleBackup()}>
+          <RefreshCw />
+          Sync all data
         </DropdownMenuItem>
         <DropdownMenuItem>
           <CreditCard />

@@ -1,0 +1,40 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+enum Role {
+  user
+  assistant
+}
+
+model Chat {
+  id            String          @id @default(uuid())
+  userId        String
+  userEmail     String
+  title         String? // optional
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  lastSynced    DateTime? // New field for last sync timestamp
+  empty         Boolean
+  parentId      String? // optional, can be null
+  StoredMessage StoredMessage[]
+}
+
+model StoredMessage {
+  id           String    @id @default(uuid())
+  chatId       String
+  content      String
+  role         Role
+  created_at   DateTime  @default(now())
+  isPartial    Boolean? // optional
+  model        String // can be "user" or other model names
+  lastModified DateTime? // New field for message modification timestamp
+
+  Chat Chat @relation(fields: [chatId], references: [id])
+}
