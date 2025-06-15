@@ -20,6 +20,7 @@ import { useCallback, type ComponentProps } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 import { Link, NavigateFunction, useLocation, useNavigate } from "react-router";
+import { cn } from "@/lib/utils";
 
 export interface SidebarProps {
   nav: NavigateFunction;
@@ -79,7 +80,10 @@ export function Sidebar({ nav, ...props }: ComponentProps<typeof SidebarPrimitiv
               {chats?.map((chat) => (
                 <SidebarMenuItem key={chat.id}>
                   <SidebarMenuButton className="w-full justify-start gap-1" asChild>
-                    <div className="group flex w-full flex-row items-center">
+                    <div
+                      className={cn("group flex w-full flex-row items-center", {
+                        "pl-0": chat.parentId != undefined,
+                      })}>
                       {/* Thread Button (if present) */}
                       {chat.parentId && (
                         <Tooltip>
