@@ -1,15 +1,14 @@
 import { db } from "@/lib/db";
-import { PersistentChatOptions } from "@/types/chat";
 import { Chat, StoredMessage } from "@/types/database";
 import { modelId } from "@/types/models";
 import { UIMessage } from "ai";
 import { useChat } from "ai/react";
 import { useLiveQuery } from "dexie-react-hooks";
+import React from "react";
 import { useCallback, useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router";
 
 export interface usePersistentChatReturnType {
-  messages: UIMessage[];
   input: string;
   handleInputChange: (
     e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>
@@ -21,6 +20,39 @@ export interface usePersistentChatReturnType {
   nav: NavigateFunction;
 }
 
+export interface PersistentChatOptions {
+  id?: string;
+  model: modelId;
+}
+export interface PersistentChatMessagesOptions {
+  id?: string;
+}
+
+export function usePersistentChatMessages({ id: chatId }: PersistentChatMessagesOptions) {
+  const currentChat = useLiveQuery(async () => {
+    if (!chatId) return undefined;
+    return await db.chats.get(chatId);
+  }, [chatId]);
+
+  const storedMessages = useLiveQuery(async () => {
+    if (!chatId) return [];
+    return await db.getChatMessages(chatId);
+  }, [chatId]);
+
+  const { messages } = useChat({
+    api: "/api/chat",
+    id: chatId,
+    initialMessages:
+      storedMessages?.map((msg) => ({
+        id: msg.id,
+        content: msg.content,
+        role: msg.role,
+      })) || [],
+  });
+
+  return messages;
+}
+
 export function usePersistentChat({
   id: chatId,
   model,
@@ -28,22 +60,19 @@ export function usePersistentChat({
   const [error, setError] = useState<Error | null>(null);
   const nav = useNavigate();
 
-  // Use reactive queries for chat and messages
   const currentChat = useLiveQuery(async () => {
     if (!chatId) return undefined;
     return await db.chats.get(chatId);
   }, [chatId]);
 
-  // Initialize chat with stored messages
   const storedMessages = useLiveQuery(async () => {
     if (!chatId) return [];
     return await db.getChatMessages(chatId);
   }, [chatId]);
 
   const {
-    messages,
     input,
-    handleInputChange,
+    handleInputChange: originalHandleInputChange,
     handleSubmit: originalHandleSubmit,
   } = useChat({
     api: "/api/chat",
@@ -65,7 +94,6 @@ export function usePersistentChat({
     },
   });
 
-  // Handle message persistence
   const persistMessage = useCallback(
     async (
       content: string,
@@ -96,8 +124,6 @@ export function usePersistentChat({
     []
   );
 
-  // Submit handler
-  // Determine appropriate system prompt based on message content
   const determineSystemPrompt = (content: string): string => {
     const lowerContent = content.toLowerCase();
 
@@ -125,6 +151,12 @@ export function usePersistentChat({
     return "default";
   };
 
+  const originalHandleInputChangeRef = React.useRef(originalHandleInputChange);
+  originalHandleInputChangeRef.current = originalHandleInputChange;
+
+  const originalHandleSubmitRef = React.useRef(originalHandleSubmit);
+  originalHandleSubmitRef.current = originalHandleSubmit;
+
   const handleSubmit = useCallback(
     async (e: React.KeyboardEvent | React.MouseEvent) => {
       e.preventDefault();
@@ -150,7 +182,7 @@ export function usePersistentChat({
         };
 
         // Call original submit with updated body
-        await originalHandleSubmit(e, { body: updatedBody });
+        originalHandleSubmitRef.current(e, { body: updatedBody });
 
         if (currentChat) {
           await persistMessage(input, "user", currentChat.id, "user");
@@ -166,13 +198,19 @@ export function usePersistentChat({
         setError(error instanceof Error ? error : new Error("Failed to process message"));
       }
     },
-    [currentChat, chatId, input, originalHandleSubmit, persistMessage]
+    [currentChat, chatId, input, persistMessage]
+  );
+
+  const handleInputChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+      originalHandleInputChangeRef.current(e);
+    },
+    []
   );
 
   const isLoading = currentChat === undefined && !!chatId;
 
   return {
-    messages,
     input,
     handleInputChange,
     handleSubmit,

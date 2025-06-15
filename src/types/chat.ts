@@ -1,10 +1,5 @@
 import { modelId } from "./models";
 
-export interface PersistentChatOptions {
-  id?: string;
-  model: modelId;
-}
-
 export interface ChatBody {
   systemPromptId: string;
   messages: ChatMessage[];

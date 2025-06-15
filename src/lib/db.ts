@@ -72,8 +72,8 @@ class ChatDatabase extends Dexie {
     return await this.messages.where("chatId").equals(chatId).sortBy("created_at");
   }
 
-  async getMsgById(chatId: string): Promise<StoredMessage | undefined> {
-    return await this.messages.get(chatId);
+  async getMsgById(id: string): Promise<StoredMessage | undefined> {
+    return await this.messages.get(id);
   }
 
   async getChats(): Promise<Chat[]> {
@@ -82,6 +82,10 @@ class ChatDatabase extends Dexie {
       .reverse()
       .filter((c) => c.empty == false)
       .toArray();
+  }
+
+  async getChatById(chatId: string): Promise<Chat | undefined> {
+    return await this.chats.get(chatId);
   }
 
   async deleteChat(chatId: string): Promise<void> {

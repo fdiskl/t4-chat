@@ -13,27 +13,26 @@ import { Sidebar } from "@/components/sidebar";
 import { Button } from "./ui/button";
 import { Share } from "lucide-react";
 import { TooltipContent, TooltipTrigger, Tooltip } from "./ui/tooltip";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { usePersistentChat } from "@/hooks/usePersistentChat";
 import { useEffect, useState } from "react";
 import { modelId } from "@/types/models";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/lib/db";
 
 export default function Main() {
   const { id } = useParams();
 
-  // TODO: pull from dexie
-  const [model, setModel] = useState<modelId>("4.1-nano");
-
-  const persistenChatInfo = usePersistentChat({
-    id,
-    model: model,
+  const title = useLiveQuery(async () => {
+    if (!id) return undefined;
+    await db.getChatById(id);
   });
 
-  // TODO: move out of here
+  const nav = useNavigate();
 
   return (
     <SidebarProvider>
-      <Sidebar nav={persistenChatInfo.nav} />
+      <Sidebar nav={nav} />
       <SidebarInset className="flex h-screen flex-col overflow-y-auto">
         <header className="border-1 sticky top-0 flex shrink-0 items-center justify-between gap-2 border-b border-primary/35 bg-background py-1">
           <div className="flex flex-1 items-center gap-2 px-3">
@@ -42,9 +41,7 @@ export default function Main() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="line-clamp-1">
-                    {persistenChatInfo.currentChat?.title}
-                  </BreadcrumbPage>
+                  <BreadcrumbPage className="line-clamp-1">{title}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -62,7 +59,7 @@ export default function Main() {
             </Tooltip>
           </div>
         </header>
-        <Chat id={id} info={persistenChatInfo} model={model} setModel={setModel} />
+        <Chat id={id} />
       </SidebarInset>
     </SidebarProvider>
   );
