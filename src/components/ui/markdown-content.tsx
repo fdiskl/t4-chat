@@ -1,31 +1,25 @@
 import { cn } from "@/lib/utils";
 import { marked } from "marked";
 import type * as React from "react";
-import {
-  Suspense,
-  isValidElement,
-  memo,
-  useDeferredValue,
-  useMemo,
-  useState,
-  useEffect,
-} from "react";
+import { Suspense, isValidElement, memo, useDeferredValue, useMemo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import Prism from "prismjs";
+
+// Load additional languages if needed
+import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-rust";
+import "prismjs/components/prism-json";
+// Add more as needed...
 
 const DEFAULT_PRE_BLOCK_CLASS =
-  " overflow-x-auto w-fit rounded-xl bg-zinc-950 text-zinc-50 dark:bg-zinc-900 border border-border p-4";
+  "overflow-x-auto w-fit rounded-xl bg-zinc-950 text-zinc-50 dark:bg-zinc-900 border border-border p-4";
 
 const extractTextContent = (node: React.ReactNode): string => {
-  if (typeof node === "string") {
-    return node;
-  }
-  if (Array.isArray(node)) {
-    return node.map(extractTextContent).join("");
-  }
-  if (isValidElement(node)) {
-    return extractTextContent(node.props.children);
-  }
+  if (typeof node === "string") return node;
+  if (Array.isArray(node)) return node.map(extractTextContent).join("");
+  if (isValidElement(node)) return extractTextContent(node.props.children);
   return "";
 };
 
@@ -40,58 +34,23 @@ export const HighlightedPre = memo(
   ({ children, className, language, ...props }: HighlightedPreProps) => {
     const code = extractTextContent(children);
     const cacheKey = `${language}:${code}`;
-    const [html, setHtml] = useState<string | null>(() => highlightCache.get(cacheKey) ?? null);
+    const cached = highlightCache.get(cacheKey);
 
-    useEffect(() => {
-      let isMounted = true;
-
-      const highlight = async () => {
-        if (highlightCache.has(cacheKey)) {
-          setHtml(highlightCache.get(cacheKey)!);
-          return;
-        }
-        try {
-          const shiki = await import("shiki");
-          const highlighter = await shiki.createHighlighter({
-            themes: ["github-dark"],
-            langs: [language],
-          });
-
-          const rendered = highlighter.codeToHtml(code, {
-            lang: language,
-            theme: "github-dark",
-          });
-
-          if (isMounted) {
-            highlightCache.set(cacheKey, rendered);
-            setHtml(rendered);
-          }
-        } catch (err) {
-          console.error("Highlighting failed:", err);
-        }
-      };
-
-      highlight();
-
-      return () => {
-        isMounted = false;
-      };
-    }, [cacheKey, code, language]);
-
-    if (!html) {
-      // Fallback while loading
-      return (
-        <pre {...props} className={cn(DEFAULT_PRE_BLOCK_CLASS, className)}>
-          <code className="whitespace-pre-wrap">{code}</code>
-        </pre>
-      );
-    }
+    const highlighted = useMemo(() => {
+      if (cached) return cached;
+      const grammar = Prism.languages[language] ?? Prism.languages.markup;
+      const html = Prism.highlight(code, grammar, language);
+      highlightCache.set(cacheKey, html);
+      return html;
+    }, [cacheKey, code, language, cached]);
 
     return (
       <pre
         {...props}
         className={cn(DEFAULT_PRE_BLOCK_CLASS, className)}
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{
+          __html: `<code class="language-${language}">${highlighted}</code>`,
+        }}
       />
     );
   }
@@ -118,54 +77,52 @@ const CodeBlock = ({ children, language, className, ...props }: CodeBlockProps) 
   );
 };
 
-// TODO: copy btn
-
 CodeBlock.displayName = "CodeBlock";
 
 const components: Partial<Components> = {
-  h1: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+  h1: ({ children, ...props }) => (
     <h1 className="mt-2 scroll-m-20 text-4xl font-bold" {...props}>
       {children}
     </h1>
   ),
-  h2: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+  h2: ({ children, ...props }) => (
     <h2
       className="mt-8 scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0"
       {...props}>
       {children}
     </h2>
   ),
-  h3: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+  h3: ({ children, ...props }) => (
     <h3 className="mt-4 scroll-m-20 text-xl font-semibold tracking-tight" {...props}>
       {children}
     </h3>
   ),
-  h4: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+  h4: ({ children, ...props }) => (
     <h4 className="mt-4 scroll-m-20 text-lg font-semibold tracking-tight" {...props}>
       {children}
     </h4>
   ),
-  h5: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+  h5: ({ children, ...props }) => (
     <h5 className="mt-4 scroll-m-20 text-lg font-semibold tracking-tight" {...props}>
       {children}
     </h5>
   ),
-  h6: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+  h6: ({ children, ...props }) => (
     <h6 className="mt-4 scroll-m-20 text-base font-semibold tracking-tight" {...props}>
       {children}
     </h6>
   ),
-  p: ({ children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
+  p: ({ children, ...props }) => (
     <p className="leading-6 [&:not(:first-child)]:mt-4" {...props}>
       {children}
     </p>
   ),
-  strong: ({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
+  strong: ({ children, ...props }) => (
     <span className="font-semibold" {...props}>
       {children}
     </span>
   ),
-  a: ({ children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+  a: ({ children, ...props }) => (
     <a
       className="font-medium underline underline-offset-4"
       target="_blank"
@@ -174,58 +131,55 @@ const components: Partial<Components> = {
       {children}
     </a>
   ),
-  ol: ({ children, ...props }: React.HTMLAttributes<HTMLOListElement>) => (
+  ol: ({ children, ...props }) => (
     <ol className="my-4 ml-6 list-decimal" {...props}>
       {children}
     </ol>
   ),
-  ul: ({ children, ...props }: React.HTMLAttributes<HTMLUListElement>) => (
+  ul: ({ children, ...props }) => (
     <ul className="my-4 ml-6 list-disc" {...props}>
       {children}
     </ul>
   ),
-  li: ({ children, ...props }: React.LiHTMLAttributes<HTMLLIElement>) => (
+  li: ({ children, ...props }) => (
     <li className="mt-2" {...props}>
       {children}
     </li>
   ),
-  blockquote: ({ children, ...props }: React.HTMLAttributes<HTMLQuoteElement>) => (
+  blockquote: ({ children, ...props }) => (
     <blockquote className="mt-4 border-l-2 pl-6 italic" {...props}>
       {children}
     </blockquote>
   ),
-  hr: (props: React.HTMLAttributes<HTMLHRElement>) => <hr className="my-4 md:my-8" {...props} />,
-  table: ({ children, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
+  hr: (props) => <hr className="my-4 md:my-8" {...props} />,
+  table: ({ children, ...props }) => (
     <div className="my-6 w-full overflow-y-auto">
       <table className="relative w-full overflow-hidden border-none text-sm" {...props}>
         {children}
       </table>
     </div>
   ),
-  tr: ({ children, ...props }: React.HTMLAttributes<HTMLTableRowElement>) => (
+  tr: ({ children, ...props }) => (
     <tr className="last:border-b-none m-0 border-b" {...props}>
       {children}
     </tr>
   ),
-  th: ({ children, ...props }: React.HTMLAttributes<HTMLTableCellElement>) => (
+  th: ({ children, ...props }) => (
     <th
       className="px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right"
       {...props}>
       {children}
     </th>
   ),
-  td: ({ children, ...props }: React.HTMLAttributes<HTMLTableCellElement>) => (
+  td: ({ children, ...props }) => (
     <td
       className="px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right"
       {...props}>
       {children}
     </td>
   ),
-  img: ({ alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
-    // biome-ignore lint/a11y/useAltText: alt is not required
-    <img className="rounded-md" alt={alt} {...props} />
-  ),
-  code: ({ children, node, className, ...props }) => {
+  img: ({ alt, ...props }) => <img className="rounded-md" alt={alt} {...props} />,
+  code: ({ children, className = "", node, ...props }) => {
     const match = /language-(\w+)/.exec(className || "");
     if (match) {
       return (
@@ -246,9 +200,7 @@ const components: Partial<Components> = {
 };
 
 function parseMarkdownIntoBlocks(markdown: string): string[] {
-  if (!markdown) {
-    return [];
-  }
+  if (!markdown) return [];
   const tokens = marked.lexer(markdown);
   return tokens.map((token) => token.raw);
 }
@@ -266,12 +218,7 @@ const MemoizedMarkdownBlock = memo(
       </ReactMarkdown>
     );
   },
-  (prevProps, nextProps) => {
-    if (prevProps.content !== nextProps.content) {
-      return false;
-    }
-    return true;
-  }
+  (prevProps, nextProps) => prevProps.content === nextProps.content
 );
 
 MemoizedMarkdownBlock.displayName = "MemoizedMarkdownBlock";
@@ -290,10 +237,7 @@ export const MarkdownContent = memo(({ content, id, className }: MarkdownContent
     <MemoizedMarkdownBlock
       content={block}
       className={className}
-      key={`${id}-block_${
-        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-        index
-      }`}
+      key={`${id}-block_${index}`} // biome-ignore lint/suspicious/noArrayIndexKey
     />
   ));
 });
