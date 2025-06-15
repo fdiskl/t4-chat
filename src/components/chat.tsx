@@ -108,16 +108,6 @@ export const InputWrapper = ({
   });
 
   return (
-    <button
-      onClick={(e) => {
-        setInput("Write aoc 2022 day 17");
-        handleSubmit(e);
-      }}>
-      SEND
-    </button>
-  );
-
-  return (
     <ChatInput
       value={input}
       onChange={handleInputChange}

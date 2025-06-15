@@ -6,8 +6,9 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: '2mb'
-    }
+      bodySizeLimit: "2mb",
+    },
+    reactCompiler: true,
   },
   typescript: {
     ignoreBuildErrors: false,
@@ -16,7 +17,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: false,
   },
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production"
+    removeConsole: process.env.NODE_ENV === "production",
   },
   reactStrictMode: true,
   compress: true,

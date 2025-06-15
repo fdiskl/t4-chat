@@ -4,77 +4,46 @@ import type * as React from "react";
 import { Suspense, isValidElement, memo, useDeferredValue, useMemo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import Prism from "prismjs";
-
-// Load additional languages if needed
-import "prismjs/components/prism-jsx";
-import "prismjs/components/prism-typescript";
-import "prismjs/components/prism-rust";
-import "prismjs/components/prism-json";
-// Add more as needed...
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 const DEFAULT_PRE_BLOCK_CLASS =
   "overflow-x-auto w-fit rounded-xl bg-zinc-950 text-zinc-50 dark:bg-zinc-900 border border-border p-4";
-
-const extractTextContent = (node: React.ReactNode): string => {
-  if (typeof node === "string") return node;
-  if (Array.isArray(node)) return node.map(extractTextContent).join("");
-  if (isValidElement(node)) return extractTextContent(node.props.children);
-  return "";
-};
-
-interface HighlightedPreProps extends React.HTMLAttributes<HTMLPreElement> {
-  language: string;
-  children: React.ReactNode;
-}
-
-const highlightCache = new Map<string, string>();
-
-export const HighlightedPre = memo(
-  ({ children, className, language, ...props }: HighlightedPreProps) => {
-    const code = extractTextContent(children);
-    const cacheKey = `${language}:${code}`;
-    const cached = highlightCache.get(cacheKey);
-
-    const highlighted = useMemo(() => {
-      if (cached) return cached;
-      const grammar = Prism.languages[language] ?? Prism.languages.markup;
-      const html = Prism.highlight(code, grammar, language);
-      highlightCache.set(cacheKey, html);
-      return html;
-    }, [cacheKey, code, language, cached]);
-
-    return (
-      <pre
-        {...props}
-        className={cn(DEFAULT_PRE_BLOCK_CLASS, className)}
-        dangerouslySetInnerHTML={{
-          __html: `<code class="language-${language}">${highlighted}</code>`,
-        }}
-      />
-    );
-  }
-);
-
-HighlightedPre.displayName = "HighlightedPre";
 
 interface CodeBlockProps extends React.HTMLAttributes<HTMLPreElement> {
   language: string;
 }
 
 const CodeBlock = ({ children, language, className, ...props }: CodeBlockProps) => {
-  return (
-    <Suspense
-      fallback={
+  const codeText = String(children);
+
+  // Check if the code is complete or likely to be incomplete
+  const isComplete = codeText.trim().endsWith("\n") || codeText.length > 0;
+
+  if (isComplete) {
+    try {
+      return (
+        <SyntaxHighlighter language={language} style={vscDarkPlus} {...props}>
+          {codeText}
+        </SyntaxHighlighter>
+      );
+    } catch (error) {
+      console.error("Error rendering syntax highlighter:", error);
+      // Fallback to plain code block
+      return (
         <pre {...props} className={cn(DEFAULT_PRE_BLOCK_CLASS, className)}>
-          <code className="whitespace-pre-wrap">{children}</code>
+          <code className="whitespace-pre-wrap">{codeText}</code>
         </pre>
-      }>
-      <HighlightedPre language={language} {...props} className="max-w-3xl">
-        {children}
-      </HighlightedPre>
-    </Suspense>
-  );
+      );
+    }
+  } else {
+    // Incomplete code, render as plain text
+    return (
+      <pre {...props} className={cn(DEFAULT_PRE_BLOCK_CLASS, className)}>
+        <code className="whitespace-pre-wrap">{codeText}</code>
+      </pre>
+    );
+  }
 };
 
 CodeBlock.displayName = "CodeBlock";
