@@ -3,10 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import { useLiveQuery } from "dexie-react-hooks";
+import { Plus, Trash } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback } from "react";
-import UserInfo from "../userInfo";
+import { useCallback, useEffect } from "react";
 
 export function Sidebar() {
   const chats = useLiveQuery(() => db.getChats(), []);
@@ -22,6 +22,11 @@ export function Sidebar() {
     }).format(date);
   };
 
+  const handleNewChat = async () => {
+    const newChat = await db.createChat();
+    router.push(`/chat/${newChat.id}`);
+  };
+
   const handleDeleteChat = useCallback(
     async (e: React.MouseEvent, chatId: string) => {
       e.preventDefault();
@@ -30,7 +35,8 @@ export function Sidebar() {
       try {
         await db.deleteChat(chatId);
         if (pathname === `/chat/${chatId}`) {
-          router.push("/");
+          const newChat = await db.createChat();
+          router.push(`/chat/${newChat.id}`);
         }
       } catch (error) {
         console.error("Error deleting chat:", error);
@@ -39,11 +45,6 @@ export function Sidebar() {
     [pathname, router]
   );
 
-  const handleNewChat = async () => {
-    const newChat = await db.createChat();
-    router.push(`/chat/${newChat.id}`);
-  };
-
   return (
     <div className="flex h-full w-full flex-col">
       <div className="p-4">
@@ -51,7 +52,7 @@ export function Sidebar() {
       </div>
       <div className="p-4">
         <Button onClick={handleNewChat} className="w-full justify-start gap-2">
-          <PlusIcon className="h-5 w-5" />
+          <Plus className="h-5 w-5" />
           New Chat
         </Button>
       </div>
@@ -71,55 +72,12 @@ export function Sidebar() {
                 onClick={(e) => handleDeleteChat(e, chat.id)}
                 className="invisible ml-2 rounded p-1 group-hover:visible hover:text-red-500"
                 aria-label="Delete chat">
-                <TrashIcon className="h-4 w-4" />
+                <Trash className="h-4 w-4" />
               </button>
             </Link>
           ))}
         </nav>
       </div>
-
-      <div className="ml-5">
-        <UserInfo />
-      </div>
     </div>
-  );
-}
-
-function TrashIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round">
-      <path d="M3 6h18" />
-      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-    </svg>
-  );
-}
-
-function PlusIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round">
-      <path d="M5 12h14" />
-      <path d="M12 5v14" />
-    </svg>
   );
 }

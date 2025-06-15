@@ -23,6 +23,18 @@ import { db } from "@/lib/db";
 export default function Main() {
   const { id } = useParams();
 
+  const newChat = async () => {
+    await db.deleteEmptyChats();
+    const c = await db.createChat();
+    nav(`/chat/${c.id}`);
+  };
+
+  useEffect(() => {
+    if (!id) {
+      newChat();
+    }
+  }, [id]);
+
   const title = useLiveQuery(async () => {
     if (!id) return undefined;
     await db.getChatById(id);

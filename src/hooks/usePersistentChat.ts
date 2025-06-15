@@ -21,39 +21,13 @@ export interface usePersistentChatReturnType {
   setInput: (a: string) => void;
   status: "error" | "submitted" | "streaming" | "ready";
   stop: () => void;
+  reload: () => void;
+  messages: UIMessage[];
 }
 
 export interface PersistentChatOptions {
   id?: string;
   model: modelId;
-}
-export interface PersistentChatMessagesOptions {
-  id?: string;
-}
-
-export function usePersistentChatMessages({ id: chatId }: PersistentChatMessagesOptions) {
-  const currentChat = useLiveQuery(async () => {
-    if (!chatId) return undefined;
-    return await db.chats.get(chatId);
-  }, [chatId]);
-
-  const storedMessages = useLiveQuery(async () => {
-    if (!chatId) return [];
-    return await db.getChatMessages(chatId);
-  }, [chatId]);
-
-  const { messages, reload } = useChat({
-    api: "/api/chat",
-    id: chatId,
-    initialMessages:
-      storedMessages?.map((msg) => ({
-        id: msg.id,
-        content: msg.content,
-        role: msg.role,
-      })) || [],
-  });
-
-  return { messages, reload };
 }
 
 export function usePersistentChat({
@@ -80,6 +54,8 @@ export function usePersistentChat({
     setInput,
     status,
     stop,
+    messages,
+    reload,
   } = useChat({
     api: "/api/chat",
     id: chatId,
@@ -227,5 +203,7 @@ export function usePersistentChat({
     nav,
     status,
     stop,
+    messages,
+    reload,
   };
 }
