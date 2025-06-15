@@ -14,6 +14,7 @@ export interface AuthToken {
 }
 
 // TODO: make deleting thread delete msgs
+// TODO: make smth about deleting parents of threaded chats
 
 class ChatDatabase extends Dexie {
   chats!: Table<Chat>;
