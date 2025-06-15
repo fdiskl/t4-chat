@@ -39,14 +39,14 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
 
   const nav = useNavigate();
 
-  const handleBranchButton = async () => {
+  const handleBranchButton = async (msgId: string) => {
     if (!id) {
       toast.error("Can't branch off if not in chat");
       return;
     }
 
     try {
-      const newChatId = await db.copyChat(id);
+      const newChatId = await db.copyChat(id, msgId);
 
       nav(`/chat/${newChatId}`);
 
@@ -105,7 +105,10 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                           </Button>
                         )}
 
-                        <Button variant="outline" size="icon" onClick={handleBranchButton}>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleBranchButton(message.id)}>
                           <GitBranch />
                         </Button>
 
