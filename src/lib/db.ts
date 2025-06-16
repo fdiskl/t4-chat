@@ -213,6 +213,24 @@ class ChatDatabase extends Dexie {
       await this.messages.add(cc);
     }
   }
+
+  // check if all chats which have parents really have them
+  async fixParents() {
+    try {
+      const chatsToCheck = await this.chats.filter((c) => c.parentId != undefined).toArray();
+
+      for (const c of chatsToCheck) {
+        const parent = await this.chats.get(c.parentId);
+        if (parent === undefined) {
+          this.chats.update(c.id, {
+            parentId: undefined,
+          });
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
 }
 
 export const db = new ChatDatabase();

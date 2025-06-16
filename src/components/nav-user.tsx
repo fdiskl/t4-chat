@@ -1,18 +1,6 @@
 "use client";
 
-import {
-  ArrowDown,
-  ArrowUp,
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogIn,
-  LogOut,
-  RefreshCw,
-  Sparkles,
-  User,
-} from "lucide-react";
+import { ChevronsUpDown, CloudDownloadIcon, LogIn, LogOut, User } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -59,36 +47,24 @@ const LoggedInDropdown = ({ nav }: { nav: NavigateFunction }) => {
     }
   }, []);
 
-  const handleBackupPush = async () => {
+  const handleBackup = async () => {
     try {
-      toast.info("Working on it....");
-      await backupToServer();
-      toast.success("Pushed!");
-    } catch (e) {
-      toast.error(String(e));
-    }
-  };
-
-  const handleBackupPull = async () => {
-    try {
-      toast.info("Working on it....");
+      toast.info("Pulling....", { position: "bottom-left" });
       await updateLocalData();
-      toast.success("Pulled!");
+      toast.success("Pushing...", { position: "bottom-left" });
+      await backupToServer();
+      toast.success("You are now in sync!", { position: "bottom-left" });
     } catch (e) {
-      toast.error(String(e));
+      toast.error(String(e), { position: "bottom-left" });
     }
   };
 
   return (
     <>
       <DropdownMenuGroup>
-        <DropdownMenuItem onClick={() => handleBackupPush()}>
-          <ArrowUp />
-          Push
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleBackupPull()}>
-          <ArrowDown />
-          Pull
+        <DropdownMenuItem onClick={() => handleBackup()}>
+          <CloudDownloadIcon />
+          Sync
         </DropdownMenuItem>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
