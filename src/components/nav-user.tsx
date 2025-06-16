@@ -49,11 +49,13 @@ const LoggedInDropdown = ({ nav }: { nav: NavigateFunction }) => {
 
   const handleBackup = async () => {
     try {
-      toast.info("Pulling....", { position: "bottom-left" });
+      let id = toast.info("Pulling....", { position: "bottom-left" });
       await updateLocalData();
-      toast.success("Pushing...", { position: "bottom-left" });
+      toast.dismiss(id);
+      id = toast.success("Pushing...", { position: "bottom-left" });
       await backupToServer();
-      toast.success("You are now in sync!", { position: "bottom-left" });
+      toast.dismiss(id);
+      id = toast.success("You are now in sync!", { position: "bottom-left" });
     } catch (e) {
       toast.error(String(e), { position: "bottom-left" });
     }

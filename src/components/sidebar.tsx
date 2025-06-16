@@ -16,17 +16,23 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { NavUser } from "@/components/nav-user";
 import { GitBranch, MessageCircle, Pin, SquarePen, TrashIcon } from "lucide-react";
-import { useCallback, type ComponentProps } from "react";
+import { useCallback, useEffect, type ComponentProps } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 import { Link, NavigateFunction, useLocation, useNavigate } from "react-router";
 import { cn } from "@/lib/utils";
+import { backupToServer } from "@/lib/realdb/real";
 
 export interface SidebarProps {
   nav: NavigateFunction;
+  id?: string;
 }
 
-export function Sidebar({ nav, ...props }: ComponentProps<typeof SidebarPrimitive> & SidebarProps) {
+export function Sidebar({
+  nav,
+  id,
+  ...props
+}: ComponentProps<typeof SidebarPrimitive> & SidebarProps) {
   const chats = useLiveQuery(() => db.getChats(), []);
 
   const pathname = useLocation().pathname;
@@ -44,6 +50,8 @@ export function Sidebar({ nav, ...props }: ComponentProps<typeof SidebarPrimitiv
 
       try {
         await db.deleteChat(chatId);
+        await db.fixParents();
+        backupToServer();
         if (pathname === `/chat/${chatId}`) {
           nav("/chat");
         }
@@ -78,7 +86,11 @@ export function Sidebar({ nav, ...props }: ComponentProps<typeof SidebarPrimitiv
             <SidebarGroupLabel>Recent</SidebarGroupLabel>
             <SidebarMenu>
               {chats?.map((chat) => (
-                <SidebarMenuItem key={chat.id}>
+                <SidebarMenuItem
+                  key={chat.id}
+                  className={cn({
+                    "bg-muted": chat.id === id,
+                  })}>
                   <SidebarMenuButton className="w-full justify-start gap-1" asChild>
                     <div
                       className={cn("group flex w-full flex-row items-center", {
