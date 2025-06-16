@@ -34,7 +34,7 @@ export default function Main() {
   const backup = async () => {
     await updateLocalData();
     await backupToServer();
-    toast.success("Just synced all the data!", { position: "bottom-left" });
+    await db.setLastSynced(new Date());
   };
 
   useEffect(() => {

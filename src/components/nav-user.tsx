@@ -56,6 +56,8 @@ const LoggedInDropdown = ({ nav }: { nav: NavigateFunction }) => {
       await backupToServer();
       toast.dismiss(id);
       id = toast.success("You are now in sync!", { position: "bottom-left" });
+
+      await db.setLastSynced(new Date());
     } catch (e) {
       toast.error(String(e), { position: "bottom-left" });
     }

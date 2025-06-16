@@ -13,6 +13,11 @@ export interface AuthToken {
   avatarUrl?: string;
 }
 
+export interface LastSynced {
+  id: "last_synced";
+  d: Date;
+}
+
 // TODO: make deleting thread delete msgs
 // TODO: make smth about deleting parents of threaded chats
 
@@ -20,6 +25,7 @@ class ChatDatabase extends Dexie {
   chats!: Table<Chat>;
   messages!: Table<StoredMessage>;
   tokens!: Table<AuthToken>;
+  last_synced!: Table<LastSynced>;
 
   constructor() {
     super("ChatDatabase");
@@ -27,7 +33,27 @@ class ChatDatabase extends Dexie {
       chats: "id, created_at, updated_at, empty",
       messages: "id, chatId, created_at",
       tokens: "id",
+      last_synced: "id",
     });
+  }
+
+  async setLastSynced(d: Date) {
+    const last = await this.last_synced.get("last_synced");
+    if (!last) {
+      await this.last_synced.add({
+        d: d,
+        id: "last_synced",
+      });
+    } else {
+      await this.last_synced.update("last_synced", {
+        d: d,
+      });
+    }
+  }
+
+  async getLastSynced() {
+    const last = await this.last_synced.get("last_synced");
+    return last;
   }
 
   // copies chat and all underlying messages, returns new id

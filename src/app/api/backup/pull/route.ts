@@ -5,6 +5,8 @@ export async function POST(req: Request) {
   const { tok, lastSynced } = await req.json();
   const prisma = new PrismaClient();
 
+  console.log(lastSynced);
+
   try {
     // Parse lastSynced as a Date, fallback to epoch if not provided
     const lastSyncedDate = lastSynced ? new Date(lastSynced) : new Date(0);

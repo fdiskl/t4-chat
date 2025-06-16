@@ -17,11 +17,8 @@ export async function backupToServer() {
 }
 
 async function fetchServerData() {
-  const toks = await db.tokens.toArray();
-
-  if (toks.length < 1) {
-    throw new Error("Please log in to sync");
-  }
+  const tok = await db.getToken();
+  const last = await db.getLastSynced();
 
   const response = await fetch(
     "/api/backup/pull",
@@ -29,7 +26,7 @@ async function fetchServerData() {
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tok: toks[0] }),
+      body: JSON.stringify({ tok: tok, lastSynced: last?.d }),
     }
   );
   if (!response.ok) {

@@ -44,7 +44,7 @@ export async function POST(req: Request) {
           created_at: chat.created_at,
           updated_at: chat.updated_at,
           lastSynced: now,
-          empty: chat.empty,
+          empty: chat.empty ?? true,
           parentId: chat.parentId ?? null,
         },
         create: {
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
           created_at: chat.created_at,
           updated_at: chat.updated_at,
           lastSynced: now,
-          empty: chat.empty,
+          empty: chat.empty ?? true,
           parentId: chat.parentId ?? null,
         },
       });
