@@ -39,6 +39,22 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
 
   const nav = useNavigate();
 
+  useEffect(() => {
+    const getModel = async () => {
+      const m = await db.getLastModel();
+      if (m) {
+        setModel(m);
+      }
+    };
+
+    getModel();
+  }, []);
+
+  const handleModelChange = async (m: modelId) => {
+    setModel(m);
+    await db.setLastModel(m);
+  };
+
   const handleBranchButton = async (msgId: string) => {
     if (!id) {
       toast.error("Can't branch off if not in chat");
@@ -145,13 +161,7 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
             <ChatInputTextArea placeholder="Type a message..." />
             <div className="flex w-full flex-row justify-between">
               <div className="flex flex-row gap-x-2">
-                <ModelSelector
-                  value={model}
-                  onChange={(v) => {
-                    console.log(v);
-                    setModel(v);
-                  }}
-                />
+                <ModelSelector value={model} onChange={(v) => handleModelChange(v)} />
                 <Button size="default" variant="outline">
                   <Globe />
                   Search

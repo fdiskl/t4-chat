@@ -1,31 +1,16 @@
-import { Chat, StoredMessage } from "@/types/database";
+import { AuthToken, Chat, LastModel, LastSynced, StoredMessage } from "@/types/database";
 import Dexie, { Table } from "dexie";
 import { nanoid } from "nanoid";
 import { $Enums, Chat as PrismChat, StoredMessage as PrismMsg } from "@/generated/prisma";
 import { Message } from "ai";
-
-export interface AuthToken {
-  id: "auth";
-  token: string;
-  provider: "github" | "google";
-  userId: string;
-  login: string;
-  avatarUrl?: string;
-}
-
-export interface LastSynced {
-  id: "last_synced";
-  d: Date;
-}
-
-// TODO: make deleting thread delete msgs
-// TODO: make smth about deleting parents of threaded chats
+import { modelId } from "@/types/models";
 
 class ChatDatabase extends Dexie {
   chats!: Table<Chat>;
   messages!: Table<StoredMessage>;
   tokens!: Table<AuthToken>;
   last_synced!: Table<LastSynced>;
+  last_model!: Table<LastModel>;
 
   constructor() {
     super("ChatDatabase");
@@ -34,7 +19,27 @@ class ChatDatabase extends Dexie {
       messages: "id, chatId, created_at",
       tokens: "id",
       last_synced: "id",
+      last_model: "id",
     });
+  }
+
+  async setLastModel(m: modelId) {
+    const last = await this.last_model.get("last_model");
+    if (!last) {
+      await this.last_model.add({
+        id: "last_model",
+        model: m,
+      });
+    } else {
+      await this.last_model.update("last_model", {
+        model: m,
+      });
+    }
+  }
+
+  async getLastModel(): Promise<modelId | undefined> {
+    const last = await this.last_model.get("last_model");
+    return last?.model as modelId;
   }
 
   async setLastSynced(d: Date) {

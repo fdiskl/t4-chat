@@ -18,3 +18,22 @@ export interface StoredMessage {
   model: string;
   lastModified?: Date; // optional
 }
+
+export interface AuthToken {
+  id: "auth";
+  token: string;
+  provider: "github" | "google";
+  userId: string;
+  login: string;
+  avatarUrl?: string;
+}
+
+export interface LastSynced {
+  id: "last_synced";
+  d: Date;
+}
+
+export interface LastModel {
+  id: "last_model";
+  model: string;
+}
