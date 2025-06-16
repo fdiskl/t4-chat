@@ -37,3 +37,9 @@ export interface LastModel {
   id: "last_model";
   model: string;
 }
+
+export interface Keys {
+  id: "keys";
+  OpenAI: string;
+  OpenRouter: string;
+}

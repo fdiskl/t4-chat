@@ -8,8 +8,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ArrowLeft, LogOutIcon, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
+import { Input } from "./ui/input";
+import { toast } from "sonner";
 
 export function Settings() {
+  const [oaiKey, setOaiKey] = useState("");
+  const [orouterKey, setOrouterKey] = useState("");
+
   const [user, setUser] = useState<{
     username?: string;
     avatarUrl?: string;
@@ -49,6 +54,62 @@ export function Settings() {
     }
   }, []);
 
+  const handleApiKeySave = useCallback(async () => {
+    const tok = await db.getToken();
+    if (!tok) {
+      toast.error("Not authenticated");
+    }
+
+    if (oaiKey === "" && orouterKey === "") {
+      toast.error("Please provide keys");
+    }
+
+    let obj = {};
+    if (oaiKey) {
+      obj = {
+        openAiKey: oaiKey,
+      };
+    }
+
+    if (orouterKey) {
+      obj = {
+        ...obj,
+        openrouterKey: orouterKey,
+      };
+    }
+
+    try {
+      const resp = await fetch("/api/keys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tok, ...obj }),
+      });
+
+      if (!resp.ok) {
+        toast.error("Couldn't save API keys, sorry");
+      }
+
+      const data = await resp.json();
+
+      const { openAiKey: oaiRes, openrouterKey: orouterRes } = data;
+
+      if (oaiRes && orouterRes) {
+        await db.setKeys(oaiRes, orouterRes);
+        toast.success("API keys saved!", { position: "top-center" });
+      } else if (oaiRes) {
+        await db.setKeys(oaiRes);
+        toast.success("API keys saved!", { position: "top-center" });
+      } else if (orouterRes) {
+        await db.setKeys(undefined, orouterRes);
+        toast.success("API keys saved!", { position: "top-center" });
+      } else {
+        toast.error("Couldn't save API keys, sorry");
+      }
+    } catch (e) {
+      toast.error("Couldn't save API keys, sorry");
+    }
+  }, [oaiKey, orouterKey]);
+
   if (!user) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center gap-y-5">
@@ -86,8 +147,37 @@ export function Settings() {
         </div>
 
         {/* Settings or other content */}
-        <div>Other things</div>
+        <div className="w-full">
+          <h2 className="mb-2 text-2xl font-semibold">Manage your API keys:</h2>
+          <div className="flex w-full flex-col items-end justify-end gap-y-2">
+            <div className="flex w-full flex-col gap-y-2">
+              <span>OpenAI key</span>
+              <Input
+                placeholder="***************"
+                value={oaiKey}
+                onChange={(e) => setOaiKey(e.target.value)}
+                type="password"
+              />
+            </div>
+            <div className="flex w-full flex-col gap-y-2">
+              <span>OpenRouter key</span>
+              <Input
+                placeholder="***************"
+                value={orouterKey}
+                onChange={(e) => setOrouterKey(e.target.value)}
+                type="password"
+              />
+            </div>
+
+            <p className="text-muted-foreground">(We will encrypt your keys)</p>
+
+            <Button className="mt-2 w-1/2 bg-primary/85" onClick={handleApiKeySave}>
+              Save
+            </Button>
+          </div>
+        </div>
       </div>
+      <Separator className="mx-auto my-4 max-w-[900px]" />
     </div>
   );
 }

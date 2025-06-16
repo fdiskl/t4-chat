@@ -38,3 +38,13 @@ model StoredMessage {
 
   Chat Chat @relation(fields: [chatId], references: [id])
 }
+
+model Keys {
+  id            String @id @default(uuid())
+  userId        String
+  userEmail     String
+  OpenAiKey     String
+  OpenRouterKey String
+
+  @@unique([userId])
+}

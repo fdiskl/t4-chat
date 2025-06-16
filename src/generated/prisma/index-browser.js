@@ -143,6 +143,14 @@ exports.Prisma.StoredMessageScalarFieldEnum = {
   lastModified: 'lastModified'
 };
 
+exports.Prisma.KeysScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  userEmail: 'userEmail',
+  OpenAiKey: 'OpenAiKey',
+  OpenRouterKey: 'OpenRouterKey'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -164,7 +172,8 @@ exports.Role = exports.$Enums.Role = {
 
 exports.Prisma.ModelName = {
   Chat: 'Chat',
-  StoredMessage: 'StoredMessage'
+  StoredMessage: 'StoredMessage',
+  Keys: 'Keys'
 };
 
 /**
