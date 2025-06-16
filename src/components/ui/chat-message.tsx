@@ -158,13 +158,7 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
         {...props}>
         {content.length > 0 && (
           <>
-            {type === "incoming" ? (
-              <>
-                <MarkdownContent id={id} content={content} />
-              </>
-            ) : (
-              <>{content}</>
-            )}
+            <MarkdownContent id={id} content={content} user={type === "outgoing"} />
           </>
         )}
         {children}

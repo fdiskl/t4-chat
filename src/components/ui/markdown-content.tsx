@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
 import { marked } from "marked";
 import type * as React from "react";
-import { Suspense, isValidElement, memo, useDeferredValue, useMemo } from "react";
+import { memo, useDeferredValue, useMemo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { vscDarkPlus, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Button } from "./button";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
@@ -15,9 +15,16 @@ const DEFAULT_PRE_BLOCK_CLASS =
 
 interface CodeBlockProps extends React.HTMLAttributes<HTMLPreElement> {
   language: string;
+  shouldBeWhiteThemed?: boolean;
 }
 
-const CodeBlock = ({ children, language, className, ...props }: CodeBlockProps) => {
+const CodeBlock = ({
+  children,
+  language,
+  className,
+  shouldBeWhiteThemed,
+  ...props
+}: CodeBlockProps) => {
   const codeText = String(children);
 
   const isComplete = codeText.trim().endsWith("\n") || codeText.length > 0;
@@ -28,7 +35,7 @@ const CodeBlock = ({ children, language, className, ...props }: CodeBlockProps) 
         return (
           <SyntaxHighlighter
             language={language}
-            style={vscDarkPlus}
+            style={shouldBeWhiteThemed ? oneLight : vscDarkPlus}
             customStyle={{ marginTop: 0, paddingTop: 0 }}
             {...props}>
             {codeText}
@@ -55,11 +62,18 @@ const CodeBlock = ({ children, language, className, ...props }: CodeBlockProps) 
 
   return (
     <div className="relative overflow-hidden rounded-md border">
-      <div className="flex items-center justify-between bg-[#1e1e1e] px-2 text-sm text-white">
+      <div
+        className={cn("flex items-center justify-between bg-[#1e1e1e] px-2 text-sm text-white", {
+          "bg-[#1e1e1e]": !shouldBeWhiteThemed,
+          "bg-[#fafafa] text-black": shouldBeWhiteThemed,
+        })}>
         <div className="font-mono">{language}</div>
         <Button
           variant="outline"
-          className="bg-[#1e1e1e]"
+          className={cn({
+            "bg-[#1e1e1e]": !shouldBeWhiteThemed,
+            "!border-0 bg-[#fafafa] text-black": shouldBeWhiteThemed,
+          })}
           size="icon"
           onClick={async () => {
             // TODO: make anim instead
@@ -183,11 +197,17 @@ const components: Partial<Components> = {
     </td>
   ),
   img: ({ alt, ...props }) => <img className="rounded-md" alt={alt} {...props} />,
+
+  pre: ({ children }) => <>{children}</>,
+};
+
+const darkComponents: Partial<Components> = {
+  ...components,
   code: ({ children, className = "", node, ...props }) => {
     const match = /language-(\w+)/.exec(className || "");
     if (match) {
       return (
-        <CodeBlock language={match[1]} className={className} {...props}>
+        <CodeBlock language={match[1]} className={className} shouldBeWhiteThemed={false} {...props}>
           {children}
         </CodeBlock>
       );
@@ -200,7 +220,27 @@ const components: Partial<Components> = {
       </code>
     );
   },
-  pre: ({ children }) => <>{children}</>,
+};
+
+const whiteComponents: Partial<Components> = {
+  ...components,
+  code: ({ children, className = "", node, ...props }) => {
+    const match = /language-(\w+)/.exec(className || "");
+    if (match) {
+      return (
+        <CodeBlock language={match[1]} className={className} shouldBeWhiteThemed={true} {...props}>
+          {children}
+        </CodeBlock>
+      );
+    }
+    return (
+      <code
+        className={cn("rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm", className)}
+        {...props}>
+        {children}
+      </code>
+    );
+  },
 };
 
 function parseMarkdownIntoBlocks(markdown: string): string[] {
@@ -212,12 +252,16 @@ function parseMarkdownIntoBlocks(markdown: string): string[] {
 interface MarkdownBlockProps {
   content: string;
   className?: string;
+  user?: boolean;
 }
 
 const MemoizedMarkdownBlock = memo(
-  ({ content, className }: MarkdownBlockProps) => {
+  ({ content, className, user }: MarkdownBlockProps) => {
     return (
-      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components} className={className}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={user ? whiteComponents : darkComponents}
+        className={className}>
         {content}
       </ReactMarkdown>
     );
@@ -231,9 +275,10 @@ interface MarkdownContentProps {
   content: string;
   id: string;
   className?: string;
+  user?: boolean;
 }
 
-export const MarkdownContent = memo(({ content, id, className }: MarkdownContentProps) => {
+export const MarkdownContent = memo(({ content, id, className, user }: MarkdownContentProps) => {
   const deferredContent = useDeferredValue(content);
   const blocks = useMemo(() => parseMarkdownIntoBlocks(deferredContent), [deferredContent]);
 
@@ -242,6 +287,7 @@ export const MarkdownContent = memo(({ content, id, className }: MarkdownContent
       content={block}
       className={className}
       key={`${id}-block_${index}`} // biome-ignore lint/suspicious/noArrayIndexKey
+      user={user}
     />
   ));
 });
