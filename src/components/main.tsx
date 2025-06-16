@@ -19,6 +19,8 @@ import { useEffect, useState } from "react";
 import { modelId } from "@/types/models";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
+import { toast } from "sonner";
+import { backupToServer, updateLocalData } from "@/lib/realdb/real";
 
 export default function Main() {
   const { id } = useParams();
@@ -28,6 +30,25 @@ export default function Main() {
     const c = await db.createChat();
     nav(`/chat/${c.id}`);
   };
+
+  const backup = async () => {
+    await updateLocalData();
+    await backupToServer();
+    toast.success("Just synced all the data!", { position: "bottom-left" });
+  };
+
+  useEffect(() => {
+    backup();
+
+    const interval = setInterval(
+      () => {
+        backup();
+      },
+      2 * 60 * 1000
+    ); // 2 minutes
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (!id) {
