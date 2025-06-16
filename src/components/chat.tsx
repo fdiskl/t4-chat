@@ -82,7 +82,7 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                         <ChatMessageContent content={message.content} className="max-w-3xl" />
                       </ChatMessage>
 
-                      {status != "streaming" && status != "submitted" && (
+                      {!(isLastMessage && (status == "streaming" || status == "submitted")) && (
                         <>
                           {/* BUTTONS */}
                           <div className="mt-2 flex flex-row items-center justify-start gap-x-2">
