@@ -11,7 +11,10 @@ import { Copy } from "lucide-react";
 import { toast } from "sonner";
 
 const DEFAULT_PRE_BLOCK_CLASS =
-  "overflow-x-auto w-fit rounded-xl bg-zinc-950 text-zinc-50 dark:bg-zinc-900 border border-border p-4";
+  "overflow-x-auto w-fit rounded-xl bg-zinc-900 text-zinc-50 border border-border p-4";
+
+const DEFAULT_PRE_WHITE_BLOCK_CLASS =
+  "overflow-x-auto w-fit rounded-xl bg-[#fafafa] text-zinc-50  border border-border p-4";
 
 interface CodeBlockProps extends React.HTMLAttributes<HTMLPreElement> {
   language: string;
@@ -45,7 +48,12 @@ const CodeBlock = ({
         console.error("Error rendering syntax highlighter:", error);
         // Fallback to plain code block
         return (
-          <pre {...props} className={cn(DEFAULT_PRE_BLOCK_CLASS, className, "!mt-0")}>
+          <pre
+            {...props}
+            className={cn(className, "!mt-0", {
+              DEFAULT_PRE_BLOCK_CLASS: !shouldBeWhiteThemed,
+              DEFAULT_PRE_WHITE_BLOCK_CLASS: shouldBeWhiteThemed,
+            })}>
             <code className="whitespace-pre-wrap">{codeText}</code>
           </pre>
         );
@@ -53,7 +61,12 @@ const CodeBlock = ({
     } else {
       // Incomplete code, render as plain text
       return (
-        <pre {...props} className={cn(DEFAULT_PRE_BLOCK_CLASS, className, "!mt-0")}>
+        <pre
+          {...props}
+          className={cn(className, "!mt-0", {
+            DEFAULT_PRE_BLOCK_CLASS: !shouldBeWhiteThemed,
+            DEFAULT_PRE_WHITE_BLOCK_CLASS: shouldBeWhiteThemed,
+          })}>
           <code className="whitespace-pre-wrap">{codeText}</code>
         </pre>
       );
@@ -235,7 +248,7 @@ const whiteComponents: Partial<Components> = {
     }
     return (
       <code
-        className={cn("rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm", className)}
+        className={cn("rounded bg-zinc-300 px-[0.3rem] py-[0.2rem] font-mono text-sm", className)}
         {...props}>
         {children}
       </code>
