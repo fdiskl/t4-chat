@@ -68,7 +68,7 @@ export function Sidebar({
         <div className="flex flex-col">
           <div className="flex items-center justify-between p-2">
             <div className="flex items-center gap-3">
-              <span className="text-lg font-semibold">Best AI chat app</span>
+              <span className="text-lg font-semibold">T0 chat</span>
             </div>
           </div>
           {/* New Chat Button */}

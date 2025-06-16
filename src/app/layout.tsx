@@ -13,8 +13,8 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata = {
-  title: "todo",
-  description: "",
+  title: "T0 Chat",
+  description: "Not t3 chat tho",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

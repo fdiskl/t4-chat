@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     m = idToModelMap[model as string];
   } catch (e) {
     console.error(e);
-    return new NextResponse("Invalid model", { status: 400 });
+    return new NextResponse("Sorry, model not supported right now", { status: 400 });
   }
 
   // TODO: api keys
@@ -29,7 +29,10 @@ export async function POST(req: Request) {
 
   if (m.openRouterProvider) {
     // TODO: open router
+    return new NextResponse("Sorry, OpenRouter is not supported yet, try OpenAI models", {
+      status: 500,
+    });
   }
 
-  return new NextResponse("No provider found for this model, sorry", { status: 500 });
+  return new NextResponse("Sorry, no provider found for this model", { status: 500 });
 }
