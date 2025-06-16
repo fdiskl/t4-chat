@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsUpDown, CloudDownloadIcon, LogIn, LogOut, User } from "lucide-react";
+import { ChevronsUpDown, CloudDownloadIcon, LogIn, LogOut, Settings, User } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -19,11 +19,12 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useCallback, useEffect, useState } from "react";
-import { NavigateFunction, useNavigate } from "react-router";
+import { Link, NavigateFunction, useNavigate } from "react-router";
 import { db } from "@/lib/db";
 import { liveQuery } from "dexie";
 import { toast } from "sonner";
 import { backupToServer, updateLocalData } from "@/lib/realdb/real";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 const NotLoggedInDropdown = ({ nav }: { nav: NavigateFunction }) => {
   return (
@@ -66,9 +67,21 @@ const LoggedInDropdown = ({ nav }: { nav: NavigateFunction }) => {
   return (
     <>
       <DropdownMenuGroup>
-        <DropdownMenuItem onClick={() => handleBackup()}>
-          <CloudDownloadIcon />
-          Sync
+        <Tooltip>
+          <DropdownMenuItem onClick={() => handleBackup()} asChild className="cursor-pointer">
+            <TooltipTrigger className="w-full">
+              <CloudDownloadIcon />
+              Sync
+            </TooltipTrigger>
+          </DropdownMenuItem>
+          <TooltipContent>If you don't want to wait for background sync</TooltipContent>
+        </Tooltip>
+
+        <DropdownMenuItem className="cursor-pointer" asChild>
+          <Link to="/settings" className="w-full">
+            <Settings />
+            Settings
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
