@@ -5,7 +5,7 @@ import { liveQuery } from "dexie";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { ArrowLeft, LogOutIcon, User } from "lucide-react";
+import { ArrowLeft, Check, CloudUpload, LoaderCircleIcon, LogOutIcon, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
@@ -14,6 +14,7 @@ import { toast } from "sonner";
 export function Settings() {
   const [oaiKey, setOaiKey] = useState("");
   const [orouterKey, setOrouterKey] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [user, setUser] = useState<{
     username?: string;
@@ -55,13 +56,19 @@ export function Settings() {
   }, []);
 
   const handleApiKeySave = useCallback(async () => {
+    setIsLoading(true);
+
     const tok = await db.getToken();
     if (!tok) {
       toast.error("Not authenticated");
+      setIsLoading(false);
+      return;
     }
 
     if (oaiKey === "" && orouterKey === "") {
       toast.error("Please provide keys");
+      setIsLoading(false);
+      return;
     }
 
     let obj = {};
@@ -107,6 +114,9 @@ export function Settings() {
       }
     } catch (e) {
       toast.error("Couldn't save API keys, sorry");
+    } finally {
+      setIsLoading(false);
+      return;
     }
   }, [oaiKey, orouterKey]);
 
@@ -171,7 +181,11 @@ export function Settings() {
 
             <p className="text-muted-foreground">(We will encrypt your keys)</p>
 
-            <Button className="mt-2 w-1/2 bg-primary/85" onClick={handleApiKeySave}>
+            <Button
+              className="mt-2 flex w-1/2 flex-row items-center justify-center"
+              onClick={handleApiKeySave}
+              disabled={isLoading}>
+              {isLoading ? <LoaderCircleIcon className="animate-spin" /> : <CloudUpload />}
               Save
             </Button>
           </div>
