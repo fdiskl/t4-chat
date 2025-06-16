@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import { $Enums, Chat as PrismChat, StoredMessage as PrismMsg } from "@/generated/prisma";
 import { Message } from "ai";
 import { modelId } from "@/types/models";
+import { Pi } from "lucide-react";
 
 class ChatDatabase extends Dexie {
   chats!: Table<Chat>;
@@ -23,6 +24,17 @@ class ChatDatabase extends Dexie {
       last_model: "id",
       keys: "id",
     });
+  }
+
+  async getKeys(): Promise<{ oai: string; openrouter: string } | undefined> {
+    const k = await this.keys.get("keys");
+
+    if (!k) return undefined;
+
+    return {
+      oai: k.OpenAI,
+      openrouter: k.OpenRouter,
+    };
   }
 
   async setKeys(oai?: string, orouter?: string) {

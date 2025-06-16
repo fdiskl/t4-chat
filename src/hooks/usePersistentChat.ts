@@ -48,6 +48,15 @@ export function usePersistentChat({
     return await db.getChatMessages(chatId);
   }, [chatId]);
 
+  const keys = useLiveQuery(async () => {
+    try {
+      const keys = await db.getKeys();
+      return keys;
+    } catch (e) {
+      toast.error("Can't find your keys");
+    }
+  }, []);
+
   const {
     input,
     handleInputChange: originalHandleInputChange,
@@ -63,6 +72,8 @@ export function usePersistentChat({
     body: {
       model,
       systemPromptId: "default",
+      openaiKey: keys?.oai,
+      openRouterKey: keys?.openrouter,
     },
     experimental_throttle: 50,
     initialMessages:
