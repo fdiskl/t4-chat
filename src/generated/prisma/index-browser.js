@@ -151,6 +151,12 @@ exports.Prisma.KeysScalarFieldEnum = {
   OpenRouterKey: 'OpenRouterKey'
 };
 
+exports.Prisma.UserFilesScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  FileUrls: 'FileUrls'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -173,7 +179,8 @@ exports.Role = exports.$Enums.Role = {
 exports.Prisma.ModelName = {
   Chat: 'Chat',
   StoredMessage: 'StoredMessage',
-  Keys: 'Keys'
+  Keys: 'Keys',
+  UserFiles: 'UserFiles'
 };
 
 /**

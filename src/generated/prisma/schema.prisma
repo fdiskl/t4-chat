@@ -48,3 +48,11 @@ model Keys {
 
   @@unique([userId])
 }
+
+model UserFiles {
+  id       String   @id @default(uuid())
+  userId   String
+  FileUrls String[]
+
+  @@unique([userId])
+}

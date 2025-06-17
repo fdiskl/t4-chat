@@ -149,7 +149,7 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
 
               {status === "submitted" && (
                 <div>
-                  <Loader2Icon className="h-20 w-20 animate-spin text-muted-foreground" />
+                  <Loader2Icon className="h-10 w-10 animate-spin text-muted-foreground" />
                 </div>
               )}
             </>
