@@ -10,6 +10,8 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
 import { toast } from "sonner";
+import { Card } from "./ui/card";
+import { Badge } from "./ui/badge";
 
 export function Settings() {
   const [oaiKey, setOaiKey] = useState("");
@@ -133,7 +135,7 @@ export function Settings() {
 
   return (
     <div className="fixed max-h-screen w-full flex-col overflow-y-auto py-10">
-      <header className="mx-auto flex w-full max-w-[900px] justify-between">
+      <header className="mx-auto flex w-full max-w-[1000px] justify-between">
         <Button variant="ghost" size="lg" onClick={() => nav("/chat")}>
           <ArrowLeft /> Back to chat
         </Button>
@@ -144,16 +146,50 @@ export function Settings() {
         </Button>
       </header>
 
-      <div className="mx-auto flex max-w-[900px] items-start justify-start gap-x-10 px-20 py-10">
-        {/* Avatar section */}
-        <div className="flex max-w-52 flex-col items-center justify-center">
-          <Avatar className="h-40 w-40">
-            <AvatarImage src={user?.avatarUrl} alt={user?.username} />
-            <AvatarFallback className="rounded-lg">
-              <User />
-            </AvatarFallback>
-          </Avatar>
-          <h1 className="text-center text-2xl font-bold">{user?.username}</h1>
+      <div className="mx-auto flex max-w-[1000px] items-start justify-start gap-x-10 px-20 py-10">
+        <div className="flex flex-col items-center">
+          {/* Avatar section */}
+          <div className="flex w-64 flex-col items-center justify-center">
+            <Avatar className="h-40 w-40">
+              <AvatarImage src={user?.avatarUrl} alt={user?.username} />
+              <AvatarFallback className="rounded-lg">
+                <User />
+              </AvatarFallback>
+            </Avatar>
+            <h1 className="text-center text-2xl font-bold">{user?.username}</h1>
+          </div>
+
+          <Separator className="mt-3" />
+
+          {/* Shortcuts */}
+          <Card className="mt-3 flex min-h-24 w-full flex-col items-center justify-center gap-y-2 p-2">
+            <div className="flex w-full items-center justify-between">
+              Toogle sidebar
+              <div className="flex items-center justify-end gap-x-1">
+                <Badge className="rounded-sm p-1 text-sm" variant="secondary">
+                  Ctrl
+                </Badge>
+                <Badge className="rounded-sm p-1 text-sm" variant="secondary">
+                  B
+                </Badge>
+              </div>
+            </div>
+
+            <div className="flex w-full items-center justify-between">
+              New chat
+              <div className="flex items-center justify-end gap-x-1">
+                <Badge className="rounded-sm p-1 text-sm" variant="secondary">
+                  Ctrl
+                </Badge>
+                <Badge className="rounded-sm p-1 text-sm" variant="secondary">
+                  Shift
+                </Badge>
+                <Badge className="rounded-sm p-1 text-sm" variant="secondary">
+                  O
+                </Badge>
+              </div>
+            </div>
+          </Card>
         </div>
 
         {/* Settings or other content */}
@@ -191,7 +227,7 @@ export function Settings() {
           </div>
         </div>
       </div>
-      <Separator className="mx-auto my-4 max-w-[900px]" />
+      <Separator className="mx-auto my-4 max-w-[1000px]" />
     </div>
   );
 }

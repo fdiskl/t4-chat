@@ -43,6 +43,17 @@ export function Sidebar({
     nav(`/chat/${c.id}`);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "o") {
+        event.preventDefault();
+        newChatHandler();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [newChatHandler]);
+
   const handleDeleteChat = useCallback(
     async (e: React.MouseEvent, chatId: string) => {
       e.preventDefault();
