@@ -11,3 +11,8 @@ export interface ChatMessage {
   role: "user" | "assistant" | "system";
   model: modelId;
 }
+
+export interface FileiInfo {
+  name: string;
+  url: string;
+}

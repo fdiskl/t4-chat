@@ -18,11 +18,7 @@ import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
 import { liveQuery } from "dexie";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Badge } from "./ui/badge";
-
-interface FileiInfo {
-  name: string;
-  url: string;
-}
+import { FileiInfo } from "@/types/chat";
 
 export interface ChatProps {
   id: string | undefined;

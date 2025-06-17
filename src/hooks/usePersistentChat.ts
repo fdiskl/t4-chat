@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { FileiInfo } from "@/types/chat";
 import { Chat, StoredMessage } from "@/types/database";
 import { modelId } from "@/types/models";
 import { ChatRequestOptions, UIMessage } from "ai";
@@ -29,11 +30,13 @@ export interface usePersistentChatReturnType {
 export interface PersistentChatOptions {
   id?: string;
   model: modelId;
+  files?: FileiInfo[];
 }
 
 export function usePersistentChat({
   id: chatId,
   model,
+  files,
 }: PersistentChatOptions): usePersistentChatReturnType {
   const [error, setError] = useState<Error | null>(null);
   const nav = useNavigate();
