@@ -6,7 +6,7 @@ import { ChatMessageArea } from "@/components/ui/chat-message-area";
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { ModelSelector } from "./ui/model-selector";
 import { Button } from "./ui/button";
-import { Copy, GitBranch, Globe, Loader2Icon, Paperclip, RefreshCw } from "lucide-react";
+import { Copy, GitBranch, Globe, Loader2Icon, Paperclip, RefreshCw, X } from "lucide-react";
 import { usePersistentChat } from "@/hooks/usePersistentChat";
 import { toast } from "sonner";
 import { idToModelMap, modelId } from "@/types/models";
@@ -17,6 +17,12 @@ import { useNavigate } from "react-router";
 import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
 import { liveQuery } from "dexie";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Badge } from "./ui/badge";
+
+interface FileiInfo {
+  name: string;
+  url: string;
+}
 
 export interface ChatProps {
   id: string | undefined;
@@ -35,6 +41,8 @@ const ModelTypeByMsgId = ({ id }: { id: string }) => {
 
 export const Chat: React.FC<ChatProps> = ({ id }) => {
   const [model, setModel] = useState<modelId>("4.1-nano");
+
+  const [files, setFiles] = useState<FileiInfo[]>([]);
 
   const { isLoading, handleSubmit, input, handleInputChange, status, messages, reload } =
     usePersistentChat({
@@ -202,9 +210,23 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                     <DialogHeader>
                       <DialogTitle>Upload attachments</DialogTitle>
                     </DialogHeader>
-                    <CustomUploadButton token={tok} />
+                    <CustomUploadButton token={tok} setFiles={setFiles} />
                   </DialogContent>
                 </Dialog>
+
+                {files.map((f) => (
+                  <div key={f.url} className="flex h-full flex-row items-center justify-center">
+                    <Badge variant="secondary">
+                      <button
+                        onClick={() => {
+                          setFiles(files.filter((ff) => ff.url !== f.url));
+                        }}>
+                        <X className="h-4 w-4" />
+                      </button>
+                      {f.name}
+                    </Badge>
+                  </div>
+                ))}
               </div>
               <ChatInputSubmit
                 loading={status === "streaming" || status === "submitted"}
@@ -218,7 +240,13 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
   );
 };
 
-function CustomUploadButton({ token }: { token: string | null }) {
+function CustomUploadButton({
+  token,
+  setFiles,
+}: {
+  token: string | null;
+  setFiles: (r: FileiInfo[]) => void;
+}) {
   return (
     <div>
       <UploadDropzone
@@ -226,7 +254,15 @@ function CustomUploadButton({ token }: { token: string | null }) {
         endpoint="msgAttachment"
         onClientUploadComplete={(res) => {
           toast.success("Successful upload", { position: "top-center" });
-          console.log(res);
+
+          const r: FileiInfo[] = res.map((rr) => {
+            return {
+              name: rr.name,
+              url: rr.ufsUrl,
+            };
+          });
+
+          setFiles(r);
         }}
         onUploadError={(error: Error) => {
           toast.error(error.name, { description: error.message, position: "top-center" });
