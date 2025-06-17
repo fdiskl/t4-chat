@@ -32,6 +32,8 @@ export default function Main() {
   };
 
   const backup = async () => {
+    const tok = await db.getToken();
+    if (!tok) return;
     await updateLocalData();
     await backupToServer();
     await db.setLastSynced(new Date());

@@ -56,6 +56,7 @@ export async function POST(req: Request) {
       apiKey: key,
     });
 
+    console.log(messages[0].experimental_attachments);
     const result = streamText({
       model: openai(m.openaiProvider, {}),
       system: "You are a helpful assistant",

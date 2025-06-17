@@ -9,8 +9,8 @@ export const ourFileRouter = {
   msgAttachment: f({
     // idk
     image: { maxFileSize: "8MB", maxFileCount: 5 },
-    pdf: { maxFileSize: "8MB", maxFileCount: 3 },
-    text: { maxFileSize: "1MB", maxFileCount: 5 },
+    // pdf: { maxFileSize: "8MB", maxFileCount: 3 },
+    // text: { maxFileSize: "1MB", maxFileCount: 5 },
   })
     .middleware(async ({ req }) => {
       try {

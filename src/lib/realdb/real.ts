@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { db } from "../db";
 
 export async function backupToServer() {
@@ -18,6 +19,11 @@ export async function backupToServer() {
 
 async function fetchServerData() {
   const tok = await db.getToken();
+
+  if (!tok) {
+    toast.error("Can't sync if you are not logged in");
+  }
+
   const last = await db.getLastSynced();
 
   const response = await fetch(
