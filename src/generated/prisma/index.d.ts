@@ -2352,6 +2352,7 @@ export namespace Prisma {
     isPartial: number
     model: number
     lastModified: number
+    attachments: number
     _all: number
   }
 
@@ -2387,6 +2388,7 @@ export namespace Prisma {
     isPartial?: true
     model?: true
     lastModified?: true
+    attachments?: true
     _all?: true
   }
 
@@ -2471,6 +2473,7 @@ export namespace Prisma {
     isPartial: boolean | null
     model: string
     lastModified: Date | null
+    attachments: string[]
     _count: StoredMessageCountAggregateOutputType | null
     _min: StoredMessageMinAggregateOutputType | null
     _max: StoredMessageMaxAggregateOutputType | null
@@ -2499,6 +2502,7 @@ export namespace Prisma {
     isPartial?: boolean
     model?: boolean
     lastModified?: boolean
+    attachments?: boolean
     Chat?: boolean | ChatDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["storedMessage"]>
 
@@ -2511,6 +2515,7 @@ export namespace Prisma {
     isPartial?: boolean
     model?: boolean
     lastModified?: boolean
+    attachments?: boolean
     Chat?: boolean | ChatDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["storedMessage"]>
 
@@ -2523,6 +2528,7 @@ export namespace Prisma {
     isPartial?: boolean
     model?: boolean
     lastModified?: boolean
+    attachments?: boolean
     Chat?: boolean | ChatDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["storedMessage"]>
 
@@ -2535,9 +2541,10 @@ export namespace Prisma {
     isPartial?: boolean
     model?: boolean
     lastModified?: boolean
+    attachments?: boolean
   }
 
-  export type StoredMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chatId" | "content" | "role" | "created_at" | "isPartial" | "model" | "lastModified", ExtArgs["result"]["storedMessage"]>
+  export type StoredMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chatId" | "content" | "role" | "created_at" | "isPartial" | "model" | "lastModified" | "attachments", ExtArgs["result"]["storedMessage"]>
   export type StoredMessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Chat?: boolean | ChatDefaultArgs<ExtArgs>
   }
@@ -2562,6 +2569,7 @@ export namespace Prisma {
       isPartial: boolean | null
       model: string
       lastModified: Date | null
+      attachments: string[]
     }, ExtArgs["result"]["storedMessage"]>
     composites: {}
   }
@@ -2994,6 +3002,7 @@ export namespace Prisma {
     readonly isPartial: FieldRef<"StoredMessage", 'Boolean'>
     readonly model: FieldRef<"StoredMessage", 'String'>
     readonly lastModified: FieldRef<"StoredMessage", 'DateTime'>
+    readonly attachments: FieldRef<"StoredMessage", 'String[]'>
   }
     
 
@@ -5405,7 +5414,8 @@ export namespace Prisma {
     created_at: 'created_at',
     isPartial: 'isPartial',
     model: 'model',
-    lastModified: 'lastModified'
+    lastModified: 'lastModified',
+    attachments: 'attachments'
   };
 
   export type StoredMessageScalarFieldEnum = (typeof StoredMessageScalarFieldEnum)[keyof typeof StoredMessageScalarFieldEnum]
@@ -5613,6 +5623,7 @@ export namespace Prisma {
     isPartial?: BoolNullableFilter<"StoredMessage"> | boolean | null
     model?: StringFilter<"StoredMessage"> | string
     lastModified?: DateTimeNullableFilter<"StoredMessage"> | Date | string | null
+    attachments?: StringNullableListFilter<"StoredMessage">
     Chat?: XOR<ChatScalarRelationFilter, ChatWhereInput>
   }
 
@@ -5625,6 +5636,7 @@ export namespace Prisma {
     isPartial?: SortOrderInput | SortOrder
     model?: SortOrder
     lastModified?: SortOrderInput | SortOrder
+    attachments?: SortOrder
     Chat?: ChatOrderByWithRelationInput
   }
 
@@ -5640,6 +5652,7 @@ export namespace Prisma {
     isPartial?: BoolNullableFilter<"StoredMessage"> | boolean | null
     model?: StringFilter<"StoredMessage"> | string
     lastModified?: DateTimeNullableFilter<"StoredMessage"> | Date | string | null
+    attachments?: StringNullableListFilter<"StoredMessage">
     Chat?: XOR<ChatScalarRelationFilter, ChatWhereInput>
   }, "id">
 
@@ -5652,6 +5665,7 @@ export namespace Prisma {
     isPartial?: SortOrderInput | SortOrder
     model?: SortOrder
     lastModified?: SortOrderInput | SortOrder
+    attachments?: SortOrder
     _count?: StoredMessageCountOrderByAggregateInput
     _max?: StoredMessageMaxOrderByAggregateInput
     _min?: StoredMessageMinOrderByAggregateInput
@@ -5669,6 +5683,7 @@ export namespace Prisma {
     isPartial?: BoolNullableWithAggregatesFilter<"StoredMessage"> | boolean | null
     model?: StringWithAggregatesFilter<"StoredMessage"> | string
     lastModified?: DateTimeNullableWithAggregatesFilter<"StoredMessage"> | Date | string | null
+    attachments?: StringNullableListFilter<"StoredMessage">
   }
 
   export type KeysWhereInput = {
@@ -5861,6 +5876,7 @@ export namespace Prisma {
     isPartial?: boolean | null
     model: string
     lastModified?: Date | string | null
+    attachments?: StoredMessageCreateattachmentsInput | string[]
     Chat: ChatCreateNestedOneWithoutStoredMessageInput
   }
 
@@ -5873,6 +5889,7 @@ export namespace Prisma {
     isPartial?: boolean | null
     model: string
     lastModified?: Date | string | null
+    attachments?: StoredMessageCreateattachmentsInput | string[]
   }
 
   export type StoredMessageUpdateInput = {
@@ -5883,6 +5900,7 @@ export namespace Prisma {
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attachments?: StoredMessageUpdateattachmentsInput | string[]
     Chat?: ChatUpdateOneRequiredWithoutStoredMessageNestedInput
   }
 
@@ -5895,6 +5913,7 @@ export namespace Prisma {
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attachments?: StoredMessageUpdateattachmentsInput | string[]
   }
 
   export type StoredMessageCreateManyInput = {
@@ -5906,6 +5925,7 @@ export namespace Prisma {
     isPartial?: boolean | null
     model: string
     lastModified?: Date | string | null
+    attachments?: StoredMessageCreateattachmentsInput | string[]
   }
 
   export type StoredMessageUpdateManyMutationInput = {
@@ -5916,6 +5936,7 @@ export namespace Prisma {
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attachments?: StoredMessageUpdateattachmentsInput | string[]
   }
 
   export type StoredMessageUncheckedUpdateManyInput = {
@@ -5927,6 +5948,7 @@ export namespace Prisma {
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attachments?: StoredMessageUpdateattachmentsInput | string[]
   }
 
   export type KeysCreateInput = {
@@ -6219,6 +6241,14 @@ export namespace Prisma {
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type ChatScalarRelationFilter = {
     is?: ChatWhereInput
     isNot?: ChatWhereInput
@@ -6233,6 +6263,7 @@ export namespace Prisma {
     isPartial?: SortOrder
     model?: SortOrder
     lastModified?: SortOrder
+    attachments?: SortOrder
   }
 
   export type StoredMessageMaxOrderByAggregateInput = {
@@ -6297,14 +6328,6 @@ export namespace Prisma {
     userEmail?: SortOrder
     OpenAiKey?: SortOrder
     OpenRouterKey?: SortOrder
-  }
-
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
   }
 
   export type UserFilesCountOrderByAggregateInput = {
@@ -6385,6 +6408,10 @@ export namespace Prisma {
     deleteMany?: StoredMessageScalarWhereInput | StoredMessageScalarWhereInput[]
   }
 
+  export type StoredMessageCreateattachmentsInput = {
+    set: string[]
+  }
+
   export type ChatCreateNestedOneWithoutStoredMessageInput = {
     create?: XOR<ChatCreateWithoutStoredMessageInput, ChatUncheckedCreateWithoutStoredMessageInput>
     connectOrCreate?: ChatCreateOrConnectWithoutStoredMessageInput
@@ -6397,6 +6424,11 @@ export namespace Prisma {
 
   export type NullableBoolFieldUpdateOperationsInput = {
     set?: boolean | null
+  }
+
+  export type StoredMessageUpdateattachmentsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type ChatUpdateOneRequiredWithoutStoredMessageNestedInput = {
@@ -6601,6 +6633,7 @@ export namespace Prisma {
     isPartial?: boolean | null
     model: string
     lastModified?: Date | string | null
+    attachments?: StoredMessageCreateattachmentsInput | string[]
   }
 
   export type StoredMessageUncheckedCreateWithoutChatInput = {
@@ -6611,6 +6644,7 @@ export namespace Prisma {
     isPartial?: boolean | null
     model: string
     lastModified?: Date | string | null
+    attachments?: StoredMessageCreateattachmentsInput | string[]
   }
 
   export type StoredMessageCreateOrConnectWithoutChatInput = {
@@ -6651,6 +6685,7 @@ export namespace Prisma {
     isPartial?: BoolNullableFilter<"StoredMessage"> | boolean | null
     model?: StringFilter<"StoredMessage"> | string
     lastModified?: DateTimeNullableFilter<"StoredMessage"> | Date | string | null
+    attachments?: StringNullableListFilter<"StoredMessage">
   }
 
   export type ChatCreateWithoutStoredMessageInput = {
@@ -6725,6 +6760,7 @@ export namespace Prisma {
     isPartial?: boolean | null
     model: string
     lastModified?: Date | string | null
+    attachments?: StoredMessageCreateattachmentsInput | string[]
   }
 
   export type StoredMessageUpdateWithoutChatInput = {
@@ -6735,6 +6771,7 @@ export namespace Prisma {
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attachments?: StoredMessageUpdateattachmentsInput | string[]
   }
 
   export type StoredMessageUncheckedUpdateWithoutChatInput = {
@@ -6745,6 +6782,7 @@ export namespace Prisma {
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attachments?: StoredMessageUpdateattachmentsInput | string[]
   }
 
   export type StoredMessageUncheckedUpdateManyWithoutChatInput = {
@@ -6755,6 +6793,7 @@ export namespace Prisma {
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    attachments?: StoredMessageUpdateattachmentsInput | string[]
   }
 
 

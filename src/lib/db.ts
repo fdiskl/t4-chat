@@ -263,6 +263,7 @@ class ChatDatabase extends Dexie {
       lastModified: msg.lastModified === null ? undefined : msg.lastModified,
       model: msg.model,
       role: msg.role === $Enums.Role.user ? "user" : "assistant",
+      attachments: msg.attachments,
     };
 
     if (c) {
@@ -277,6 +278,7 @@ class ChatDatabase extends Dexie {
         lastModified: msg.lastModified === null ? undefined : msg.lastModified,
         model: msg.model,
         role: msg.role === $Enums.Role.user ? "user" : "assistant",
+        attachments: msg.attachments,
       };
 
       await this.messages.add(cc);

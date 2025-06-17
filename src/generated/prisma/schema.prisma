@@ -35,6 +35,7 @@ model StoredMessage {
   isPartial    Boolean? // optional
   model        String // can be "user" or other model names
   lastModified DateTime? // New field for message modification timestamp
+  attachments  String[]  @default([])
 
   Chat Chat @relation(fields: [chatId], references: [id])
 }

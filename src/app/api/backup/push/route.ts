@@ -77,6 +77,7 @@ export async function POST(req: Request) {
           created_at: message.created_at,
           lastModified: message.lastModified ?? message.created_at,
           model: message.model,
+          attachments: message.attachments,
         },
         create: {
           id: message.id,
@@ -86,6 +87,7 @@ export async function POST(req: Request) {
           created_at: message.created_at,
           lastModified: message.lastModified ?? message.created_at,
           model: message.model,
+          attachments: message.attachments,
         },
       });
     }

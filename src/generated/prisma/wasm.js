@@ -140,7 +140,8 @@ exports.Prisma.StoredMessageScalarFieldEnum = {
   created_at: 'created_at',
   isPartial: 'isPartial',
   model: 'model',
-  lastModified: 'lastModified'
+  lastModified: 'lastModified',
+  attachments: 'attachments'
 };
 
 exports.Prisma.KeysScalarFieldEnum = {

@@ -46,8 +46,8 @@ export default function Main() {
       () => {
         backup();
       },
-      2 * 60 * 1000
-    ); // 2 minutes
+      10 * 60 * 1000
+    ); // 10 minutes
 
     return () => clearInterval(interval);
   }, []);

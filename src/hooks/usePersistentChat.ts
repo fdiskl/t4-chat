@@ -114,7 +114,8 @@ export function usePersistentChat({
       role: "user" | "assistant",
       chatId: string,
       model: modelId | "user",
-      id?: string
+      id?: string,
+      attachments?: Attachment[]
     ): Promise<StoredMessage> => {
       try {
         const message = await db.addMessage(
@@ -123,6 +124,7 @@ export function usePersistentChat({
             content,
             role,
             model,
+            attachments: !attachments ? [] : attachments.map((a) => a.url),
           },
           id
         );
