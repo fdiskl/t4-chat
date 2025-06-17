@@ -195,8 +195,6 @@ export function usePersistentChat({
           systemPromptId,
         };
 
-        console.log(attachments);
-
         // Call original submit with updated body
         originalHandleSubmitRef.current(e, {
           body: updatedBody,
@@ -211,12 +209,13 @@ export function usePersistentChat({
           if (!currentChat.title) {
             let title = "";
             try {
+              const k = await db.getKeys();
               const titleResp = await fetch("/api/title", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ msg: input }),
+                body: JSON.stringify({ msg: input, openaiKey: k?.oai }),
               });
 
               if (titleResp.status != 200 || !titleResp.ok) {
