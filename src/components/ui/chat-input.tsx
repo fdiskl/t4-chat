@@ -145,7 +145,7 @@ function ChatInputSubmit({
     return (
       <Button
         onClick={onStop}
-        className={cn("h-fit shrink-0 rounded-full border p-1.5 dark:border-zinc-600", className)}
+        className={cn("h-fit shrink-0 rounded-full border border-primary p-1.5", className)}
         {...props}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -169,7 +169,10 @@ function ChatInputSubmit({
 
   return (
     <Button
-      className={cn("h-fit shrink-0 rounded-full border p-1.5 dark:border-zinc-600", className)}
+      className={cn(
+        "h-fit shrink-0 rounded-full border border-primary bg-primary p-1.5",
+        className
+      )}
       disabled={isDisabled}
       onClick={(event) => {
         event.preventDefault();
