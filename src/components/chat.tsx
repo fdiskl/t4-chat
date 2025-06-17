@@ -4,7 +4,7 @@ import { ChatMessageArea } from "@/components/ui/chat-message-area";
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { ModelSelector } from "./ui/model-selector";
 import { Button } from "./ui/button";
-import { Copy, GitBranch, Globe, Paperclip, RefreshCw } from "lucide-react";
+import { Copy, GitBranch, Globe, Loader2Icon, Paperclip, RefreshCw } from "lucide-react";
 import { usePersistentChat } from "@/hooks/usePersistentChat";
 import { toast } from "sonner";
 import { idToModelMap, modelId } from "@/types/models";
@@ -146,6 +146,12 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                   </ChatMessage>
                 );
               })}
+
+              {status === "submitted" && (
+                <div>
+                  <Loader2Icon className="h-20 w-20 animate-spin text-muted-foreground" />
+                </div>
+              )}
             </>
           )}
         </div>

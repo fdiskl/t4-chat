@@ -91,6 +91,12 @@ export function usePersistentChat({
       const errs = err.message.match("Sorry");
       if (errs && errs.length != 0) {
         toast.error(err.name, { description: err.message, position: "top-center" });
+      } else {
+        console.error(err.message);
+        toast.error("Unexpected error happened", {
+          description: "Try again later",
+          position: "top-center",
+        });
       }
     },
   });

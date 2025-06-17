@@ -177,8 +177,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.9.0",
@@ -187,6 +186,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -197,7 +197,7 @@ const config = {
   },
   "inlineSchema": "datasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\nenum Role {\n  user\n  assistant\n}\n\nmodel Chat {\n  id            String          @id @default(uuid())\n  userId        String\n  userEmail     String\n  title         String? // optional\n  created_at    DateTime        @default(now())\n  updated_at    DateTime        @updatedAt\n  lastSynced    DateTime? // New field for last sync timestamp\n  empty         Boolean\n  parentId      String? // optional, can be null\n  StoredMessage StoredMessage[]\n}\n\nmodel StoredMessage {\n  id           String    @id @default(uuid())\n  chatId       String\n  content      String\n  role         Role\n  created_at   DateTime  @default(now())\n  isPartial    Boolean? // optional\n  model        String // can be \"user\" or other model names\n  lastModified DateTime? // New field for message modification timestamp\n\n  Chat Chat @relation(fields: [chatId], references: [id])\n}\n\nmodel Keys {\n  id            String @id @default(uuid())\n  userId        String\n  userEmail     String\n  OpenAiKey     String\n  OpenRouterKey String\n\n  @@unique([userId])\n}\n",
   "inlineSchemaHash": "12dc0f208321554c47747d2207047f7d8876f47249076a2936cae1b517782186",
-  "copyEngine": false
+  "copyEngine": true
 }
 
 const fs = require('fs')
@@ -234,3 +234,9 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
+path.join(process.cwd(), "src/generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node")
+// file annotations for bundling tools to include these files
+path.join(__dirname, "schema.prisma");
+path.join(process.cwd(), "src/generated/prisma/schema.prisma")
