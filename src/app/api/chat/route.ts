@@ -4,8 +4,12 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { streamText } from "ai";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { getSystemPrompt } from "@/lib/constants/prompts";
 
 const secretKey = process.env.API_KEY_SECRET as string;
+
+export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
 function getKey() {
   return crypto.createHash("sha256").update(secretKey).digest();
@@ -18,7 +22,7 @@ function isOpenAIKey(s: string): boolean {
 }
 
 export async function POST(req: Request) {
-  const { messages, model, openaiKey, openRouterKey } = await req.json();
+  const { messages, model, openaiKey, openRouterKey, systemPromptId } = await req.json();
 
   let m: ModelConfig;
   try {
@@ -56,11 +60,11 @@ export async function POST(req: Request) {
       apiKey: key,
     });
 
-    console.log(messages[0].experimental_attachments);
+    const systemPrompt = getSystemPrompt(systemPromptId || "default");
+    const messagesWithSystem = [{ role: "system", content: systemPrompt.content }, ...messages];
     const result = streamText({
       model: openai(m.openaiProvider, {}),
-      system: "You are a helpful assistant",
-      messages,
+      messages: messagesWithSystem,
       abortSignal: req.signal,
     });
 

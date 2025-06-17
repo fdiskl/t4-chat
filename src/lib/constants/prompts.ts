@@ -16,8 +16,9 @@ If you are generating code, you should:
 - Include clear comments
 - Follow best practices for the language/framework
 - Explain any complex logic
+- Wrap any code blocks in tripple backticks like '\`\`\`', as it is done in markdown
 
-If you are generating math, use LaTeX notation wrapped in $$ symbols.`,
+If you are generating math, use LaTeX notation wrapped in $$ symbols, as it is done in markdown`,
     description: "A helpful AI assistant focused on clear communication",
   },
   {
@@ -31,12 +32,15 @@ When writing code:
 - Write clear documentation and comments
 - Consider performance implications
 - Use modern syntax and features appropriately
+- Wrap any code blocks in tripple backticks like '\`\`\`', as it is done in markdown
 
 For bug fixes:
 - Analyze the root cause
 - Explain the issue and solution
 - Consider edge cases
 - Suggest preventive measures
+
+If you need to write any math, wrpa it in $$ symbols, as it is done in markdown
 
 Always strive to write maintainable, efficient, and well-documented code.`,
     description: "An expert programmer focused on best practices and clean code",
@@ -61,7 +65,7 @@ Focus on building understanding rather than just providing answers.`,
 export const getSystemPrompt = (id: string): SystemPrompt => {
   const prompt = systemPrompts.find((p) => p.id === id);
   if (!prompt) {
-    return systemPrompts[0]; // Return default prompt if ID not found
+    return systemPrompts[0];
   }
   return prompt;
 };
