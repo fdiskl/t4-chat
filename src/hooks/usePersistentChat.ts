@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { FileiInfo } from "@/types/chat";
 import { Chat, StoredMessage } from "@/types/database";
 import { modelId } from "@/types/models";
-import { ChatRequestOptions, UIMessage } from "ai";
+import { Attachment, ChatRequestOptions, UIMessage } from "ai";
 import { useChat } from "ai/react";
 import { useLiveQuery } from "dexie-react-hooks";
 import React from "react";
@@ -30,232 +30,244 @@ export interface usePersistentChatReturnType {
 export interface PersistentChatOptions {
   id?: string;
   model: modelId;
-  files?: FileiInfo[];
+  attachments?: Attachment[];
+  setAttachments?: (a: Attachment[]) => void;
 }
 
 export function usePersistentChat({
   id: chatId,
   model,
-  files,
+  attachments,
+  setAttachments,
 }: PersistentChatOptions): usePersistentChatReturnType {
-  const [error, setError] = useState<Error | null>(null);
-  const nav = useNavigate();
+  try {
+    const [error, setError] = useState<Error | null>(null);
+    const nav = useNavigate();
 
-  const currentChat = useLiveQuery(async () => {
-    if (!chatId) return undefined;
-    return await db.chats.get(chatId);
-  }, [chatId]);
+    const currentChat = useLiveQuery(async () => {
+      if (!chatId) return undefined;
+      return await db.chats.get(chatId);
+    }, [chatId]);
 
-  const storedMessages = useLiveQuery(async () => {
-    if (!chatId) return [];
-    return await db.getChatMessages(chatId);
-  }, [chatId]);
+    const storedMessages = useLiveQuery(async () => {
+      if (!chatId) return [];
+      return await db.getChatMessages(chatId);
+    }, [chatId]);
 
-  const keys = useLiveQuery(async () => {
-    try {
-      const keys = await db.getKeys();
-      return keys;
-    } catch (e) {
-      toast.error("Can't find your keys");
-    }
-  }, []);
-
-  const {
-    input,
-    handleInputChange: originalHandleInputChange,
-    handleSubmit: originalHandleSubmit,
-    setInput,
-    status,
-    stop,
-    messages,
-    reload,
-  } = useChat({
-    api: "/api/chat",
-    id: chatId,
-    body: {
-      model,
-      systemPromptId: "default",
-      openaiKey: keys?.oai,
-      openRouterKey: keys?.openrouter,
-    },
-    experimental_throttle: 50,
-    initialMessages:
-      storedMessages?.map((msg) => ({
-        id: msg.id,
-        content: msg.content,
-        role: msg.role,
-      })) || [],
-    onFinish: async (message) => {
-      if (currentChat) {
-        await persistMessage(message.content, "assistant", currentChat.id, model, message.id);
-      }
-    },
-    onError: (err) => {
-      const errs = err.message.match("Sorry");
-      if (errs && errs.length != 0) {
-        toast.error(err.name, { description: err.message, position: "top-center" });
-      } else {
-        console.error(err.message);
-        toast.error("Unexpected error happened", {
-          description: "Try again later",
-          position: "top-center",
-        });
-      }
-    },
-  });
-
-  const persistMessage = useCallback(
-    async (
-      content: string,
-      role: "user" | "assistant",
-      chatId: string,
-      model: modelId | "user",
-      id?: string
-    ): Promise<StoredMessage> => {
+    const keys = useLiveQuery(async () => {
       try {
-        const message = await db.addMessage(
-          {
-            chatId,
-            content,
-            role,
-            model,
-          },
-          id
-        );
-
-        console.log("persisting msg");
-
-        return message;
-      } catch (error) {
-        console.error(`Error persisting ${role} message:`, error);
-        throw error;
+        const keys = await db.getKeys();
+        return keys;
+      } catch (e) {
+        toast.error("Can't find your keys");
       }
-    },
-    []
-  );
+    }, []);
 
-  const determineSystemPrompt = (content: string): string => {
-    const lowerContent = content.toLowerCase();
-
-    // Check for programming-related keywords
-    if (
-      lowerContent.includes("code") ||
-      lowerContent.includes("programming") ||
-      lowerContent.includes("function") ||
-      lowerContent.includes("bug") ||
-      lowerContent.includes("error")
-    ) {
-      return "programmer";
-    }
-
-    // Check for math-related keywords
-    if (
-      lowerContent.includes("math") ||
-      lowerContent.includes("calculate") ||
-      lowerContent.includes("equation") ||
-      lowerContent.includes("solve")
-    ) {
-      return "math";
-    }
-
-    return "default";
-  };
-
-  const originalHandleInputChangeRef = React.useRef(originalHandleInputChange);
-  originalHandleInputChangeRef.current = originalHandleInputChange;
-
-  const originalHandleSubmitRef = React.useRef(originalHandleSubmit);
-  originalHandleSubmitRef.current = originalHandleSubmit;
-
-  const handleSubmit = useCallback(
-    async (e: React.KeyboardEvent | React.MouseEvent) => {
-      e.preventDefault();
-
-      if (!input.trim()) return;
-
-      try {
-        setError(null);
-
-        if (!chatId) {
-          const newChat = await db.createChat();
-          nav(`/chat/${newChat.id}`);
+    const {
+      input,
+      handleInputChange: originalHandleInputChange,
+      handleSubmit: originalHandleSubmit,
+      setInput,
+      status,
+      stop,
+      messages,
+      reload,
+    } = useChat({
+      api: "/api/chat",
+      id: chatId,
+      body: {
+        model,
+        systemPromptId: "default",
+        openaiKey: keys?.oai,
+        openRouterKey: keys?.openrouter,
+      },
+      experimental_throttle: 50,
+      initialMessages:
+        storedMessages?.map((msg) => ({
+          id: msg.id,
+          content: msg.content,
+          role: msg.role,
+        })) || [],
+      onFinish: async (message) => {
+        if (currentChat) {
+          await persistMessage(message.content, "assistant", currentChat.id, model, message.id);
+        }
+      },
+      keepLastMessageOnError: true,
+      onError: (err) => {
+        const errs = err.message.match("Sorry");
+        if (errs && errs.length != 0) {
+          toast.error(err.name, { description: err.message, position: "top-center" });
+        } else {
+          toast.error("Unexpected error happened", {
+            description: "If this happened when you stopped the chat - everything is fine",
+            position: "top-center",
+          });
           return;
         }
+      },
+    });
 
-        // Determine system prompt based on input content
-        const systemPromptId = determineSystemPrompt(input);
+    const persistMessage = useCallback(
+      async (
+        content: string,
+        role: "user" | "assistant",
+        chatId: string,
+        model: modelId | "user",
+        id?: string
+      ): Promise<StoredMessage> => {
+        try {
+          const message = await db.addMessage(
+            {
+              chatId,
+              content,
+              role,
+              model,
+            },
+            id
+          );
 
-        // Update the body with the determined system prompt
-        const updatedBody = {
-          model,
-          systemPromptId,
-        };
+          console.log("persisting msg");
 
-        // Call original submit with updated body
-        originalHandleSubmitRef.current(e, { body: updatedBody });
-
-        if (currentChat) {
-          await persistMessage(input, "user", currentChat.id, "user");
-
-          if (!currentChat.title) {
-            let title = "";
-            try {
-              const titleResp = await fetch("/api/title", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ msg: input }),
-              });
-
-              if (titleResp.status != 200 || !titleResp.ok) {
-                title = input.slice(0, 50) + (input.length > 50 ? "..." : "");
-              } else {
-                const data = await titleResp.json();
-                console.log(data);
-                if (data && data.result) {
-                  title = String(data.result);
-                } else {
-                  title = input.slice(0, 50) + (input.length > 50 ? "..." : "");
-                }
-              }
-            } catch (e) {
-              console.error(e);
-              title = input.slice(0, 50) + (input.length > 50 ? "..." : "");
-            }
-
-            await db.updateChatTitle(currentChat.id, title);
-          }
+          return message;
+        } catch (error) {
+          console.error(`Error persisting ${role} message:`, error);
+          throw error;
         }
-      } catch (error) {
-        console.error("Error in handleSubmit:", error);
-        setError(error instanceof Error ? error : new Error("Failed to process message"));
+      },
+      []
+    );
+
+    const determineSystemPrompt = (content: string): string => {
+      const lowerContent = content.toLowerCase();
+
+      // Check for programming-related keywords
+      if (
+        lowerContent.includes("code") ||
+        lowerContent.includes("programming") ||
+        lowerContent.includes("function") ||
+        lowerContent.includes("bug") ||
+        lowerContent.includes("error")
+      ) {
+        return "programmer";
       }
-    },
-    [currentChat, chatId, input, persistMessage]
-  );
 
-  const handleInputChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-      originalHandleInputChangeRef.current(e);
-    },
-    []
-  );
+      // Check for math-related keywords
+      if (
+        lowerContent.includes("math") ||
+        lowerContent.includes("calculate") ||
+        lowerContent.includes("equation") ||
+        lowerContent.includes("solve")
+      ) {
+        return "math";
+      }
 
-  const isLoading = currentChat === undefined && !!chatId;
+      return "default";
+    };
 
-  return {
-    input,
-    handleInputChange,
-    handleSubmit,
-    isLoading,
-    error,
-    currentChat,
-    setInput,
-    nav,
-    status,
-    stop,
-    messages,
-    reload,
-  };
+    const originalHandleInputChangeRef = React.useRef(originalHandleInputChange);
+    originalHandleInputChangeRef.current = originalHandleInputChange;
+
+    const originalHandleSubmitRef = React.useRef(originalHandleSubmit);
+    originalHandleSubmitRef.current = originalHandleSubmit;
+
+    const handleSubmit = useCallback(
+      async (e: React.KeyboardEvent | React.MouseEvent) => {
+        e.preventDefault();
+
+        if (!input.trim()) return;
+
+        try {
+          setError(null);
+
+          if (!chatId) {
+            const newChat = await db.createChat();
+            nav(`/chat/${newChat.id}`);
+            return;
+          }
+
+          // Determine system prompt based on input content
+          const systemPromptId = determineSystemPrompt(input);
+
+          // Update the body with the determined system prompt
+          const updatedBody = {
+            model,
+            systemPromptId,
+          };
+
+          // Call original submit with updated body
+          originalHandleSubmitRef.current(e, {
+            body: updatedBody,
+            experimental_attachments: attachments,
+          });
+
+          if (setAttachments) setAttachments([]);
+
+          if (currentChat) {
+            await persistMessage(input, "user", currentChat.id, "user");
+
+            if (!currentChat.title) {
+              let title = "";
+              try {
+                const titleResp = await fetch("/api/title", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ msg: input }),
+                });
+
+                if (titleResp.status != 200 || !titleResp.ok) {
+                  title = input.slice(0, 50) + (input.length > 50 ? "..." : "");
+                } else {
+                  const data = await titleResp.json();
+                  console.log(data);
+                  if (data && data.result) {
+                    title = String(data.result);
+                  } else {
+                    title = input.slice(0, 50) + (input.length > 50 ? "..." : "");
+                  }
+                }
+              } catch (e) {
+                console.error(e);
+                title = input.slice(0, 50) + (input.length > 50 ? "..." : "");
+              }
+
+              await db.updateChatTitle(currentChat.id, title);
+            }
+          }
+        } catch (error) {
+          console.error("Error in handleSubmit:", error);
+          setError(error instanceof Error ? error : new Error("Failed to process message"));
+        }
+      },
+      [currentChat, chatId, input, persistMessage]
+    );
+
+    const handleInputChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+        originalHandleInputChangeRef.current(e);
+      },
+      []
+    );
+
+    const isLoading = currentChat === undefined && !!chatId;
+
+    return {
+      input,
+      handleInputChange,
+      handleSubmit,
+      isLoading,
+      error,
+      currentChat,
+      setInput,
+      nav,
+      status,
+      stop,
+      messages,
+      reload,
+    };
+  } catch (e) {
+    console.error(e);
+  }
 }

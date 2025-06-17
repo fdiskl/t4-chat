@@ -12,13 +12,14 @@ import { toast } from "sonner";
 import { idToModelMap, modelId } from "@/types/models";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
-import { UIMessage } from "ai";
+import { Attachment, UIMessage } from "ai";
 import { useNavigate } from "react-router";
 import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
 import { liveQuery } from "dexie";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Badge } from "./ui/badge";
 import { FileiInfo } from "@/types/chat";
+import ImagePreview, { FilePreview } from "./preview";
 
 export interface ChatProps {
   id: string | undefined;
@@ -38,12 +39,14 @@ const ModelTypeByMsgId = ({ id }: { id: string }) => {
 export const Chat: React.FC<ChatProps> = ({ id }) => {
   const [model, setModel] = useState<modelId>("4.1-nano");
 
-  const [files, setFiles] = useState<FileiInfo[]>([]);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
 
   const { isLoading, handleSubmit, input, handleInputChange, status, messages, reload } =
     usePersistentChat({
       id: id,
       model: model,
+      attachments,
+      setAttachments,
     });
 
   const nav = useNavigate();
@@ -169,9 +172,26 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                   );
                 }
                 return (
-                  <ChatMessage key={message.id} id={message.id} variant="bubble" type="outgoing">
-                    <ChatMessageContent content={message.content} className="max-w-xl" />
-                  </ChatMessage>
+                  <div key={message.id} className="flex flex-col items-end justify-center">
+                    <ChatMessage id={message.id} variant="bubble" type="outgoing">
+                      <ChatMessageContent content={message.content} className="max-w-xl" />
+                    </ChatMessage>
+                    <div className="mt-2 flex flex-row items-end justify-center gap-x-2">
+                      {message.experimental_attachments?.map((f) => (
+                        <div key={f.url}>
+                          {f.contentType?.startsWith("image/") ? (
+                            <>
+                              <ImagePreview url={f.url} />
+                            </>
+                          ) : (
+                            <>
+                              <FilePreview url={f.url} name={f.name} />
+                            </>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 );
               })}
 
@@ -206,16 +226,21 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                     <DialogHeader>
                       <DialogTitle>Upload attachments</DialogTitle>
                     </DialogHeader>
-                    <CustomUploadButton token={tok} setFiles={setFiles} />
+                    <CustomUploadButton
+                      token={tok}
+                      setAttachments={(a: Attachment[]) => {
+                        setAttachments([...a, ...attachments]);
+                      }}
+                    />
                   </DialogContent>
                 </Dialog>
 
-                {files.map((f) => (
+                {attachments.map((f) => (
                   <div key={f.url} className="flex h-full flex-row items-center justify-center">
                     <Badge variant="secondary">
                       <button
                         onClick={() => {
-                          setFiles(files.filter((ff) => ff.url !== f.url));
+                          setAttachments(attachments.filter((ff) => ff.url !== f.url));
                         }}>
                         <X className="h-4 w-4" />
                       </button>
@@ -226,7 +251,11 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
               </div>
               <ChatInputSubmit
                 loading={status === "streaming" || status === "submitted"}
-                onStop={stop}
+                onStop={() => {
+                  try {
+                    stop();
+                  } catch (e) {}
+                }}
               />
             </div>
           </div>
@@ -238,10 +267,10 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
 
 function CustomUploadButton({
   token,
-  setFiles,
+  setAttachments,
 }: {
   token: string | null;
-  setFiles: (r: FileiInfo[]) => void;
+  setAttachments: (r: Attachment[]) => void;
 }) {
   return (
     <div>
@@ -251,14 +280,15 @@ function CustomUploadButton({
         onClientUploadComplete={(res) => {
           toast.success("Successful upload", { position: "top-center" });
 
-          const r: FileiInfo[] = res.map((rr) => {
+          const r: Attachment[] = res.map((rr) => {
             return {
               name: rr.name,
               url: rr.ufsUrl,
+              contentType: rr.type,
             };
           });
 
-          setFiles(r);
+          setAttachments(r);
         }}
         onUploadError={(error: Error) => {
           toast.error(error.name, { description: error.message, position: "top-center" });

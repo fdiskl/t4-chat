@@ -60,6 +60,7 @@ export async function POST(req: Request) {
       model: openai(m.openaiProvider, {}),
       system: "You are a helpful assistant",
       messages,
+      abortSignal: req.signal,
     });
 
     return result.toDataStreamResponse();
