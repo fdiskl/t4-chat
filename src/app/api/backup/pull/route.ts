@@ -27,7 +27,19 @@ export async function POST(req: Request) {
           chatId: { in: chatIds },
           lastModified: { gt: lastSyncedDate },
         },
+        include: {
+          attachments: true,
+        },
       });
+
+      messages = messages.map((msg) => ({
+        ...msg,
+        attachments: (msg.attachments || []).map((att: any) => ({
+          name: att.name || undefined,
+          contentType: att.type || undefined,
+          url: att.url,
+        })),
+      }));
     }
 
     return NextResponse.json({ chats, messages });

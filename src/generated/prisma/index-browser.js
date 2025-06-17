@@ -140,8 +140,15 @@ exports.Prisma.StoredMessageScalarFieldEnum = {
   created_at: 'created_at',
   isPartial: 'isPartial',
   model: 'model',
-  lastModified: 'lastModified',
-  attachments: 'attachments'
+  lastModified: 'lastModified'
+};
+
+exports.Prisma.AttachmentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  url: 'url',
+  type: 'type',
+  storedMessageId: 'storedMessageId'
 };
 
 exports.Prisma.KeysScalarFieldEnum = {
@@ -180,6 +187,7 @@ exports.Role = exports.$Enums.Role = {
 exports.Prisma.ModelName = {
   Chat: 'Chat',
   StoredMessage: 'StoredMessage',
+  Attachment: 'Attachment',
   Keys: 'Keys',
   UserFiles: 'UserFiles'
 };

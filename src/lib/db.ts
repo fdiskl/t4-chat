@@ -2,7 +2,7 @@ import { AuthToken, Chat, Keys, LastModel, LastSynced, StoredMessage } from "@/t
 import Dexie, { Table } from "dexie";
 import { nanoid } from "nanoid";
 import { $Enums, Chat as PrismChat, StoredMessage as PrismMsg } from "@/generated/prisma";
-import { Message } from "ai";
+import { Attachment, Message } from "ai";
 import { modelId } from "@/types/models";
 import { Pi } from "lucide-react";
 
@@ -176,11 +176,15 @@ class ChatDatabase extends Dexie {
     message: Omit<StoredMessage, "id" | "created_at">,
     id?: string
   ): Promise<StoredMessage> {
+    console.log(message);
+
     const storedMessage: StoredMessage = {
       ...message,
       id: id ? id : nanoid(),
       created_at: new Date(),
     };
+
+    console.log(storedMessage);
 
     await this.messages.add(storedMessage);
     await this.chats.update(message.chatId, {
@@ -252,7 +256,7 @@ class ChatDatabase extends Dexie {
     }
   }
 
-  async createOrUpdateMsg(id: string, msg: PrismMsg): Promise<void> {
+  async createOrUpdateMsg(id: string, msg: BetterPrismMsg): Promise<void> {
     const c = await this.messages.get(id);
 
     const o: Partial<StoredMessage> = {
@@ -305,3 +309,7 @@ class ChatDatabase extends Dexie {
 }
 
 export const db = new ChatDatabase();
+
+interface BetterPrismMsg extends PrismMsg {
+  attachments: Attachment[];
+}

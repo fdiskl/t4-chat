@@ -27,17 +27,27 @@ model Chat {
 }
 
 model StoredMessage {
-  id           String    @id @default(uuid())
+  id           String       @id @default(uuid())
   chatId       String
   content      String
   role         Role
-  created_at   DateTime  @default(now())
+  created_at   DateTime     @default(now())
   isPartial    Boolean? // optional
   model        String // can be "user" or other model names
   lastModified DateTime? // New field for message modification timestamp
-  attachments  String[]  @default([])
+  attachments  Attachment[]
 
   Chat Chat @relation(fields: [chatId], references: [id])
+}
+
+model Attachment {
+  id String @id @default(uuid())
+
+  name            String
+  url             String
+  type            String
+  StoredMessage   StoredMessage? @relation(fields: [storedMessageId], references: [id])
+  storedMessageId String?
 }
 
 model Keys {

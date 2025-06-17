@@ -1,3 +1,5 @@
+import { Attachment } from "ai";
+
 export interface Chat {
   id: string;
   title?: string;
@@ -17,6 +19,8 @@ export interface StoredMessage {
   isPartial?: boolean;
   model: string;
   lastModified?: Date; // optional
+
+  attachments: Attachment[];
 }
 
 export interface AuthToken {

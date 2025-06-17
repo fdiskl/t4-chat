@@ -86,10 +86,18 @@ export function usePersistentChat({
         id: msg.id,
         content: msg.content,
         role: msg.role,
+        experimental_attachments: msg.attachments,
       })) || [],
     onFinish: async (message) => {
       if (currentChat) {
-        await persistMessage(message.content, "assistant", currentChat.id, model, message.id);
+        await persistMessage(
+          message.content,
+          "assistant",
+          currentChat.id,
+          model,
+          message.experimental_attachments ?? [],
+          message.id
+        );
       }
     },
     keepLastMessageOnError: true,
@@ -114,8 +122,8 @@ export function usePersistentChat({
       role: "user" | "assistant",
       chatId: string,
       model: modelId | "user",
-      id?: string,
-      attachments?: Attachment[]
+      attachments: Attachment[],
+      id?: string
     ): Promise<StoredMessage> => {
       try {
         const message = await db.addMessage(
@@ -124,7 +132,7 @@ export function usePersistentChat({
             content,
             role,
             model,
-            attachments: !attachments ? [] : attachments.map((a) => a.url),
+            attachments: attachments,
           },
           id
         );
@@ -206,7 +214,7 @@ export function usePersistentChat({
         if (setAttachments) setAttachments([]);
 
         if (currentChat) {
-          await persistMessage(input, "user", currentChat.id, "user");
+          await persistMessage(input, "user", currentChat.id, "user", attachments ?? []);
 
           if (!currentChat.title) {
             let title = "";

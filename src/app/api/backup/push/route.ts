@@ -1,5 +1,6 @@
 import { PrismaClient } from "@/generated/prisma/edge";
 import { NextResponse } from "next/server";
+import { Attachment } from "ai";
 
 export async function POST(req: Request) {
   const { chats: allChats, messages: allMessages, tok } = await req.json();
@@ -68,6 +69,7 @@ export async function POST(req: Request) {
         console.error(`Chat with id ${message.chatId} not found for message ${message.id}`);
         continue;
       }
+
       await prisma.storedMessage.upsert({
         where: { id: message.id },
         update: {
@@ -77,7 +79,6 @@ export async function POST(req: Request) {
           created_at: message.created_at,
           lastModified: message.lastModified ?? message.created_at,
           model: message.model,
-          attachments: message.attachments,
         },
         create: {
           id: message.id,
@@ -87,9 +88,56 @@ export async function POST(req: Request) {
           created_at: message.created_at,
           lastModified: message.lastModified ?? message.created_at,
           model: message.model,
-          attachments: message.attachments,
         },
       });
+
+      const incomingAttachments = (message.attachments ?? []) as Attachment[];
+
+      // 2. Get existing attachments from DB for this message
+      const existingAttachments = await prisma.attachment.findMany({
+        where: { storedMessageId: message.id },
+      });
+
+      // 3. Delete attachments that are no longer present
+      const incomingUrls = new Set(incomingAttachments.map((a) => a.url));
+      const toDelete = existingAttachments.filter((a) => !incomingUrls.has(a.url));
+      if (toDelete.length > 0) {
+        await prisma.attachment.deleteMany({
+          where: {
+            id: { in: toDelete.map((a) => a.id) },
+          },
+        });
+      }
+
+      // 4. Upsert (create or update) incoming attachments
+      for (const att of incomingAttachments) {
+        // Try to find by URL and storedMessageId
+        const existing = existingAttachments.find((a) => a.url === att.url);
+
+        if (existing) {
+          // Update if needed
+          await prisma.attachment.update({
+            where: { id: existing.id },
+            data: {
+              name: att.name ?? existing.name,
+              type: att.contentType ?? existing.type,
+              url: att.url,
+              storedMessageId: message.id,
+            },
+          });
+        } else {
+          // Create new
+          await prisma.attachment.create({
+            data: {
+              name: att.name ?? "",
+              type: att.contentType ?? "",
+              url: att.url,
+              storedMessageId: message.id,
+            },
+          });
+        }
+      }
+      // --- ATTACHMENTS HANDLING ENDS HERE ---
     }
     return new NextResponse("OK", { status: 200 });
   } catch (e) {

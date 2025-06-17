@@ -32,11 +32,16 @@ export default function Main() {
   };
 
   const backup = async () => {
-    const tok = await db.getToken();
-    if (!tok) return;
-    await updateLocalData();
-    await backupToServer();
-    await db.setLastSynced(new Date());
+    try {
+      const tok = await db.getToken();
+      if (!tok) return;
+      await updateLocalData();
+      await backupToServer();
+      await db.setLastSynced(new Date());
+    } catch (e) {
+      toast.error("Couldn't sync your data in background :(", { position: "top-center" });
+      console.error(e);
+    }
   };
 
   useEffect(() => {
