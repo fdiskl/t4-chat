@@ -1,5 +1,3 @@
-import { OpenAIProvider } from "@ai-sdk/openai";
-
 // I spent almost hour just doing this one file...
 
 export type modelId =
@@ -87,11 +85,18 @@ type OpenAIChatModelId =
   | "gpt-3.5-turbo-1106"
   | "chatgpt-4o-latest";
 
+export enum Capability {
+  Image,
+  Thinking,
+  Fast,
+}
+
 export interface ModelConfig {
   name: string;
   contextWindow?: number;
   provider: provider;
   id: modelId;
+  capabilities?: Set<Capability>;
 
   openaiProvider?: OpenAIChatModelId;
   openRouterProvider?: string;
@@ -105,6 +110,7 @@ export const models: ModelConfig[] = [
     id: "4o-mini",
     openaiProvider: "gpt-4o-mini",
     openRouterProvider: "openai/gpt-4o-mini",
+    capabilities: new Set([Capability.Image]),
   },
   {
     name: "GPT-4o",
@@ -112,6 +118,7 @@ export const models: ModelConfig[] = [
     id: "4o",
     openaiProvider: "gpt-4o",
     openRouterProvider: "openai/gpt-4o",
+    capabilities: new Set([Capability.Image]),
   },
   {
     name: "GPT-4.1",
@@ -119,6 +126,7 @@ export const models: ModelConfig[] = [
     id: "4.1",
     openaiProvider: "gpt-4.1",
     openRouterProvider: "openai/gpt-4.1",
+    capabilities: new Set([Capability.Image]),
   },
   {
     name: "GPT-4.1 Mini",
@@ -126,6 +134,7 @@ export const models: ModelConfig[] = [
     id: "4.1-mini",
     openaiProvider: "gpt-4.1-mini",
     openRouterProvider: "openai/gpt-4.1-mini",
+    capabilities: new Set([Capability.Image]),
   },
   {
     name: "GPT-4.1 Nano",
@@ -133,6 +142,7 @@ export const models: ModelConfig[] = [
     id: "4.1-nano",
     openaiProvider: "gpt-4.1-nano",
     openRouterProvider: "openai/gpt-4.1-nano",
+    capabilities: new Set([Capability.Image]),
   },
   {
     name: "o3 Mini",
@@ -140,6 +150,7 @@ export const models: ModelConfig[] = [
     id: "o3-mini",
     openaiProvider: "o3-mini",
     openRouterProvider: "openai/gpt-o3-mini",
+    capabilities: new Set([Capability.Thinking]),
   },
   {
     name: "o3",
@@ -147,6 +158,7 @@ export const models: ModelConfig[] = [
     id: "o3",
     openaiProvider: "o3",
     // no open router here
+    capabilities: new Set([Capability.Thinking]),
   },
   {
     name: "o4 Mini",
@@ -154,6 +166,7 @@ export const models: ModelConfig[] = [
     id: "o4-mini",
     openaiProvider: "o4-mini",
     openRouterProvider: "openai/gpt-o4-mini",
+    capabilities: new Set([Capability.Thinking]),
   },
   // gemini
   {
@@ -161,18 +174,21 @@ export const models: ModelConfig[] = [
     id: "2-flash",
     provider: "Gemini",
     openRouterProvider: "google/gemini-2.0-flash-001",
+    capabilities: new Set([Capability.Image]),
   },
   {
     name: "Gemini 2.0 Flash Lite",
     id: "2-flash-lite",
     provider: "Gemini",
     openRouterProvider: "google/gemini-2.0-flash-lite-001",
+    capabilities: new Set([Capability.Image, Capability.Fast]),
   },
   {
     name: "Gemini 2.5 Flash",
     id: "2.5-flash",
     provider: "Gemini",
     openRouterProvider: "google/gemini-2.5-flash-preview",
+    capabilities: new Set([Capability.Image]),
   },
   // {
   //   name: "Gemini 2.0 Flash (Thinking)",
@@ -184,6 +200,7 @@ export const models: ModelConfig[] = [
     id: "2.5-pro",
     provider: "Gemini",
     openRouterProvider: "google/gemini-2.5-pro-preview",
+    capabilities: new Set([Capability.Image, Capability.Thinking]),
   },
   // deepseek
   {
@@ -197,6 +214,7 @@ export const models: ModelConfig[] = [
     id: "r1",
     provider: "Deepseek",
     openRouterProvider: "deepseek/deepseek-r1-0528",
+    capabilities: new Set([Capability.Thinking]),
   },
   // claude
   {
@@ -204,24 +222,28 @@ export const models: ModelConfig[] = [
     id: "3.5",
     provider: "Anthropic",
     openRouterProvider: "anthropic/claude-3.5-sonnet",
+    capabilities: new Set([Capability.Image]),
   },
   {
     name: "Claude 3.7 Sonnet",
     id: "3.7",
     provider: "Anthropic",
     openRouterProvider: "anthropic/claude-3.7-sonnet",
+    capabilities: new Set([Capability.Image]),
   },
   {
     name: "Claude 3.7 Sonnet (Thinking)",
     id: "3.7-t",
     provider: "Anthropic",
     openRouterProvider: "anthropic/claude-3.7-sonnet:thinking",
+    capabilities: new Set([Capability.Image, Capability.Thinking]),
   },
   {
     name: "Claude 4 Sonnet",
     id: "4",
     provider: "Anthropic",
     openRouterProvider: "anthropic/claude-sonnet-4",
+    capabilities: new Set([Capability.Image]),
   },
   // {
   //   name: "Claude 4 Sonnet (Thinking)",
@@ -231,21 +253,18 @@ export const models: ModelConfig[] = [
   // }, i have no idea how to make it think tho
   // llama
   {
-    name: "LLama 3.3 70b",
-    id: "3.3",
-    provider: "Llama",
-  },
-  {
     name: "LLama 4 Scout",
     id: "l4-scout",
     provider: "Llama",
     openRouterProvider: "meta-llama/llama-4-scout",
+    capabilities: new Set([Capability.Image]),
   },
   {
     name: "LLama 4 Maverick",
     id: "l4-maverick",
     provider: "Llama",
     openRouterProvider: "meta-llama/llama-4-maverick",
+    capabilities: new Set([Capability.Image]),
   },
   // grok
   {
@@ -259,6 +278,7 @@ export const models: ModelConfig[] = [
     id: "grok-3-mini",
     provider: "Grok",
     openRouterProvider: "x-ai/grok-3-mini-beta",
+    capabilities: new Set([Capability.Thinking]),
   },
 ] as const;
 

@@ -14,8 +14,18 @@ import {
 } from "./dropdown-menu";
 import { Button } from "./button";
 import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-import { ChevronDown } from "lucide-react";
-import { allProviders, idToModelMap, modelId, provider, providerToModels } from "@/types/models";
+import { Brain, ChevronDown, Eye, Zap } from "lucide-react";
+import {
+  allProviders,
+  Capability,
+  idToModelMap,
+  modelId,
+  provider,
+  providerToModels,
+} from "@/types/models";
+import { Record } from "@/generated/prisma/runtime/library";
+import { Badge } from "./badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
 interface ModelSelectorProps extends DropdownMenuProps {
   value: modelId;
@@ -55,9 +65,26 @@ export function ModelSelector({ value, onChange, ...props }: ModelSelectorProps)
                       <DropdownMenuRadioItem
                         key={m.name}
                         value={m.id}
-                        className="flex flex-row items-center justify-start gap-x-2">
-                        <Icon />
-                        {m.name}
+                        className="flex flex-row items-center justify-between gap-x-4">
+                        <div className="flex flex-row items-center justify-center gap-x-2">
+                          <Icon />
+                          {m.name}
+                        </div>
+
+                        <div className="flex flex-row items-center justify-center gap-x-2">
+                          {m.capabilities && (
+                            <>
+                              {[...m.capabilities].map((c) => {
+                                const CIcon = CapabilitiesIcons[c];
+                                return (
+                                  <div key={String(c)}>
+                                    <CIcon />
+                                  </div>
+                                );
+                              })}
+                            </>
+                          )}
+                        </div>
                       </DropdownMenuRadioItem>
                     ))}
                   </DropdownMenuSubContent>
@@ -232,6 +259,45 @@ const Meta = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+const CapabilityThinking = () => {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div>
+          <Brain className="h-4 w-4" />
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>Has reasoning capabilities</TooltipContent>
+    </Tooltip>
+  );
+};
+
+const CapabilityImage = () => {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div>
+          <Eye className="h-4 w-4" />
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>Has ability to analyze images</TooltipContent>
+    </Tooltip>
+  );
+};
+
+const CapabilityFast = () => {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div>
+          <Zap className="h-4 w-4" />
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>Is really damn fast</TooltipContent>
+    </Tooltip>
+  );
+};
+
 const ModelIcons: Record<provider, ElementType> = {
   Gemini: Gemini,
   Openai: OpenAI,
@@ -239,4 +305,10 @@ const ModelIcons: Record<provider, ElementType> = {
   Anthropic: ClaudeAI,
   Grok: Grok,
   Llama: Meta,
+};
+
+const CapabilitiesIcons: Record<Capability, ElementType> = {
+  "0": CapabilityImage,
+  "1": CapabilityThinking,
+  "2": CapabilityFast,
 };
