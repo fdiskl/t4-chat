@@ -1,3 +1,5 @@
+"use client";
+
 import { ChatInput, ChatInputSubmit, ChatInputTextArea } from "@/components/ui/chat-input";
 import { ChatMessage, ChatMessageContent } from "@/components/ui/chat-message";
 import { ChatMessageArea } from "@/components/ui/chat-message-area";
@@ -12,6 +14,9 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 import { UIMessage } from "ai";
 import { useNavigate } from "react-router";
+import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
+import { liveQuery } from "dexie";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 
 export interface ChatProps {
   id: string | undefined;
@@ -73,6 +78,25 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
       toast.error(String(e), { position: "top-center" });
     }
   };
+
+  const [tok, setTok] = useState<string | null>(null);
+
+  useEffect(() => {
+    const subscription = liveQuery(() => db.getToken()).subscribe({
+      next: (tokenRecord) => {
+        if (tokenRecord) {
+          setTok(tokenRecord.token);
+        } else {
+          setTok(null);
+        }
+      },
+      error: (err) => {
+        console.error("Dexie liveQuery error:", err);
+      },
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <div className="flex h-full flex-1 flex-col overflow-y-auto">
@@ -168,13 +192,19 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
             <div className="flex w-full flex-row justify-between">
               <div className="flex flex-row gap-x-2">
                 <ModelSelector value={model} onChange={(v) => handleModelChange(v)} />
-                <Button size="default" variant="outline">
-                  <Globe />
-                  Search
-                </Button>
-                <Button size="icon" variant="outline">
-                  <Paperclip />
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="icon" variant="outline">
+                      <Paperclip />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Upload attachments</DialogTitle>
+                    </DialogHeader>
+                    <CustomUploadButton token={tok} />
+                  </DialogContent>
+                </Dialog>
               </div>
               <ChatInputSubmit
                 loading={status === "streaming" || status === "submitted"}
@@ -187,3 +217,23 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
     </div>
   );
 };
+
+function CustomUploadButton({ token }: { token: string | null }) {
+  return (
+    <div>
+      <UploadDropzone
+        disabled={token === null}
+        endpoint="msgAttachment"
+        onClientUploadComplete={(res) => {
+          toast.success("Successful upload", { position: "top-center" });
+          console.log(res);
+        }}
+        onUploadError={(error: Error) => {
+          toast.error(error.name, { description: error.message, position: "top-center" });
+        }}
+        headers={[["Authorization", `Bearer ${token}`]]}
+        className="ut-label:hover:text-secondary-foreground ut-label:text-muted-foreground ut-button:bg-secondary ut-button:text-secondary-foreground my-8 h-full w-full !p-0"
+      />
+    </div>
+  );
+}

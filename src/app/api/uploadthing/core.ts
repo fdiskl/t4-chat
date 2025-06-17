@@ -5,7 +5,7 @@ import { PrismaClient } from "@/generated/prisma/edge";
 
 const f = createUploadthing();
 
-export const fileRouter = {
+export const ourFileRouter = {
   msgAttachment: f({
     // idk
     image: { maxFileSize: "8MB", maxFileCount: 5 },
@@ -14,15 +14,23 @@ export const fileRouter = {
   })
     .middleware(async ({ req }) => {
       try {
-        const { token } = await req.json();
+        const authHeader = req.headers.get("authorization");
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+          throw new UploadThingError("unauthorized");
+        }
+
+        const token = authHeader.split(" ")[1];
 
         if (!token) throw new UploadThingError("unauthorized");
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+
+        console.log(decoded);
+
         let id: string | undefined;
 
-        if (typeof decoded === "object" && decoded !== null && "id" in decoded) {
-          id = (decoded as JwtPayload & { id?: string }).id;
+        if (typeof decoded === "object" && decoded !== null && "login" in decoded) {
+          id = (decoded as JwtPayload & { login?: string }).login;
         }
 
         if (!id) throw new UploadThingError("Unauthorized");
@@ -70,4 +78,6 @@ export const fileRouter = {
         throw new UploadThingError("Something went wrong");
       }
     }),
-};
+} satisfies FileRouter;
+
+export type OurFileRouter_t = typeof ourFileRouter;
