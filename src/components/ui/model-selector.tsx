@@ -36,7 +36,9 @@ export function ModelSelector({ value, onChange, ...props }: ModelSelectorProps)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="nodrag flex w-48 flex-row items-center justify-center">
+        <Button
+          variant="outline"
+          className="nodrag flex w-48 flex-row items-center justify-center bg-transparent">
           <span className="overflow-hidden truncate text-ellipsis whitespace-nowrap">
             {idToModelMap[value].name}
           </span>

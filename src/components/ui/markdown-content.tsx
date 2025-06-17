@@ -5,16 +5,17 @@ import { memo, useDeferredValue, useMemo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { vscDarkPlus, oneLight, dracula } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Button } from "./button";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
+import styles from "../dark.js";
 
 const DEFAULT_PRE_BLOCK_CLASS =
   "overflow-x-auto w-fit rounded-xl bg-zinc-900 text-zinc-50 border border-border p-4";
 
 const DEFAULT_PRE_WHITE_BLOCK_CLASS =
-  "overflow-x-auto w-fit rounded-xl bg-[#fafafa] text-zinc-50  border border-border p-4";
+  "overflow-x-auto w-fit rounded-xl bg-[#362d3d] text-zinc-50  border border-border p-4";
 
 interface CodeBlockProps extends React.HTMLAttributes<HTMLPreElement> {
   language: string;
@@ -38,8 +39,13 @@ const CodeBlock = ({
         return (
           <SyntaxHighlighter
             language={language}
-            style={shouldBeWhiteThemed ? oneLight : vscDarkPlus}
-            customStyle={{ marginTop: 0, paddingTop: 0 }}
+            style={styles}
+            customStyle={{
+              marginTop: 0,
+              paddingTop: 0,
+              borderTopRightRadius: 0,
+              borderTopLeftRadius: 0,
+            }}
             {...props}>
             {codeText}
           </SyntaxHighlighter>
@@ -75,17 +81,13 @@ const CodeBlock = ({
 
   return (
     <div className="relative overflow-hidden rounded-md border">
-      <div
-        className={cn("flex items-center justify-between bg-[#1e1e1e] px-2 text-sm text-white", {
-          "bg-[#1e1e1e]": !shouldBeWhiteThemed,
-          "bg-[#fafafa] text-black": shouldBeWhiteThemed,
-        })}>
+      <div className={cn("flex items-center justify-between bg-[#362d3d] px-2 text-sm text-white")}>
         <div className="font-mono">{language}</div>
         <Button
           variant="outline"
           className={cn({
-            "bg-[#1e1e1e]": !shouldBeWhiteThemed,
-            "!border-0 bg-[#fafafa] text-black": shouldBeWhiteThemed,
+            "bg-[#362d3d]": !shouldBeWhiteThemed,
+            "!border-0 bg-[#362d3d]": shouldBeWhiteThemed,
           })}
           size="icon"
           onClick={async () => {
@@ -101,6 +103,8 @@ const CodeBlock = ({
           <Copy />
         </Button>
       </div>
+
+      <div className="h-2 w-full bg-[#19161f]"></div>
 
       {/* Code Content */}
       {renderCode()}
@@ -248,7 +252,7 @@ const whiteComponents: Partial<Components> = {
     }
     return (
       <code
-        className={cn("rounded bg-zinc-300 px-[0.3rem] py-[0.2rem] font-mono text-sm", className)}
+        className={cn("rounded bg-[#362d3d] px-[0.3rem] py-[0.2rem] font-mono text-sm", className)}
         {...props}>
         {children}
       </code>

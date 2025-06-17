@@ -30,6 +30,7 @@ export default withUt({
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        msg: "hsl(var(--msg))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

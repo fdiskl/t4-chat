@@ -129,7 +129,7 @@ const chatMessageContentVariants = cva("flex flex-col gap-2", {
     {
       variant: "bubble",
       type: "outgoing",
-      className: "bg-primary text-primary-foreground",
+      className: "bg-msg text-primary-foreground text-white",
     },
   ],
   defaultVariants: {

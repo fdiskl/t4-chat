@@ -218,7 +218,7 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
                 <ModelSelector value={model} onChange={(v) => handleModelChange(v)} />
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="icon" variant="outline">
+                    <Button size="icon" variant="outline" className="bg-transparent">
                       <Paperclip />
                     </Button>
                   </DialogTrigger>
@@ -294,7 +294,7 @@ function CustomUploadButton({
           toast.error(error.name, { description: error.message, position: "top-center" });
         }}
         headers={[["Authorization", `Bearer ${token}`]]}
-        className="ut-label:hover:text-secondary-foreground ut-label:text-muted-foreground ut-button:bg-secondary ut-button:text-secondary-foreground my-8 h-full w-full !p-0"
+        className="my-8 h-full w-full !p-0 ut-button:bg-secondary ut-button:text-secondary-foreground ut-label:text-muted-foreground ut-label:hover:text-secondary-foreground"
       />
     </div>
   );
