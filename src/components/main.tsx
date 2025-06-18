@@ -11,7 +11,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { Chat } from "@/components/chat";
 import { Sidebar } from "@/components/sidebar";
 import { Button } from "./ui/button";
-import { Share } from "lucide-react";
+import { Plus, Share } from "lucide-react";
 import { TooltipContent, TooltipTrigger, Tooltip } from "./ui/tooltip";
 import { useNavigate, useParams } from "react-router";
 import { usePersistentChat } from "@/hooks/usePersistentChat";
@@ -80,9 +80,9 @@ export default function Main() {
   }, [id]);
 
   const title = useLiveQuery(async () => {
-    if (!id) return undefined;
+    if (!id) return "New chat";
     const c = await db.getChatById(id);
-    return c ? c.title : "";
+    return c ? c.title : "New chat";
   }, [id]);
 
   const nav = useNavigate();
@@ -94,10 +94,18 @@ export default function Main() {
         <header className="border-1 sticky top-0 flex shrink-0 items-center justify-between gap-2 border-b border-primary/35 bg-background py-1">
           <div className="flex flex-1 items-center gap-2 px-3">
             <SidebarTrigger />
+            {!open && (
+              <>
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={newChat}>
+                  <Plus />
+                </Button>
+              </>
+            )}
+            <Separator orientation="vertical" className="h-4 border-primary" />
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="line-clamp-1">{title}</BreadcrumbPage>
+                  <BreadcrumbPage className="line-clamp-1">{title ?? "New chat"}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
