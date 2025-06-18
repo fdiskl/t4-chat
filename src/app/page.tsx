@@ -14,5 +14,5 @@ export default function Page() {
     router.push("/chat");
   }, []);
 
-  return <>Go to /chat</>;
+  return <>Regirecting to /chat ...</>;
 }

@@ -108,7 +108,7 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
   return (
     <div className="flex h-full flex-1 flex-col overflow-y-auto">
       <ChatMessageArea scrollButtonAlignment="center">
-        <div className="mx-auto w-full max-w-3xl space-y-4 px-4 py-8">
+        <div className="mx-auto mb-32 w-full max-w-3xl space-y-4 py-8">
           {messages.length === 0 ? (
             <>
               <div className="mt-80 flex w-full items-center justify-center">
@@ -204,62 +204,64 @@ export const Chat: React.FC<ChatProps> = ({ id }) => {
           )}
         </div>
       </ChatMessageArea>
-      <div className="mx-auto w-full max-w-3xl px-2 py-4">
-        <ChatInput
-          value={input}
-          onChange={handleInputChange}
-          onSubmit={handleSubmit}
-          loading={isLoading}
-          onStop={stop}>
-          <div className="flex w-full flex-col">
-            <ChatInputTextArea placeholder="Type a message..." />
-            <div className="flex w-full flex-row justify-between">
-              <div className="flex flex-row gap-x-2">
-                <ModelSelector value={model} onChange={(v) => handleModelChange(v)} />
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button size="icon" variant="outline" className="bg-transparent">
-                      <Paperclip />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Upload attachments</DialogTitle>
-                    </DialogHeader>
-                    <CustomUploadButton
-                      token={tok}
-                      setAttachments={(a: Attachment[]) => {
-                        setAttachments([...a, ...attachments]);
-                      }}
-                    />
-                  </DialogContent>
-                </Dialog>
+      <div className="pointer-events-none absolute bottom-0 z-10 w-full">
+        <div className="pointer-events-auto relative mx-auto flex w-full max-w-3xl flex-col text-center">
+          <ChatInput
+            value={input}
+            onChange={handleInputChange}
+            onSubmit={handleSubmit}
+            loading={isLoading}
+            onStop={stop}>
+            <div className="flex w-full flex-col">
+              <ChatInputTextArea placeholder="Type a message..." />
+              <div className="flex w-full flex-row justify-between">
+                <div className="flex flex-row gap-x-2">
+                  <ModelSelector value={model} onChange={(v) => handleModelChange(v)} />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="icon" variant="outline" className="bg-transparent">
+                        <Paperclip />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Upload attachments</DialogTitle>
+                      </DialogHeader>
+                      <CustomUploadButton
+                        token={tok}
+                        setAttachments={(a: Attachment[]) => {
+                          setAttachments([...a, ...attachments]);
+                        }}
+                      />
+                    </DialogContent>
+                  </Dialog>
 
-                {attachments.map((f) => (
-                  <div key={f.url} className="flex h-full flex-row items-center justify-center">
-                    <Badge variant="secondary">
-                      <button
-                        onClick={() => {
-                          setAttachments(attachments.filter((ff) => ff.url !== f.url));
-                        }}>
-                        <X className="h-4 w-4" />
-                      </button>
-                      {f.name}
-                    </Badge>
-                  </div>
-                ))}
+                  {attachments.map((f) => (
+                    <div key={f.url} className="flex h-full flex-row items-center justify-center">
+                      <Badge variant="secondary">
+                        <button
+                          onClick={() => {
+                            setAttachments(attachments.filter((ff) => ff.url !== f.url));
+                          }}>
+                          <X className="h-4 w-4" />
+                        </button>
+                        {f.name}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+                <ChatInputSubmit
+                  loading={status === "streaming" || status === "submitted"}
+                  onStop={() => {
+                    try {
+                      stop();
+                    } catch (e) {}
+                  }}
+                />
               </div>
-              <ChatInputSubmit
-                loading={status === "streaming" || status === "submitted"}
-                onStop={() => {
-                  try {
-                    stop();
-                  } catch (e) {}
-                }}
-              />
             </div>
-          </div>
-        </ChatInput>
+          </ChatInput>
+        </div>
       </div>
     </div>
   );
@@ -294,7 +296,7 @@ function CustomUploadButton({
           toast.error(error.name, { description: error.message, position: "top-center" });
         }}
         headers={[["Authorization", `Bearer ${token}`]]}
-        className="my-8 h-full w-full !p-0 ut-button:bg-secondary ut-button:text-secondary-foreground ut-label:text-muted-foreground ut-label:hover:text-secondary-foreground"
+        className="my-8 h-full w-full !p-0 ut-button:bg-secondary ut-button:text-secondary-foreground ut-label:text-muted-foreground ut-label:hover:text-secondary-foreground ut-button:ut-uploading:bg-primary"
       />
     </div>
   );
