@@ -81,8 +81,9 @@ export default function Main() {
 
   const title = useLiveQuery(async () => {
     if (!id) return undefined;
-    await db.getChatById(id);
-  });
+    const c = await db.getChatById(id);
+    return c ? c.title : "";
+  }, [id]);
 
   const nav = useNavigate();
 

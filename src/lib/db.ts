@@ -140,12 +140,13 @@ class ChatDatabase extends Dexie {
       throw new Error("chat not found");
     }
 
-    const { id: oldId, parentId: _, created_at: __, ...rest } = chat;
+    const { id: oldId, parentId: _, created_at: __, updated_at: ___, ...rest } = chat;
 
     const newId = await db.chats.add({
       id: nanoid(),
       parentId: oldId,
       created_at: new Date(),
+      updated_at: new Date(),
       ...rest,
     });
 
@@ -339,7 +340,7 @@ class ChatDatabase extends Dexie {
 
       for (const c of chatsToCheck) {
         const parent = await this.chats.get(c.parentId);
-        if (parent === undefined) {
+        if (parent === undefined || parent.isDeleted === true) {
           this.chats.update(c.id, {
             parentId: undefined,
           });
