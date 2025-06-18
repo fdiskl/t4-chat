@@ -15,15 +15,31 @@ import { Share } from "lucide-react";
 import { TooltipContent, TooltipTrigger, Tooltip } from "./ui/tooltip";
 import { useNavigate, useParams } from "react-router";
 import { usePersistentChat } from "@/hooks/usePersistentChat";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { modelId } from "@/types/models";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 import { toast } from "sonner";
 import { backupToServer, updateLocalData } from "@/lib/realdb/real";
+import { setOptions } from "marked";
 
 export default function Main() {
   const { id } = useParams();
+
+  const [open, setOpen] = useState(true);
+
+  const changeIsOpen = useCallback((o: boolean) => {
+    db.setIsOpen(o);
+    setOpen(o);
+  }, []);
+
+  const getFirstIsOpen = async () => {
+    setOpen(await db.getIsOpen());
+  };
+
+  useEffect(() => {
+    getFirstIsOpen();
+  }, []);
 
   const newChat = async () => {
     await db.deleteEmptyChats();
@@ -71,7 +87,7 @@ export default function Main() {
   const nav = useNavigate();
 
   return (
-    <SidebarProvider>
+    <SidebarProvider open={open} onOpenChange={changeIsOpen}>
       <Sidebar nav={nav} id={id} />
       <SidebarInset className="flex h-screen flex-col overflow-y-auto">
         <header className="border-1 sticky top-0 flex shrink-0 items-center justify-between gap-2 border-b border-primary/35 bg-background py-1">

@@ -1,4 +1,12 @@
-import { AuthToken, Chat, Keys, LastModel, LastSynced, StoredMessage } from "@/types/database";
+import {
+  AuthToken,
+  Chat,
+  IsOpen,
+  Keys,
+  LastModel,
+  LastSynced,
+  StoredMessage,
+} from "@/types/database";
 import Dexie, { Table } from "dexie";
 import { nanoid } from "nanoid";
 import { $Enums, Chat as PrismChat, StoredMessage as PrismMsg } from "@/generated/prisma";
@@ -13,6 +21,7 @@ class ChatDatabase extends Dexie {
   last_synced!: Table<LastSynced>;
   last_model!: Table<LastModel>;
   keys!: Table<Keys>;
+  isOpenT!: Table<IsOpen>;
 
   constructor() {
     super("ChatDatabase");
@@ -23,7 +32,28 @@ class ChatDatabase extends Dexie {
       last_synced: "id",
       last_model: "id",
       keys: "id",
+      isOpenT: "id",
     });
+  }
+
+  async setIsOpen(isOpen: boolean) {
+    const o = await this.isOpenT.get("isOpen");
+
+    if (!o) {
+      await this.isOpenT.add({
+        id: "isOpen",
+        isOpen: isOpen,
+      });
+    } else {
+      await this.isOpenT.update("isOpen", {
+        isOpen: isOpen,
+      });
+    }
+  }
+
+  async getIsOpen(): Promise<boolean> {
+    const o = await this.isOpenT.get("isOpen");
+    return o ? o.isOpen : false;
   }
 
   async getKeys(): Promise<{ oai: string; openrouter: string } | undefined> {

@@ -47,3 +47,8 @@ export interface Keys {
   OpenAI: string;
   OpenRouter: string;
 }
+
+export interface IsOpen {
+  id: "isOpen";
+  isOpen: boolean;
+}
