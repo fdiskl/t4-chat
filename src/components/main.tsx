@@ -11,8 +11,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { Chat } from "@/components/chat";
 import { Sidebar } from "@/components/sidebar";
 import { Button } from "./ui/button";
-import { Plus, Share } from "lucide-react";
-import { TooltipContent, TooltipTrigger, Tooltip } from "./ui/tooltip";
+import { Plus } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 import { usePersistentChat } from "@/hooks/usePersistentChat";
 import { useCallback, useEffect, useState } from "react";
@@ -22,14 +21,7 @@ import { db } from "@/lib/db";
 import { toast } from "sonner";
 import { backupToServer, updateLocalData } from "@/lib/realdb/real";
 import { setOptions } from "marked";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
+import Share from "./share";
 
 export default function Main() {
   const { id } = useParams();
@@ -119,44 +111,7 @@ export default function Main() {
             </Breadcrumb>
           </div>
           <div className="mr-2">
-            <Tooltip>
-              <Dialog>
-                <TooltipTrigger asChild>
-                  <DialogTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      disabled={!title || title.includes("New chat") || !id}>
-                      <Share />
-                    </Button>
-                  </DialogTrigger>
-                </TooltipTrigger>
-
-                <DialogContent>
-                  <DialogTitle>Are you shure?</DialogTitle>
-                  Are you shure you want to share <span className="-mt-3 italic">"{title}"?</span>
-                  <Separator />
-                  <div className="flex flex-col text-muted-foreground">
-                    All your current messages and attachments will be shared.
-                    <br className="mt-2" />
-                    Your personal information (such as username, email, and profile picture) will
-                    remain private and won't be shared.
-                    <br className="mt-2" />
-                    Additionally, other users won't have the ability to modify your chat.
-                  </div>
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button variant="secondary">Cancel</Button>
-                    </DialogClose>
-                    <Button variant="default">Share this chat</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-
-              <TooltipContent>
-                <p>Share (only current state)</p>
-              </TooltipContent>
-            </Tooltip>
+            <Share id={id} title={title} />
           </div>
         </header>
         <Chat id={id} />

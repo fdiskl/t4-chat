@@ -48,12 +48,33 @@ export async function POST(req: Request) {
         )
       );
 
-      return { chatId: chat.id, messageIds: messages.map((msg) => msg.id) };
+      let slug: string;
+      while (true) {
+        slug = randomString();
+
+        const inDb = await tx.slug.findFirst({
+          where: {
+            slug: slug,
+          },
+        });
+
+        if (!inDb) break;
+      }
+
+      await tx.slug.create({
+        data: {
+          slug,
+          chatId: chat.id,
+        },
+      });
+
+      return { chatId: chat.id, messageIds: messages.map((msg) => msg.id), slug };
     });
 
     return NextResponse.json(
       {
         chatId: result.chatId,
+        slug: result.slug,
       },
       { status: 200 }
     );
@@ -61,4 +82,13 @@ export async function POST(req: Request) {
     console.error(e);
     return new NextResponse("Internal", { status: 500 });
   }
+}
+
+function randomString(length = 8) {
+  const chars = "abcdefghijklmnopqrstuvwxyz";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }

@@ -26,6 +26,7 @@ model Chat {
   isShared      Boolean         @default(false)
   parentId      String? // optional, can be null
   StoredMessage StoredMessage[]
+  Slugs         Slug[]
 }
 
 model StoredMessage {
@@ -41,6 +42,13 @@ model StoredMessage {
   attachments  Attachment[]
 
   Chat Chat @relation(fields: [chatId], references: [id])
+}
+
+model Slug {
+  id     String @id @default(uuid())
+  slug   String
+  Chat   Chat   @relation(fields: [chatId], references: [id])
+  chatId String
 }
 
 model Attachment {

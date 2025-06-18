@@ -24,6 +24,11 @@ export type Chat = $Result.DefaultSelection<Prisma.$ChatPayload>
  */
 export type StoredMessage = $Result.DefaultSelection<Prisma.$StoredMessagePayload>
 /**
+ * Model Slug
+ * 
+ */
+export type Slug = $Result.DefaultSelection<Prisma.$SlugPayload>
+/**
  * Model Attachment
  * 
  */
@@ -200,6 +205,16 @@ export class PrismaClient<
     * ```
     */
   get storedMessage(): Prisma.StoredMessageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.slug`: Exposes CRUD operations for the **Slug** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Slugs
+    * const slugs = await prisma.slug.findMany()
+    * ```
+    */
+  get slug(): Prisma.SlugDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.attachment`: Exposes CRUD operations for the **Attachment** model.
@@ -672,6 +687,7 @@ export namespace Prisma {
   export const ModelName: {
     Chat: 'Chat',
     StoredMessage: 'StoredMessage',
+    Slug: 'Slug',
     Attachment: 'Attachment',
     Keys: 'Keys',
     UserFiles: 'UserFiles'
@@ -693,7 +709,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "chat" | "storedMessage" | "attachment" | "keys" | "userFiles"
+      modelProps: "chat" | "storedMessage" | "slug" | "attachment" | "keys" | "userFiles"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -842,6 +858,80 @@ export namespace Prisma {
           count: {
             args: Prisma.StoredMessageCountArgs<ExtArgs>
             result: $Utils.Optional<StoredMessageCountAggregateOutputType> | number
+          }
+        }
+      }
+      Slug: {
+        payload: Prisma.$SlugPayload<ExtArgs>
+        fields: Prisma.SlugFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SlugFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlugPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SlugFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlugPayload>
+          }
+          findFirst: {
+            args: Prisma.SlugFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlugPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SlugFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlugPayload>
+          }
+          findMany: {
+            args: Prisma.SlugFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlugPayload>[]
+          }
+          create: {
+            args: Prisma.SlugCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlugPayload>
+          }
+          createMany: {
+            args: Prisma.SlugCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SlugCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlugPayload>[]
+          }
+          delete: {
+            args: Prisma.SlugDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlugPayload>
+          }
+          update: {
+            args: Prisma.SlugUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlugPayload>
+          }
+          deleteMany: {
+            args: Prisma.SlugDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SlugUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SlugUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlugPayload>[]
+          }
+          upsert: {
+            args: Prisma.SlugUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SlugPayload>
+          }
+          aggregate: {
+            args: Prisma.SlugAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSlug>
+          }
+          groupBy: {
+            args: Prisma.SlugGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SlugGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SlugCountArgs<ExtArgs>
+            result: $Utils.Optional<SlugCountAggregateOutputType> | number
           }
         }
       }
@@ -1153,6 +1243,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     chat?: ChatOmit
     storedMessage?: StoredMessageOmit
+    slug?: SlugOmit
     attachment?: AttachmentOmit
     keys?: KeysOmit
     userFiles?: UserFilesOmit
@@ -1251,10 +1342,12 @@ export namespace Prisma {
 
   export type ChatCountOutputType = {
     StoredMessage: number
+    Slugs: number
   }
 
   export type ChatCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     StoredMessage?: boolean | ChatCountOutputTypeCountStoredMessageArgs
+    Slugs?: boolean | ChatCountOutputTypeCountSlugsArgs
   }
 
   // Custom InputTypes
@@ -1273,6 +1366,13 @@ export namespace Prisma {
    */
   export type ChatCountOutputTypeCountStoredMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: StoredMessageWhereInput
+  }
+
+  /**
+   * ChatCountOutputType without action
+   */
+  export type ChatCountOutputTypeCountSlugsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SlugWhereInput
   }
 
 
@@ -1524,6 +1624,7 @@ export namespace Prisma {
     isShared?: boolean
     parentId?: boolean
     StoredMessage?: boolean | Chat$StoredMessageArgs<ExtArgs>
+    Slugs?: boolean | Chat$SlugsArgs<ExtArgs>
     _count?: boolean | ChatCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chat"]>
 
@@ -1572,6 +1673,7 @@ export namespace Prisma {
   export type ChatOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "userEmail" | "title" | "created_at" | "updated_at" | "lastSynced" | "empty" | "isDeleted" | "isShared" | "parentId", ExtArgs["result"]["chat"]>
   export type ChatInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     StoredMessage?: boolean | Chat$StoredMessageArgs<ExtArgs>
+    Slugs?: boolean | Chat$SlugsArgs<ExtArgs>
     _count?: boolean | ChatCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ChatIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1581,6 +1683,7 @@ export namespace Prisma {
     name: "Chat"
     objects: {
       StoredMessage: Prisma.$StoredMessagePayload<ExtArgs>[]
+      Slugs: Prisma.$SlugPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1989,6 +2092,7 @@ export namespace Prisma {
   export interface Prisma__ChatClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     StoredMessage<T extends Chat$StoredMessageArgs<ExtArgs> = {}>(args?: Subset<T, Chat$StoredMessageArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StoredMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Slugs<T extends Chat$SlugsArgs<ExtArgs> = {}>(args?: Subset<T, Chat$SlugsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2438,6 +2542,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: StoredMessageScalarFieldEnum | StoredMessageScalarFieldEnum[]
+  }
+
+  /**
+   * Chat.Slugs
+   */
+  export type Chat$SlugsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugInclude<ExtArgs> | null
+    where?: SlugWhereInput
+    orderBy?: SlugOrderByWithRelationInput | SlugOrderByWithRelationInput[]
+    cursor?: SlugWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SlugScalarFieldEnum | SlugScalarFieldEnum[]
   }
 
   /**
@@ -3596,6 +3724,1038 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: StoredMessageInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Slug
+   */
+
+  export type AggregateSlug = {
+    _count: SlugCountAggregateOutputType | null
+    _min: SlugMinAggregateOutputType | null
+    _max: SlugMaxAggregateOutputType | null
+  }
+
+  export type SlugMinAggregateOutputType = {
+    id: string | null
+    slug: string | null
+    chatId: string | null
+  }
+
+  export type SlugMaxAggregateOutputType = {
+    id: string | null
+    slug: string | null
+    chatId: string | null
+  }
+
+  export type SlugCountAggregateOutputType = {
+    id: number
+    slug: number
+    chatId: number
+    _all: number
+  }
+
+
+  export type SlugMinAggregateInputType = {
+    id?: true
+    slug?: true
+    chatId?: true
+  }
+
+  export type SlugMaxAggregateInputType = {
+    id?: true
+    slug?: true
+    chatId?: true
+  }
+
+  export type SlugCountAggregateInputType = {
+    id?: true
+    slug?: true
+    chatId?: true
+    _all?: true
+  }
+
+  export type SlugAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Slug to aggregate.
+     */
+    where?: SlugWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Slugs to fetch.
+     */
+    orderBy?: SlugOrderByWithRelationInput | SlugOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SlugWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Slugs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Slugs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Slugs
+    **/
+    _count?: true | SlugCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SlugMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SlugMaxAggregateInputType
+  }
+
+  export type GetSlugAggregateType<T extends SlugAggregateArgs> = {
+        [P in keyof T & keyof AggregateSlug]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSlug[P]>
+      : GetScalarType<T[P], AggregateSlug[P]>
+  }
+
+
+
+
+  export type SlugGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SlugWhereInput
+    orderBy?: SlugOrderByWithAggregationInput | SlugOrderByWithAggregationInput[]
+    by: SlugScalarFieldEnum[] | SlugScalarFieldEnum
+    having?: SlugScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SlugCountAggregateInputType | true
+    _min?: SlugMinAggregateInputType
+    _max?: SlugMaxAggregateInputType
+  }
+
+  export type SlugGroupByOutputType = {
+    id: string
+    slug: string
+    chatId: string
+    _count: SlugCountAggregateOutputType | null
+    _min: SlugMinAggregateOutputType | null
+    _max: SlugMaxAggregateOutputType | null
+  }
+
+  type GetSlugGroupByPayload<T extends SlugGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SlugGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SlugGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SlugGroupByOutputType[P]>
+            : GetScalarType<T[P], SlugGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SlugSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    chatId?: boolean
+    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["slug"]>
+
+  export type SlugSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    chatId?: boolean
+    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["slug"]>
+
+  export type SlugSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    slug?: boolean
+    chatId?: boolean
+    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["slug"]>
+
+  export type SlugSelectScalar = {
+    id?: boolean
+    slug?: boolean
+    chatId?: boolean
+  }
+
+  export type SlugOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "chatId", ExtArgs["result"]["slug"]>
+  export type SlugInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+  }
+  export type SlugIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+  }
+  export type SlugIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+  }
+
+  export type $SlugPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Slug"
+    objects: {
+      Chat: Prisma.$ChatPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      slug: string
+      chatId: string
+    }, ExtArgs["result"]["slug"]>
+    composites: {}
+  }
+
+  type SlugGetPayload<S extends boolean | null | undefined | SlugDefaultArgs> = $Result.GetResult<Prisma.$SlugPayload, S>
+
+  type SlugCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SlugFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SlugCountAggregateInputType | true
+    }
+
+  export interface SlugDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Slug'], meta: { name: 'Slug' } }
+    /**
+     * Find zero or one Slug that matches the filter.
+     * @param {SlugFindUniqueArgs} args - Arguments to find a Slug
+     * @example
+     * // Get one Slug
+     * const slug = await prisma.slug.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SlugFindUniqueArgs>(args: SelectSubset<T, SlugFindUniqueArgs<ExtArgs>>): Prisma__SlugClient<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Slug that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SlugFindUniqueOrThrowArgs} args - Arguments to find a Slug
+     * @example
+     * // Get one Slug
+     * const slug = await prisma.slug.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SlugFindUniqueOrThrowArgs>(args: SelectSubset<T, SlugFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SlugClient<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Slug that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlugFindFirstArgs} args - Arguments to find a Slug
+     * @example
+     * // Get one Slug
+     * const slug = await prisma.slug.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SlugFindFirstArgs>(args?: SelectSubset<T, SlugFindFirstArgs<ExtArgs>>): Prisma__SlugClient<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Slug that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlugFindFirstOrThrowArgs} args - Arguments to find a Slug
+     * @example
+     * // Get one Slug
+     * const slug = await prisma.slug.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SlugFindFirstOrThrowArgs>(args?: SelectSubset<T, SlugFindFirstOrThrowArgs<ExtArgs>>): Prisma__SlugClient<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Slugs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlugFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Slugs
+     * const slugs = await prisma.slug.findMany()
+     * 
+     * // Get first 10 Slugs
+     * const slugs = await prisma.slug.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const slugWithIdOnly = await prisma.slug.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SlugFindManyArgs>(args?: SelectSubset<T, SlugFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Slug.
+     * @param {SlugCreateArgs} args - Arguments to create a Slug.
+     * @example
+     * // Create one Slug
+     * const Slug = await prisma.slug.create({
+     *   data: {
+     *     // ... data to create a Slug
+     *   }
+     * })
+     * 
+     */
+    create<T extends SlugCreateArgs>(args: SelectSubset<T, SlugCreateArgs<ExtArgs>>): Prisma__SlugClient<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Slugs.
+     * @param {SlugCreateManyArgs} args - Arguments to create many Slugs.
+     * @example
+     * // Create many Slugs
+     * const slug = await prisma.slug.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SlugCreateManyArgs>(args?: SelectSubset<T, SlugCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Slugs and returns the data saved in the database.
+     * @param {SlugCreateManyAndReturnArgs} args - Arguments to create many Slugs.
+     * @example
+     * // Create many Slugs
+     * const slug = await prisma.slug.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Slugs and only return the `id`
+     * const slugWithIdOnly = await prisma.slug.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SlugCreateManyAndReturnArgs>(args?: SelectSubset<T, SlugCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Slug.
+     * @param {SlugDeleteArgs} args - Arguments to delete one Slug.
+     * @example
+     * // Delete one Slug
+     * const Slug = await prisma.slug.delete({
+     *   where: {
+     *     // ... filter to delete one Slug
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SlugDeleteArgs>(args: SelectSubset<T, SlugDeleteArgs<ExtArgs>>): Prisma__SlugClient<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Slug.
+     * @param {SlugUpdateArgs} args - Arguments to update one Slug.
+     * @example
+     * // Update one Slug
+     * const slug = await prisma.slug.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SlugUpdateArgs>(args: SelectSubset<T, SlugUpdateArgs<ExtArgs>>): Prisma__SlugClient<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Slugs.
+     * @param {SlugDeleteManyArgs} args - Arguments to filter Slugs to delete.
+     * @example
+     * // Delete a few Slugs
+     * const { count } = await prisma.slug.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SlugDeleteManyArgs>(args?: SelectSubset<T, SlugDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Slugs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlugUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Slugs
+     * const slug = await prisma.slug.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SlugUpdateManyArgs>(args: SelectSubset<T, SlugUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Slugs and returns the data updated in the database.
+     * @param {SlugUpdateManyAndReturnArgs} args - Arguments to update many Slugs.
+     * @example
+     * // Update many Slugs
+     * const slug = await prisma.slug.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Slugs and only return the `id`
+     * const slugWithIdOnly = await prisma.slug.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SlugUpdateManyAndReturnArgs>(args: SelectSubset<T, SlugUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Slug.
+     * @param {SlugUpsertArgs} args - Arguments to update or create a Slug.
+     * @example
+     * // Update or create a Slug
+     * const slug = await prisma.slug.upsert({
+     *   create: {
+     *     // ... data to create a Slug
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Slug we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SlugUpsertArgs>(args: SelectSubset<T, SlugUpsertArgs<ExtArgs>>): Prisma__SlugClient<$Result.GetResult<Prisma.$SlugPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Slugs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlugCountArgs} args - Arguments to filter Slugs to count.
+     * @example
+     * // Count the number of Slugs
+     * const count = await prisma.slug.count({
+     *   where: {
+     *     // ... the filter for the Slugs we want to count
+     *   }
+     * })
+    **/
+    count<T extends SlugCountArgs>(
+      args?: Subset<T, SlugCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SlugCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Slug.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlugAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SlugAggregateArgs>(args: Subset<T, SlugAggregateArgs>): Prisma.PrismaPromise<GetSlugAggregateType<T>>
+
+    /**
+     * Group by Slug.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SlugGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SlugGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SlugGroupByArgs['orderBy'] }
+        : { orderBy?: SlugGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SlugGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSlugGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Slug model
+   */
+  readonly fields: SlugFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Slug.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SlugClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Chat<T extends ChatDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChatDefaultArgs<ExtArgs>>): Prisma__ChatClient<$Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Slug model
+   */
+  interface SlugFieldRefs {
+    readonly id: FieldRef<"Slug", 'String'>
+    readonly slug: FieldRef<"Slug", 'String'>
+    readonly chatId: FieldRef<"Slug", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Slug findUnique
+   */
+  export type SlugFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugInclude<ExtArgs> | null
+    /**
+     * Filter, which Slug to fetch.
+     */
+    where: SlugWhereUniqueInput
+  }
+
+  /**
+   * Slug findUniqueOrThrow
+   */
+  export type SlugFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugInclude<ExtArgs> | null
+    /**
+     * Filter, which Slug to fetch.
+     */
+    where: SlugWhereUniqueInput
+  }
+
+  /**
+   * Slug findFirst
+   */
+  export type SlugFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugInclude<ExtArgs> | null
+    /**
+     * Filter, which Slug to fetch.
+     */
+    where?: SlugWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Slugs to fetch.
+     */
+    orderBy?: SlugOrderByWithRelationInput | SlugOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Slugs.
+     */
+    cursor?: SlugWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Slugs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Slugs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Slugs.
+     */
+    distinct?: SlugScalarFieldEnum | SlugScalarFieldEnum[]
+  }
+
+  /**
+   * Slug findFirstOrThrow
+   */
+  export type SlugFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugInclude<ExtArgs> | null
+    /**
+     * Filter, which Slug to fetch.
+     */
+    where?: SlugWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Slugs to fetch.
+     */
+    orderBy?: SlugOrderByWithRelationInput | SlugOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Slugs.
+     */
+    cursor?: SlugWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Slugs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Slugs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Slugs.
+     */
+    distinct?: SlugScalarFieldEnum | SlugScalarFieldEnum[]
+  }
+
+  /**
+   * Slug findMany
+   */
+  export type SlugFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugInclude<ExtArgs> | null
+    /**
+     * Filter, which Slugs to fetch.
+     */
+    where?: SlugWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Slugs to fetch.
+     */
+    orderBy?: SlugOrderByWithRelationInput | SlugOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Slugs.
+     */
+    cursor?: SlugWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Slugs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Slugs.
+     */
+    skip?: number
+    distinct?: SlugScalarFieldEnum | SlugScalarFieldEnum[]
+  }
+
+  /**
+   * Slug create
+   */
+  export type SlugCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Slug.
+     */
+    data: XOR<SlugCreateInput, SlugUncheckedCreateInput>
+  }
+
+  /**
+   * Slug createMany
+   */
+  export type SlugCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Slugs.
+     */
+    data: SlugCreateManyInput | SlugCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Slug createManyAndReturn
+   */
+  export type SlugCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * The data used to create many Slugs.
+     */
+    data: SlugCreateManyInput | SlugCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Slug update
+   */
+  export type SlugUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Slug.
+     */
+    data: XOR<SlugUpdateInput, SlugUncheckedUpdateInput>
+    /**
+     * Choose, which Slug to update.
+     */
+    where: SlugWhereUniqueInput
+  }
+
+  /**
+   * Slug updateMany
+   */
+  export type SlugUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Slugs.
+     */
+    data: XOR<SlugUpdateManyMutationInput, SlugUncheckedUpdateManyInput>
+    /**
+     * Filter which Slugs to update
+     */
+    where?: SlugWhereInput
+    /**
+     * Limit how many Slugs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Slug updateManyAndReturn
+   */
+  export type SlugUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * The data used to update Slugs.
+     */
+    data: XOR<SlugUpdateManyMutationInput, SlugUncheckedUpdateManyInput>
+    /**
+     * Filter which Slugs to update
+     */
+    where?: SlugWhereInput
+    /**
+     * Limit how many Slugs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Slug upsert
+   */
+  export type SlugUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Slug to update in case it exists.
+     */
+    where: SlugWhereUniqueInput
+    /**
+     * In case the Slug found by the `where` argument doesn't exist, create a new Slug with this data.
+     */
+    create: XOR<SlugCreateInput, SlugUncheckedCreateInput>
+    /**
+     * In case the Slug was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SlugUpdateInput, SlugUncheckedUpdateInput>
+  }
+
+  /**
+   * Slug delete
+   */
+  export type SlugDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugInclude<ExtArgs> | null
+    /**
+     * Filter which Slug to delete.
+     */
+    where: SlugWhereUniqueInput
+  }
+
+  /**
+   * Slug deleteMany
+   */
+  export type SlugDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Slugs to delete
+     */
+    where?: SlugWhereInput
+    /**
+     * Limit how many Slugs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Slug without action
+   */
+  export type SlugDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Slug
+     */
+    select?: SlugSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Slug
+     */
+    omit?: SlugOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SlugInclude<ExtArgs> | null
   }
 
 
@@ -6682,6 +7842,15 @@ export namespace Prisma {
   export type StoredMessageScalarFieldEnum = (typeof StoredMessageScalarFieldEnum)[keyof typeof StoredMessageScalarFieldEnum]
 
 
+  export const SlugScalarFieldEnum: {
+    id: 'id',
+    slug: 'slug',
+    chatId: 'chatId'
+  };
+
+  export type SlugScalarFieldEnum = (typeof SlugScalarFieldEnum)[keyof typeof SlugScalarFieldEnum]
+
+
   export const AttachmentScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -6824,6 +7993,7 @@ export namespace Prisma {
     isShared?: BoolFilter<"Chat"> | boolean
     parentId?: StringNullableFilter<"Chat"> | string | null
     StoredMessage?: StoredMessageListRelationFilter
+    Slugs?: SlugListRelationFilter
   }
 
   export type ChatOrderByWithRelationInput = {
@@ -6839,6 +8009,7 @@ export namespace Prisma {
     isShared?: SortOrder
     parentId?: SortOrderInput | SortOrder
     StoredMessage?: StoredMessageOrderByRelationAggregateInput
+    Slugs?: SlugOrderByRelationAggregateInput
   }
 
   export type ChatWhereUniqueInput = Prisma.AtLeast<{
@@ -6857,6 +8028,7 @@ export namespace Prisma {
     isShared?: BoolFilter<"Chat"> | boolean
     parentId?: StringNullableFilter<"Chat"> | string | null
     StoredMessage?: StoredMessageListRelationFilter
+    Slugs?: SlugListRelationFilter
   }, "id">
 
   export type ChatOrderByWithAggregationInput = {
@@ -6969,6 +8141,51 @@ export namespace Prisma {
     isDeleted?: BoolWithAggregatesFilter<"StoredMessage"> | boolean
     model?: StringWithAggregatesFilter<"StoredMessage"> | string
     lastModified?: DateTimeNullableWithAggregatesFilter<"StoredMessage"> | Date | string | null
+  }
+
+  export type SlugWhereInput = {
+    AND?: SlugWhereInput | SlugWhereInput[]
+    OR?: SlugWhereInput[]
+    NOT?: SlugWhereInput | SlugWhereInput[]
+    id?: StringFilter<"Slug"> | string
+    slug?: StringFilter<"Slug"> | string
+    chatId?: StringFilter<"Slug"> | string
+    Chat?: XOR<ChatScalarRelationFilter, ChatWhereInput>
+  }
+
+  export type SlugOrderByWithRelationInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    chatId?: SortOrder
+    Chat?: ChatOrderByWithRelationInput
+  }
+
+  export type SlugWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SlugWhereInput | SlugWhereInput[]
+    OR?: SlugWhereInput[]
+    NOT?: SlugWhereInput | SlugWhereInput[]
+    slug?: StringFilter<"Slug"> | string
+    chatId?: StringFilter<"Slug"> | string
+    Chat?: XOR<ChatScalarRelationFilter, ChatWhereInput>
+  }, "id">
+
+  export type SlugOrderByWithAggregationInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    chatId?: SortOrder
+    _count?: SlugCountOrderByAggregateInput
+    _max?: SlugMaxOrderByAggregateInput
+    _min?: SlugMinOrderByAggregateInput
+  }
+
+  export type SlugScalarWhereWithAggregatesInput = {
+    AND?: SlugScalarWhereWithAggregatesInput | SlugScalarWhereWithAggregatesInput[]
+    OR?: SlugScalarWhereWithAggregatesInput[]
+    NOT?: SlugScalarWhereWithAggregatesInput | SlugScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Slug"> | string
+    slug?: StringWithAggregatesFilter<"Slug"> | string
+    chatId?: StringWithAggregatesFilter<"Slug"> | string
   }
 
   export type AttachmentWhereInput = {
@@ -7133,6 +8350,7 @@ export namespace Prisma {
     isShared?: boolean
     parentId?: string | null
     StoredMessage?: StoredMessageCreateNestedManyWithoutChatInput
+    Slugs?: SlugCreateNestedManyWithoutChatInput
   }
 
   export type ChatUncheckedCreateInput = {
@@ -7148,6 +8366,7 @@ export namespace Prisma {
     isShared?: boolean
     parentId?: string | null
     StoredMessage?: StoredMessageUncheckedCreateNestedManyWithoutChatInput
+    Slugs?: SlugUncheckedCreateNestedManyWithoutChatInput
   }
 
   export type ChatUpdateInput = {
@@ -7163,6 +8382,7 @@ export namespace Prisma {
     isShared?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     StoredMessage?: StoredMessageUpdateManyWithoutChatNestedInput
+    Slugs?: SlugUpdateManyWithoutChatNestedInput
   }
 
   export type ChatUncheckedUpdateInput = {
@@ -7178,6 +8398,7 @@ export namespace Prisma {
     isShared?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     StoredMessage?: StoredMessageUncheckedUpdateManyWithoutChatNestedInput
+    Slugs?: SlugUncheckedUpdateManyWithoutChatNestedInput
   }
 
   export type ChatCreateManyInput = {
@@ -7307,6 +8528,47 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SlugCreateInput = {
+    id?: string
+    slug: string
+    Chat: ChatCreateNestedOneWithoutSlugsInput
+  }
+
+  export type SlugUncheckedCreateInput = {
+    id?: string
+    slug: string
+    chatId: string
+  }
+
+  export type SlugUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    Chat?: ChatUpdateOneRequiredWithoutSlugsNestedInput
+  }
+
+  export type SlugUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    chatId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SlugCreateManyInput = {
+    id?: string
+    slug: string
+    chatId: string
+  }
+
+  export type SlugUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SlugUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    chatId?: StringFieldUpdateOperationsInput | string
   }
 
   export type AttachmentCreateInput = {
@@ -7525,12 +8787,22 @@ export namespace Prisma {
     none?: StoredMessageWhereInput
   }
 
+  export type SlugListRelationFilter = {
+    every?: SlugWhereInput
+    some?: SlugWhereInput
+    none?: SlugWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type StoredMessageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SlugOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -7729,6 +9001,24 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
+  export type SlugCountOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    chatId?: SortOrder
+  }
+
+  export type SlugMaxOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    chatId?: SortOrder
+  }
+
+  export type SlugMinOrderByAggregateInput = {
+    id?: SortOrder
+    slug?: SortOrder
+    chatId?: SortOrder
+  }
+
   export type StoredMessageNullableScalarRelationFilter = {
     is?: StoredMessageWhereInput | null
     isNot?: StoredMessageWhereInput | null
@@ -7813,11 +9103,25 @@ export namespace Prisma {
     connect?: StoredMessageWhereUniqueInput | StoredMessageWhereUniqueInput[]
   }
 
+  export type SlugCreateNestedManyWithoutChatInput = {
+    create?: XOR<SlugCreateWithoutChatInput, SlugUncheckedCreateWithoutChatInput> | SlugCreateWithoutChatInput[] | SlugUncheckedCreateWithoutChatInput[]
+    connectOrCreate?: SlugCreateOrConnectWithoutChatInput | SlugCreateOrConnectWithoutChatInput[]
+    createMany?: SlugCreateManyChatInputEnvelope
+    connect?: SlugWhereUniqueInput | SlugWhereUniqueInput[]
+  }
+
   export type StoredMessageUncheckedCreateNestedManyWithoutChatInput = {
     create?: XOR<StoredMessageCreateWithoutChatInput, StoredMessageUncheckedCreateWithoutChatInput> | StoredMessageCreateWithoutChatInput[] | StoredMessageUncheckedCreateWithoutChatInput[]
     connectOrCreate?: StoredMessageCreateOrConnectWithoutChatInput | StoredMessageCreateOrConnectWithoutChatInput[]
     createMany?: StoredMessageCreateManyChatInputEnvelope
     connect?: StoredMessageWhereUniqueInput | StoredMessageWhereUniqueInput[]
+  }
+
+  export type SlugUncheckedCreateNestedManyWithoutChatInput = {
+    create?: XOR<SlugCreateWithoutChatInput, SlugUncheckedCreateWithoutChatInput> | SlugCreateWithoutChatInput[] | SlugUncheckedCreateWithoutChatInput[]
+    connectOrCreate?: SlugCreateOrConnectWithoutChatInput | SlugCreateOrConnectWithoutChatInput[]
+    createMany?: SlugCreateManyChatInputEnvelope
+    connect?: SlugWhereUniqueInput | SlugWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -7854,6 +9158,20 @@ export namespace Prisma {
     deleteMany?: StoredMessageScalarWhereInput | StoredMessageScalarWhereInput[]
   }
 
+  export type SlugUpdateManyWithoutChatNestedInput = {
+    create?: XOR<SlugCreateWithoutChatInput, SlugUncheckedCreateWithoutChatInput> | SlugCreateWithoutChatInput[] | SlugUncheckedCreateWithoutChatInput[]
+    connectOrCreate?: SlugCreateOrConnectWithoutChatInput | SlugCreateOrConnectWithoutChatInput[]
+    upsert?: SlugUpsertWithWhereUniqueWithoutChatInput | SlugUpsertWithWhereUniqueWithoutChatInput[]
+    createMany?: SlugCreateManyChatInputEnvelope
+    set?: SlugWhereUniqueInput | SlugWhereUniqueInput[]
+    disconnect?: SlugWhereUniqueInput | SlugWhereUniqueInput[]
+    delete?: SlugWhereUniqueInput | SlugWhereUniqueInput[]
+    connect?: SlugWhereUniqueInput | SlugWhereUniqueInput[]
+    update?: SlugUpdateWithWhereUniqueWithoutChatInput | SlugUpdateWithWhereUniqueWithoutChatInput[]
+    updateMany?: SlugUpdateManyWithWhereWithoutChatInput | SlugUpdateManyWithWhereWithoutChatInput[]
+    deleteMany?: SlugScalarWhereInput | SlugScalarWhereInput[]
+  }
+
   export type StoredMessageUncheckedUpdateManyWithoutChatNestedInput = {
     create?: XOR<StoredMessageCreateWithoutChatInput, StoredMessageUncheckedCreateWithoutChatInput> | StoredMessageCreateWithoutChatInput[] | StoredMessageUncheckedCreateWithoutChatInput[]
     connectOrCreate?: StoredMessageCreateOrConnectWithoutChatInput | StoredMessageCreateOrConnectWithoutChatInput[]
@@ -7866,6 +9184,20 @@ export namespace Prisma {
     update?: StoredMessageUpdateWithWhereUniqueWithoutChatInput | StoredMessageUpdateWithWhereUniqueWithoutChatInput[]
     updateMany?: StoredMessageUpdateManyWithWhereWithoutChatInput | StoredMessageUpdateManyWithWhereWithoutChatInput[]
     deleteMany?: StoredMessageScalarWhereInput | StoredMessageScalarWhereInput[]
+  }
+
+  export type SlugUncheckedUpdateManyWithoutChatNestedInput = {
+    create?: XOR<SlugCreateWithoutChatInput, SlugUncheckedCreateWithoutChatInput> | SlugCreateWithoutChatInput[] | SlugUncheckedCreateWithoutChatInput[]
+    connectOrCreate?: SlugCreateOrConnectWithoutChatInput | SlugCreateOrConnectWithoutChatInput[]
+    upsert?: SlugUpsertWithWhereUniqueWithoutChatInput | SlugUpsertWithWhereUniqueWithoutChatInput[]
+    createMany?: SlugCreateManyChatInputEnvelope
+    set?: SlugWhereUniqueInput | SlugWhereUniqueInput[]
+    disconnect?: SlugWhereUniqueInput | SlugWhereUniqueInput[]
+    delete?: SlugWhereUniqueInput | SlugWhereUniqueInput[]
+    connect?: SlugWhereUniqueInput | SlugWhereUniqueInput[]
+    update?: SlugUpdateWithWhereUniqueWithoutChatInput | SlugUpdateWithWhereUniqueWithoutChatInput[]
+    updateMany?: SlugUpdateManyWithWhereWithoutChatInput | SlugUpdateManyWithWhereWithoutChatInput[]
+    deleteMany?: SlugScalarWhereInput | SlugScalarWhereInput[]
   }
 
   export type AttachmentCreateNestedManyWithoutStoredMessageInput = {
@@ -7930,6 +9262,20 @@ export namespace Prisma {
     update?: AttachmentUpdateWithWhereUniqueWithoutStoredMessageInput | AttachmentUpdateWithWhereUniqueWithoutStoredMessageInput[]
     updateMany?: AttachmentUpdateManyWithWhereWithoutStoredMessageInput | AttachmentUpdateManyWithWhereWithoutStoredMessageInput[]
     deleteMany?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+  }
+
+  export type ChatCreateNestedOneWithoutSlugsInput = {
+    create?: XOR<ChatCreateWithoutSlugsInput, ChatUncheckedCreateWithoutSlugsInput>
+    connectOrCreate?: ChatCreateOrConnectWithoutSlugsInput
+    connect?: ChatWhereUniqueInput
+  }
+
+  export type ChatUpdateOneRequiredWithoutSlugsNestedInput = {
+    create?: XOR<ChatCreateWithoutSlugsInput, ChatUncheckedCreateWithoutSlugsInput>
+    connectOrCreate?: ChatCreateOrConnectWithoutSlugsInput
+    upsert?: ChatUpsertWithoutSlugsInput
+    connect?: ChatWhereUniqueInput
+    update?: XOR<XOR<ChatUpdateToOneWithWhereWithoutSlugsInput, ChatUpdateWithoutSlugsInput>, ChatUncheckedUpdateWithoutSlugsInput>
   }
 
   export type StoredMessageCreateNestedOneWithoutAttachmentsInput = {
@@ -8168,6 +9514,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SlugCreateWithoutChatInput = {
+    id?: string
+    slug: string
+  }
+
+  export type SlugUncheckedCreateWithoutChatInput = {
+    id?: string
+    slug: string
+  }
+
+  export type SlugCreateOrConnectWithoutChatInput = {
+    where: SlugWhereUniqueInput
+    create: XOR<SlugCreateWithoutChatInput, SlugUncheckedCreateWithoutChatInput>
+  }
+
+  export type SlugCreateManyChatInputEnvelope = {
+    data: SlugCreateManyChatInput | SlugCreateManyChatInput[]
+    skipDuplicates?: boolean
+  }
+
   export type StoredMessageUpsertWithWhereUniqueWithoutChatInput = {
     where: StoredMessageWhereUniqueInput
     update: XOR<StoredMessageUpdateWithoutChatInput, StoredMessageUncheckedUpdateWithoutChatInput>
@@ -8197,6 +9563,31 @@ export namespace Prisma {
     isDeleted?: BoolFilter<"StoredMessage"> | boolean
     model?: StringFilter<"StoredMessage"> | string
     lastModified?: DateTimeNullableFilter<"StoredMessage"> | Date | string | null
+  }
+
+  export type SlugUpsertWithWhereUniqueWithoutChatInput = {
+    where: SlugWhereUniqueInput
+    update: XOR<SlugUpdateWithoutChatInput, SlugUncheckedUpdateWithoutChatInput>
+    create: XOR<SlugCreateWithoutChatInput, SlugUncheckedCreateWithoutChatInput>
+  }
+
+  export type SlugUpdateWithWhereUniqueWithoutChatInput = {
+    where: SlugWhereUniqueInput
+    data: XOR<SlugUpdateWithoutChatInput, SlugUncheckedUpdateWithoutChatInput>
+  }
+
+  export type SlugUpdateManyWithWhereWithoutChatInput = {
+    where: SlugScalarWhereInput
+    data: XOR<SlugUpdateManyMutationInput, SlugUncheckedUpdateManyWithoutChatInput>
+  }
+
+  export type SlugScalarWhereInput = {
+    AND?: SlugScalarWhereInput | SlugScalarWhereInput[]
+    OR?: SlugScalarWhereInput[]
+    NOT?: SlugScalarWhereInput | SlugScalarWhereInput[]
+    id?: StringFilter<"Slug"> | string
+    slug?: StringFilter<"Slug"> | string
+    chatId?: StringFilter<"Slug"> | string
   }
 
   export type AttachmentCreateWithoutStoredMessageInput = {
@@ -8235,6 +9626,7 @@ export namespace Prisma {
     isDeleted?: boolean
     isShared?: boolean
     parentId?: string | null
+    Slugs?: SlugCreateNestedManyWithoutChatInput
   }
 
   export type ChatUncheckedCreateWithoutStoredMessageInput = {
@@ -8249,6 +9641,7 @@ export namespace Prisma {
     isDeleted?: boolean
     isShared?: boolean
     parentId?: string | null
+    Slugs?: SlugUncheckedCreateNestedManyWithoutChatInput
   }
 
   export type ChatCreateOrConnectWithoutStoredMessageInput = {
@@ -8306,6 +9699,7 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     isShared?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    Slugs?: SlugUpdateManyWithoutChatNestedInput
   }
 
   export type ChatUncheckedUpdateWithoutStoredMessageInput = {
@@ -8320,6 +9714,83 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     isShared?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    Slugs?: SlugUncheckedUpdateManyWithoutChatNestedInput
+  }
+
+  export type ChatCreateWithoutSlugsInput = {
+    id?: string
+    userId: string
+    userEmail: string
+    title?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    lastSynced?: Date | string | null
+    empty: boolean
+    isDeleted?: boolean
+    isShared?: boolean
+    parentId?: string | null
+    StoredMessage?: StoredMessageCreateNestedManyWithoutChatInput
+  }
+
+  export type ChatUncheckedCreateWithoutSlugsInput = {
+    id?: string
+    userId: string
+    userEmail: string
+    title?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    lastSynced?: Date | string | null
+    empty: boolean
+    isDeleted?: boolean
+    isShared?: boolean
+    parentId?: string | null
+    StoredMessage?: StoredMessageUncheckedCreateNestedManyWithoutChatInput
+  }
+
+  export type ChatCreateOrConnectWithoutSlugsInput = {
+    where: ChatWhereUniqueInput
+    create: XOR<ChatCreateWithoutSlugsInput, ChatUncheckedCreateWithoutSlugsInput>
+  }
+
+  export type ChatUpsertWithoutSlugsInput = {
+    update: XOR<ChatUpdateWithoutSlugsInput, ChatUncheckedUpdateWithoutSlugsInput>
+    create: XOR<ChatCreateWithoutSlugsInput, ChatUncheckedCreateWithoutSlugsInput>
+    where?: ChatWhereInput
+  }
+
+  export type ChatUpdateToOneWithWhereWithoutSlugsInput = {
+    where?: ChatWhereInput
+    data: XOR<ChatUpdateWithoutSlugsInput, ChatUncheckedUpdateWithoutSlugsInput>
+  }
+
+  export type ChatUpdateWithoutSlugsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    userEmail?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    empty?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    isShared?: BoolFieldUpdateOperationsInput | boolean
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    StoredMessage?: StoredMessageUpdateManyWithoutChatNestedInput
+  }
+
+  export type ChatUncheckedUpdateWithoutSlugsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    userEmail?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    empty?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    isShared?: BoolFieldUpdateOperationsInput | boolean
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    StoredMessage?: StoredMessageUncheckedUpdateManyWithoutChatNestedInput
   }
 
   export type StoredMessageCreateWithoutAttachmentsInput = {
@@ -8397,6 +9868,11 @@ export namespace Prisma {
     lastModified?: Date | string | null
   }
 
+  export type SlugCreateManyChatInput = {
+    id?: string
+    slug: string
+  }
+
   export type StoredMessageUpdateWithoutChatInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
@@ -8430,6 +9906,21 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SlugUpdateWithoutChatInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SlugUncheckedUpdateWithoutChatInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SlugUncheckedUpdateManyWithoutChatInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
   }
 
   export type AttachmentCreateManyStoredMessageInput = {
