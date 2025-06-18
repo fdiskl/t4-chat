@@ -12,36 +12,20 @@ export async function POST(req: Request) {
 
   const prisma = new PrismaClient();
 
-  // Collect all chat and message IDs from the incoming data
-  const incomingChatIds = allChats.map((chat: any) => chat.id);
-  const incomingMessageIds = allMessages.map((msg: any) => msg.id);
-
   try {
-    // 1. Delete all messages for this user that are NOT in the incoming message IDs
-    await prisma.storedMessage.deleteMany({
-      where: {
-        Chat: {
-          userId: tok.userId,
-        },
-        id: {
-          notIn: incomingMessageIds.length > 0 ? incomingMessageIds : ["_never_"], // avoid deleting all if empty
-        },
-      },
-    });
-
-    // 2. Delete all chats for this user that are NOT in the incoming chat IDs
-    await prisma.chat.deleteMany({
-      where: {
-        userId: tok.userId,
-        id: {
-          notIn: incomingChatIds.length > 0 ? incomingChatIds : ["_never_"], // avoid deleting all if empty
-        },
-      },
-    });
-
     // 3. Upsert chats
     for (const chat of allChats) {
       if (chat.isShared) continue;
+
+      if (chat.isDeleted) {
+        await prisma.chat.delete({
+          where: {
+            id: chat.id,
+          },
+        });
+
+        continue;
+      }
 
       await prisma.chat.upsert({
         where: { id: chat.id, userId: tok.userId },
@@ -72,12 +56,24 @@ export async function POST(req: Request) {
     }
 
     // 4. Upsert messages
-    const chatIds = new Set(allChats.map((chat: any) => chat.id));
     for (const message of allMessages) {
-      if (!chatIds.has(message.chatId)) {
-        console.error(`Chat with id ${message.chatId} not found for message ${message.id}`);
+      if (message.isDeleted) {
+        await prisma.chat.delete({
+          where: {
+            id: message.id,
+          },
+        });
+
         continue;
       }
+
+      const c = await prisma.chat.findFirst({
+        where: {
+          id: message.chatId,
+        },
+      });
+
+      if (!c) continue;
 
       await prisma.storedMessage.upsert({
         where: { id: message.id },
@@ -108,17 +104,6 @@ export async function POST(req: Request) {
       const existingAttachments = await prisma.attachment.findMany({
         where: { storedMessageId: message.id },
       });
-
-      // 3. Delete attachments that are no longer present
-      const incomingUrls = new Set(incomingAttachments.map((a) => a.url));
-      const toDelete = existingAttachments.filter((a) => !incomingUrls.has(a.url));
-      if (toDelete.length > 0) {
-        await prisma.attachment.deleteMany({
-          where: {
-            id: { in: toDelete.map((a) => a.id) },
-          },
-        });
-      }
 
       // 4. Upsert (create or update) incoming attachments
       for (const att of incomingAttachments) {

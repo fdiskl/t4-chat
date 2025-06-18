@@ -12,7 +12,6 @@ import { nanoid } from "nanoid";
 import { $Enums, Chat as PrismChat, StoredMessage as PrismMsg } from "@/generated/prisma";
 import { Attachment, Message } from "ai";
 import { modelId } from "@/types/models";
-import { Pi } from "lucide-react";
 
 class ChatDatabase extends Dexie {
   chats!: Table<Chat>;
@@ -322,6 +321,7 @@ class ChatDatabase extends Dexie {
     };
 
     if (c) {
+      console.log("updating", c.id);
       await this.messages.update(id, o);
     } else {
       const cc: StoredMessage = {
@@ -336,6 +336,7 @@ class ChatDatabase extends Dexie {
         attachments: msg.attachments,
         isDeleted: msg.isDeleted,
       };
+      console.log("creating", cc);
 
       await this.messages.add(cc);
     }

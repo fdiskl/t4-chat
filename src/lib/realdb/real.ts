@@ -53,7 +53,7 @@ export async function updateLocalData() {
   }
 
   for (const message of serverMessages) {
-    await db.createOrUpdateChat(message.id, message);
+    await db.createOrUpdateMsg(message.id, message);
   }
 
   await db.fixParents();

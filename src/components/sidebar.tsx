@@ -75,7 +75,6 @@ export function Sidebar({
       try {
         await db.deleteChat(chatId);
         await db.fixParents();
-        backupToServer();
         if (pathname === `/chat/${chatId}`) {
           nav("/chat");
         }

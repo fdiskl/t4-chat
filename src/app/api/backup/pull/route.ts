@@ -25,15 +25,15 @@ export async function POST(req: Request) {
       },
     });
 
+    console.log("CHATS", chats);
+
     // Get all messages for these chats updated after lastSynced
     const chatIds = chats.map((chat) => chat.id);
-    console.log("CHATD IDS", chatIds);
     let messages: any[] = [];
     if (chatIds.length > 0) {
       messages = await prisma.storedMessage.findMany({
         where: {
           chatId: { in: chatIds },
-          lastModified: { gt: lastSyncedDate },
           isDeleted: false,
         },
         include: {
