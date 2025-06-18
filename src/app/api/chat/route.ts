@@ -19,8 +19,7 @@ function getKey() {
 // at least smth
 function isKey(s: string): boolean {
   if (s.length < 5) return false;
-  const pattern = /^sk-[A-Za-z0-9]/;
-  return pattern.test(s);
+  return true;
 }
 
 export async function POST(req: Request) {
@@ -74,7 +73,7 @@ export async function POST(req: Request) {
       );
     }
     const key = decryptApiKey(openRouterKey, getKey());
-    console.log(key);
+
     if (!isKey(key)) {
       return new NextResponse(
         "Sorry, but you need to provide your own keys for now, go to /settings. (Your OpenRouter key doesn't look right)",

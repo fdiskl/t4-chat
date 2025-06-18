@@ -217,8 +217,11 @@ export function usePersistentChat({
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ msg: input, openaiKey: keys?.oai }),
-                // TODO: here
+                body: JSON.stringify({
+                  msg: input,
+                  openaiKey: keys?.oai,
+                  openRouterKey: keys?.openrouter,
+                }),
               });
 
               if (titleResp.status != 200 || !titleResp.ok) {
