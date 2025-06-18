@@ -36,9 +36,12 @@ async function fetchServerData() {
     }
   );
   if (!response.ok) {
-    throw new Error("Failed to fetch data from server");
+    toast.error("Something went wrong");
   }
   const data = await response.json();
+
+  console.log("DATA FROM SERVER ", data);
+
   return data;
 }
 

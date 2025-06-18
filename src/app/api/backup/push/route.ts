@@ -47,6 +47,7 @@ export async function POST(req: Request) {
           lastSynced: now,
           empty: chat.empty ?? true,
           parentId: chat.parentId ?? null,
+          isDeleted: chat.isDeleted,
         },
         create: {
           id: chat.id,
@@ -58,6 +59,7 @@ export async function POST(req: Request) {
           lastSynced: now,
           empty: chat.empty ?? true,
           parentId: chat.parentId ?? null,
+          isDeleted: chat.isDeleted,
         },
       });
     }
@@ -79,6 +81,7 @@ export async function POST(req: Request) {
           created_at: message.created_at,
           lastModified: message.lastModified ?? message.created_at,
           model: message.model,
+          isDeleted: message.isDeleted,
         },
         create: {
           id: message.id,
@@ -88,6 +91,7 @@ export async function POST(req: Request) {
           created_at: message.created_at,
           lastModified: message.lastModified ?? message.created_at,
           model: message.model,
+          isDeleted: message.isDeleted,
         },
       });
 

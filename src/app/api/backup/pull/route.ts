@@ -9,6 +9,8 @@ export async function POST(req: Request) {
     // Parse lastSynced as a Date, fallback to epoch if not provided
     const lastSyncedDate = lastSynced ? new Date(lastSynced) : new Date(0);
 
+    console.log(lastSyncedDate);
+
     // Get all chats for this user updated after lastSynced
     const chats = await prisma.chat.findMany({
       where: {
@@ -20,17 +22,21 @@ export async function POST(req: Request) {
 
     // Get all messages for these chats updated after lastSynced
     const chatIds = chats.map((chat) => chat.id);
+    console.log("CHATD IDS", chatIds);
     let messages: any[] = [];
     if (chatIds.length > 0) {
       messages = await prisma.storedMessage.findMany({
         where: {
           chatId: { in: chatIds },
           lastModified: { gt: lastSyncedDate },
+          isDeleted: false,
         },
         include: {
           attachments: true,
         },
       });
+
+      console.log("MSGS", messages);
 
       messages = messages.map((msg) => ({
         ...msg,

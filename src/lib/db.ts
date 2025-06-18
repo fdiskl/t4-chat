@@ -134,6 +134,8 @@ class ChatDatabase extends Dexie {
   async copyChat(id: string, lastMsgInBranchId: string): Promise<string> {
     const chat = await this.chats.get(id);
 
+    if (chat?.isDeleted) return "";
+
     if (!chat) {
       throw new Error("chat not found");
     }
@@ -185,6 +187,7 @@ class ChatDatabase extends Dexie {
       updated_at: new Date(),
       empty: true,
       parentId: undefined,
+      isDeleted: false,
     };
 
     await this.chats.add(chat);
@@ -199,7 +202,7 @@ class ChatDatabase extends Dexie {
   }
 
   async deleteEmptyChats(): Promise<void> {
-    await this.chats.filter((c) => c.empty == true).delete();
+    await this.chats.filter((c) => c.empty == true).delete(); // empty chats should be hard deleted
   }
 
   async addMessage(
@@ -237,7 +240,7 @@ class ChatDatabase extends Dexie {
     return await this.chats
       .orderBy("created_at")
       .reverse()
-      .filter((c) => c.empty == false)
+      .filter((c) => c.empty === false && c.isDeleted === false)
       .toArray();
   }
 
@@ -247,8 +250,15 @@ class ChatDatabase extends Dexie {
 
   async deleteChat(chatId: string): Promise<void> {
     await this.transaction("rw", this.chats, this.messages, async () => {
-      await this.messages.where("chatId").equals(chatId).delete();
-      await this.chats.delete(chatId);
+      await this.messages
+        .where("chatId")
+        .equals(chatId)
+        .modify((m) => {
+          m.isDeleted = true;
+        });
+      await this.chats.update(chatId, {
+        isDeleted: true,
+      });
     });
   }
 
@@ -274,6 +284,7 @@ class ChatDatabase extends Dexie {
       parentId: chat.parentId === null ? undefined : chat.parentId,
       title: chat.title === null ? undefined : chat.title,
       updated_at: chat.updated_at,
+      isDeleted: chat.isDeleted,
     };
 
     if (c) {
@@ -298,6 +309,7 @@ class ChatDatabase extends Dexie {
       model: msg.model,
       role: msg.role === $Enums.Role.user ? "user" : "assistant",
       attachments: msg.attachments,
+      isDeleted: msg.isDeleted,
     };
 
     if (c) {
@@ -313,6 +325,7 @@ class ChatDatabase extends Dexie {
         model: msg.model,
         role: msg.role === $Enums.Role.user ? "user" : "assistant",
         attachments: msg.attachments,
+        isDeleted: msg.isDeleted,
       };
 
       await this.messages.add(cc);

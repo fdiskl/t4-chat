@@ -8,6 +8,7 @@ export interface Chat {
   lastSynced?: Date; // optional
   empty: boolean;
   parentId?: string;
+  isDeleted: boolean;
 }
 
 export interface StoredMessage {
@@ -19,6 +20,7 @@ export interface StoredMessage {
   isPartial?: boolean;
   model: string;
   lastModified?: Date; // optional
+  isDeleted: boolean;
 
   attachments: Attachment[];
 }

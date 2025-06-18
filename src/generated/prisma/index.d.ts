@@ -288,8 +288,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.9.0
-   * Query Engine version: 81e4af48011447c3cc503a190e86995b66d2a28e
+   * Prisma Client JS version: 6.10.0
+   * Query Engine version: aee10d5a411e4360c6d3445ce4810ca65adbf3e8
    */
   export type PrismaVersion = {
     client: string
@@ -1330,6 +1330,7 @@ export namespace Prisma {
     updated_at: Date | null
     lastSynced: Date | null
     empty: boolean | null
+    isDeleted: boolean | null
     parentId: string | null
   }
 
@@ -1342,6 +1343,7 @@ export namespace Prisma {
     updated_at: Date | null
     lastSynced: Date | null
     empty: boolean | null
+    isDeleted: boolean | null
     parentId: string | null
   }
 
@@ -1354,6 +1356,7 @@ export namespace Prisma {
     updated_at: number
     lastSynced: number
     empty: number
+    isDeleted: number
     parentId: number
     _all: number
   }
@@ -1368,6 +1371,7 @@ export namespace Prisma {
     updated_at?: true
     lastSynced?: true
     empty?: true
+    isDeleted?: true
     parentId?: true
   }
 
@@ -1380,6 +1384,7 @@ export namespace Prisma {
     updated_at?: true
     lastSynced?: true
     empty?: true
+    isDeleted?: true
     parentId?: true
   }
 
@@ -1392,6 +1397,7 @@ export namespace Prisma {
     updated_at?: true
     lastSynced?: true
     empty?: true
+    isDeleted?: true
     parentId?: true
     _all?: true
   }
@@ -1477,6 +1483,7 @@ export namespace Prisma {
     updated_at: Date
     lastSynced: Date | null
     empty: boolean
+    isDeleted: boolean
     parentId: string | null
     _count: ChatCountAggregateOutputType | null
     _min: ChatMinAggregateOutputType | null
@@ -1506,6 +1513,7 @@ export namespace Prisma {
     updated_at?: boolean
     lastSynced?: boolean
     empty?: boolean
+    isDeleted?: boolean
     parentId?: boolean
     StoredMessage?: boolean | Chat$StoredMessageArgs<ExtArgs>
     _count?: boolean | ChatCountOutputTypeDefaultArgs<ExtArgs>
@@ -1520,6 +1528,7 @@ export namespace Prisma {
     updated_at?: boolean
     lastSynced?: boolean
     empty?: boolean
+    isDeleted?: boolean
     parentId?: boolean
   }, ExtArgs["result"]["chat"]>
 
@@ -1532,6 +1541,7 @@ export namespace Prisma {
     updated_at?: boolean
     lastSynced?: boolean
     empty?: boolean
+    isDeleted?: boolean
     parentId?: boolean
   }, ExtArgs["result"]["chat"]>
 
@@ -1544,10 +1554,11 @@ export namespace Prisma {
     updated_at?: boolean
     lastSynced?: boolean
     empty?: boolean
+    isDeleted?: boolean
     parentId?: boolean
   }
 
-  export type ChatOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "userEmail" | "title" | "created_at" | "updated_at" | "lastSynced" | "empty" | "parentId", ExtArgs["result"]["chat"]>
+  export type ChatOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "userEmail" | "title" | "created_at" | "updated_at" | "lastSynced" | "empty" | "isDeleted" | "parentId", ExtArgs["result"]["chat"]>
   export type ChatInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     StoredMessage?: boolean | Chat$StoredMessageArgs<ExtArgs>
     _count?: boolean | ChatCountOutputTypeDefaultArgs<ExtArgs>
@@ -1569,6 +1580,7 @@ export namespace Prisma {
       updated_at: Date
       lastSynced: Date | null
       empty: boolean
+      isDeleted: boolean
       parentId: string | null
     }, ExtArgs["result"]["chat"]>
     composites: {}
@@ -2002,6 +2014,7 @@ export namespace Prisma {
     readonly updated_at: FieldRef<"Chat", 'DateTime'>
     readonly lastSynced: FieldRef<"Chat", 'DateTime'>
     readonly empty: FieldRef<"Chat", 'Boolean'>
+    readonly isDeleted: FieldRef<"Chat", 'Boolean'>
     readonly parentId: FieldRef<"Chat", 'String'>
   }
     
@@ -2450,6 +2463,7 @@ export namespace Prisma {
     role: $Enums.Role | null
     created_at: Date | null
     isPartial: boolean | null
+    isDeleted: boolean | null
     model: string | null
     lastModified: Date | null
   }
@@ -2461,6 +2475,7 @@ export namespace Prisma {
     role: $Enums.Role | null
     created_at: Date | null
     isPartial: boolean | null
+    isDeleted: boolean | null
     model: string | null
     lastModified: Date | null
   }
@@ -2472,6 +2487,7 @@ export namespace Prisma {
     role: number
     created_at: number
     isPartial: number
+    isDeleted: number
     model: number
     lastModified: number
     _all: number
@@ -2485,6 +2501,7 @@ export namespace Prisma {
     role?: true
     created_at?: true
     isPartial?: true
+    isDeleted?: true
     model?: true
     lastModified?: true
   }
@@ -2496,6 +2513,7 @@ export namespace Prisma {
     role?: true
     created_at?: true
     isPartial?: true
+    isDeleted?: true
     model?: true
     lastModified?: true
   }
@@ -2507,6 +2525,7 @@ export namespace Prisma {
     role?: true
     created_at?: true
     isPartial?: true
+    isDeleted?: true
     model?: true
     lastModified?: true
     _all?: true
@@ -2591,6 +2610,7 @@ export namespace Prisma {
     role: $Enums.Role
     created_at: Date
     isPartial: boolean | null
+    isDeleted: boolean
     model: string
     lastModified: Date | null
     _count: StoredMessageCountAggregateOutputType | null
@@ -2619,6 +2639,7 @@ export namespace Prisma {
     role?: boolean
     created_at?: boolean
     isPartial?: boolean
+    isDeleted?: boolean
     model?: boolean
     lastModified?: boolean
     attachments?: boolean | StoredMessage$attachmentsArgs<ExtArgs>
@@ -2633,6 +2654,7 @@ export namespace Prisma {
     role?: boolean
     created_at?: boolean
     isPartial?: boolean
+    isDeleted?: boolean
     model?: boolean
     lastModified?: boolean
     Chat?: boolean | ChatDefaultArgs<ExtArgs>
@@ -2645,6 +2667,7 @@ export namespace Prisma {
     role?: boolean
     created_at?: boolean
     isPartial?: boolean
+    isDeleted?: boolean
     model?: boolean
     lastModified?: boolean
     Chat?: boolean | ChatDefaultArgs<ExtArgs>
@@ -2657,11 +2680,12 @@ export namespace Prisma {
     role?: boolean
     created_at?: boolean
     isPartial?: boolean
+    isDeleted?: boolean
     model?: boolean
     lastModified?: boolean
   }
 
-  export type StoredMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chatId" | "content" | "role" | "created_at" | "isPartial" | "model" | "lastModified", ExtArgs["result"]["storedMessage"]>
+  export type StoredMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chatId" | "content" | "role" | "created_at" | "isPartial" | "isDeleted" | "model" | "lastModified", ExtArgs["result"]["storedMessage"]>
   export type StoredMessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attachments?: boolean | StoredMessage$attachmentsArgs<ExtArgs>
     Chat?: boolean | ChatDefaultArgs<ExtArgs>
@@ -2687,6 +2711,7 @@ export namespace Prisma {
       role: $Enums.Role
       created_at: Date
       isPartial: boolean | null
+      isDeleted: boolean
       model: string
       lastModified: Date | null
     }, ExtArgs["result"]["storedMessage"]>
@@ -3120,6 +3145,7 @@ export namespace Prisma {
     readonly role: FieldRef<"StoredMessage", 'Role'>
     readonly created_at: FieldRef<"StoredMessage", 'DateTime'>
     readonly isPartial: FieldRef<"StoredMessage", 'Boolean'>
+    readonly isDeleted: FieldRef<"StoredMessage", 'Boolean'>
     readonly model: FieldRef<"StoredMessage", 'String'>
     readonly lastModified: FieldRef<"StoredMessage", 'DateTime'>
   }
@@ -6620,6 +6646,7 @@ export namespace Prisma {
     updated_at: 'updated_at',
     lastSynced: 'lastSynced',
     empty: 'empty',
+    isDeleted: 'isDeleted',
     parentId: 'parentId'
   };
 
@@ -6633,6 +6660,7 @@ export namespace Prisma {
     role: 'role',
     created_at: 'created_at',
     isPartial: 'isPartial',
+    isDeleted: 'isDeleted',
     model: 'model',
     lastModified: 'lastModified'
   };
@@ -6778,6 +6806,7 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"Chat"> | Date | string
     lastSynced?: DateTimeNullableFilter<"Chat"> | Date | string | null
     empty?: BoolFilter<"Chat"> | boolean
+    isDeleted?: BoolFilter<"Chat"> | boolean
     parentId?: StringNullableFilter<"Chat"> | string | null
     StoredMessage?: StoredMessageListRelationFilter
   }
@@ -6791,6 +6820,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     lastSynced?: SortOrderInput | SortOrder
     empty?: SortOrder
+    isDeleted?: SortOrder
     parentId?: SortOrderInput | SortOrder
     StoredMessage?: StoredMessageOrderByRelationAggregateInput
   }
@@ -6807,6 +6837,7 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"Chat"> | Date | string
     lastSynced?: DateTimeNullableFilter<"Chat"> | Date | string | null
     empty?: BoolFilter<"Chat"> | boolean
+    isDeleted?: BoolFilter<"Chat"> | boolean
     parentId?: StringNullableFilter<"Chat"> | string | null
     StoredMessage?: StoredMessageListRelationFilter
   }, "id">
@@ -6820,6 +6851,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     lastSynced?: SortOrderInput | SortOrder
     empty?: SortOrder
+    isDeleted?: SortOrder
     parentId?: SortOrderInput | SortOrder
     _count?: ChatCountOrderByAggregateInput
     _max?: ChatMaxOrderByAggregateInput
@@ -6838,6 +6870,7 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"Chat"> | Date | string
     lastSynced?: DateTimeNullableWithAggregatesFilter<"Chat"> | Date | string | null
     empty?: BoolWithAggregatesFilter<"Chat"> | boolean
+    isDeleted?: BoolWithAggregatesFilter<"Chat"> | boolean
     parentId?: StringNullableWithAggregatesFilter<"Chat"> | string | null
   }
 
@@ -6851,6 +6884,7 @@ export namespace Prisma {
     role?: EnumRoleFilter<"StoredMessage"> | $Enums.Role
     created_at?: DateTimeFilter<"StoredMessage"> | Date | string
     isPartial?: BoolNullableFilter<"StoredMessage"> | boolean | null
+    isDeleted?: BoolFilter<"StoredMessage"> | boolean
     model?: StringFilter<"StoredMessage"> | string
     lastModified?: DateTimeNullableFilter<"StoredMessage"> | Date | string | null
     attachments?: AttachmentListRelationFilter
@@ -6864,6 +6898,7 @@ export namespace Prisma {
     role?: SortOrder
     created_at?: SortOrder
     isPartial?: SortOrderInput | SortOrder
+    isDeleted?: SortOrder
     model?: SortOrder
     lastModified?: SortOrderInput | SortOrder
     attachments?: AttachmentOrderByRelationAggregateInput
@@ -6880,6 +6915,7 @@ export namespace Prisma {
     role?: EnumRoleFilter<"StoredMessage"> | $Enums.Role
     created_at?: DateTimeFilter<"StoredMessage"> | Date | string
     isPartial?: BoolNullableFilter<"StoredMessage"> | boolean | null
+    isDeleted?: BoolFilter<"StoredMessage"> | boolean
     model?: StringFilter<"StoredMessage"> | string
     lastModified?: DateTimeNullableFilter<"StoredMessage"> | Date | string | null
     attachments?: AttachmentListRelationFilter
@@ -6893,6 +6929,7 @@ export namespace Prisma {
     role?: SortOrder
     created_at?: SortOrder
     isPartial?: SortOrderInput | SortOrder
+    isDeleted?: SortOrder
     model?: SortOrder
     lastModified?: SortOrderInput | SortOrder
     _count?: StoredMessageCountOrderByAggregateInput
@@ -6910,6 +6947,7 @@ export namespace Prisma {
     role?: EnumRoleWithAggregatesFilter<"StoredMessage"> | $Enums.Role
     created_at?: DateTimeWithAggregatesFilter<"StoredMessage"> | Date | string
     isPartial?: BoolNullableWithAggregatesFilter<"StoredMessage"> | boolean | null
+    isDeleted?: BoolWithAggregatesFilter<"StoredMessage"> | boolean
     model?: StringWithAggregatesFilter<"StoredMessage"> | string
     lastModified?: DateTimeNullableWithAggregatesFilter<"StoredMessage"> | Date | string | null
   }
@@ -7072,6 +7110,7 @@ export namespace Prisma {
     updated_at?: Date | string
     lastSynced?: Date | string | null
     empty: boolean
+    isDeleted?: boolean
     parentId?: string | null
     StoredMessage?: StoredMessageCreateNestedManyWithoutChatInput
   }
@@ -7085,6 +7124,7 @@ export namespace Prisma {
     updated_at?: Date | string
     lastSynced?: Date | string | null
     empty: boolean
+    isDeleted?: boolean
     parentId?: string | null
     StoredMessage?: StoredMessageUncheckedCreateNestedManyWithoutChatInput
   }
@@ -7098,6 +7138,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     StoredMessage?: StoredMessageUpdateManyWithoutChatNestedInput
   }
@@ -7111,6 +7152,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     StoredMessage?: StoredMessageUncheckedUpdateManyWithoutChatNestedInput
   }
@@ -7124,6 +7166,7 @@ export namespace Prisma {
     updated_at?: Date | string
     lastSynced?: Date | string | null
     empty: boolean
+    isDeleted?: boolean
     parentId?: string | null
   }
 
@@ -7136,6 +7179,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -7148,6 +7192,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -7157,6 +7202,7 @@ export namespace Prisma {
     role: $Enums.Role
     created_at?: Date | string
     isPartial?: boolean | null
+    isDeleted?: boolean
     model: string
     lastModified?: Date | string | null
     attachments?: AttachmentCreateNestedManyWithoutStoredMessageInput
@@ -7170,6 +7216,7 @@ export namespace Prisma {
     role: $Enums.Role
     created_at?: Date | string
     isPartial?: boolean | null
+    isDeleted?: boolean
     model: string
     lastModified?: Date | string | null
     attachments?: AttachmentUncheckedCreateNestedManyWithoutStoredMessageInput
@@ -7181,6 +7228,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     attachments?: AttachmentUpdateManyWithoutStoredMessageNestedInput
@@ -7194,6 +7242,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     attachments?: AttachmentUncheckedUpdateManyWithoutStoredMessageNestedInput
@@ -7206,6 +7255,7 @@ export namespace Prisma {
     role: $Enums.Role
     created_at?: Date | string
     isPartial?: boolean | null
+    isDeleted?: boolean
     model: string
     lastModified?: Date | string | null
   }
@@ -7216,6 +7266,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -7227,6 +7278,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -7465,6 +7517,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     lastSynced?: SortOrder
     empty?: SortOrder
+    isDeleted?: SortOrder
     parentId?: SortOrder
   }
 
@@ -7477,6 +7530,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     lastSynced?: SortOrder
     empty?: SortOrder
+    isDeleted?: SortOrder
     parentId?: SortOrder
   }
 
@@ -7489,6 +7543,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     lastSynced?: SortOrder
     empty?: SortOrder
+    isDeleted?: SortOrder
     parentId?: SortOrder
   }
 
@@ -7598,6 +7653,7 @@ export namespace Prisma {
     role?: SortOrder
     created_at?: SortOrder
     isPartial?: SortOrder
+    isDeleted?: SortOrder
     model?: SortOrder
     lastModified?: SortOrder
   }
@@ -7609,6 +7665,7 @@ export namespace Prisma {
     role?: SortOrder
     created_at?: SortOrder
     isPartial?: SortOrder
+    isDeleted?: SortOrder
     model?: SortOrder
     lastModified?: SortOrder
   }
@@ -7620,6 +7677,7 @@ export namespace Prisma {
     role?: SortOrder
     created_at?: SortOrder
     isPartial?: SortOrder
+    isDeleted?: SortOrder
     model?: SortOrder
     lastModified?: SortOrder
   }
@@ -8053,6 +8111,7 @@ export namespace Prisma {
     role: $Enums.Role
     created_at?: Date | string
     isPartial?: boolean | null
+    isDeleted?: boolean
     model: string
     lastModified?: Date | string | null
     attachments?: AttachmentCreateNestedManyWithoutStoredMessageInput
@@ -8064,6 +8123,7 @@ export namespace Prisma {
     role: $Enums.Role
     created_at?: Date | string
     isPartial?: boolean | null
+    isDeleted?: boolean
     model: string
     lastModified?: Date | string | null
     attachments?: AttachmentUncheckedCreateNestedManyWithoutStoredMessageInput
@@ -8105,6 +8165,7 @@ export namespace Prisma {
     role?: EnumRoleFilter<"StoredMessage"> | $Enums.Role
     created_at?: DateTimeFilter<"StoredMessage"> | Date | string
     isPartial?: BoolNullableFilter<"StoredMessage"> | boolean | null
+    isDeleted?: BoolFilter<"StoredMessage"> | boolean
     model?: StringFilter<"StoredMessage"> | string
     lastModified?: DateTimeNullableFilter<"StoredMessage"> | Date | string | null
   }
@@ -8142,6 +8203,7 @@ export namespace Prisma {
     updated_at?: Date | string
     lastSynced?: Date | string | null
     empty: boolean
+    isDeleted?: boolean
     parentId?: string | null
   }
 
@@ -8154,6 +8216,7 @@ export namespace Prisma {
     updated_at?: Date | string
     lastSynced?: Date | string | null
     empty: boolean
+    isDeleted?: boolean
     parentId?: string | null
   }
 
@@ -8209,6 +8272,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -8221,6 +8285,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -8230,6 +8295,7 @@ export namespace Prisma {
     role: $Enums.Role
     created_at?: Date | string
     isPartial?: boolean | null
+    isDeleted?: boolean
     model: string
     lastModified?: Date | string | null
     Chat: ChatCreateNestedOneWithoutStoredMessageInput
@@ -8242,6 +8308,7 @@ export namespace Prisma {
     role: $Enums.Role
     created_at?: Date | string
     isPartial?: boolean | null
+    isDeleted?: boolean
     model: string
     lastModified?: Date | string | null
   }
@@ -8268,6 +8335,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Chat?: ChatUpdateOneRequiredWithoutStoredMessageNestedInput
@@ -8280,6 +8348,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -8290,6 +8359,7 @@ export namespace Prisma {
     role: $Enums.Role
     created_at?: Date | string
     isPartial?: boolean | null
+    isDeleted?: boolean
     model: string
     lastModified?: Date | string | null
   }
@@ -8300,6 +8370,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     attachments?: AttachmentUpdateManyWithoutStoredMessageNestedInput
@@ -8311,6 +8382,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     attachments?: AttachmentUncheckedUpdateManyWithoutStoredMessageNestedInput
@@ -8322,6 +8394,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     isPartial?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     model?: StringFieldUpdateOperationsInput | string
     lastModified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }

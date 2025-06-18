@@ -22,6 +22,7 @@ model Chat {
   updated_at    DateTime        @updatedAt
   lastSynced    DateTime? // New field for last sync timestamp
   empty         Boolean
+  isDeleted     Boolean         @default(false)
   parentId      String? // optional, can be null
   StoredMessage StoredMessage[]
 }
@@ -33,6 +34,7 @@ model StoredMessage {
   role         Role
   created_at   DateTime     @default(now())
   isPartial    Boolean? // optional
+  isDeleted    Boolean      @default(false)
   model        String // can be "user" or other model names
   lastModified DateTime? // New field for message modification timestamp
   attachments  Attachment[]
