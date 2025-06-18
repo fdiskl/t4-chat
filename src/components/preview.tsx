@@ -21,6 +21,8 @@ export default function ImagePreview({ url }: { url: string }) {
             <Image
               src={url}
               alt="Preview"
+              width={32}
+              height={32}
               className={`h-8 w-full rounded object-cover ${thumbLoading ? "invisible" : "visible"}`}
               onLoad={() => setThumbLoading(false)}
               onError={() => setThumbLoading(false)}
@@ -34,6 +36,8 @@ export default function ImagePreview({ url }: { url: string }) {
           {dialogLoading && <Loader2 className="animate-spin" />}
           <Image
             src={url}
+            width={192}
+            height={192}
             alt="Preview"
             className={`h-full rounded object-cover ${dialogLoading ? "invisible" : "visible"}`}
             onLoad={() => setDialogLoading(false)}

@@ -1,6 +1,7 @@
 import { PrismaClient } from "@/generated/prisma/edge";
 import { NextResponse } from "next/server";
 import { Attachment } from "ai";
+import { isDate } from "node:util/types";
 
 export async function POST(req: Request) {
   const { chats: allChats, messages: allMessages, tok } = await req.json();
@@ -15,12 +16,18 @@ export async function POST(req: Request) {
   try {
     // 3. Upsert chats
     for (const chat of allChats) {
+      console.log(chat.id, chat.isDeleted);
+
       if (chat.isShared) continue;
 
       if (chat.isDeleted) {
-        await prisma.chat.delete({
+        console.log("delete");
+        await prisma.chat.update({
           where: {
             id: chat.id,
+          },
+          data: {
+            isDeleted: true,
           },
         });
 
@@ -58,9 +65,12 @@ export async function POST(req: Request) {
     // 4. Upsert messages
     for (const message of allMessages) {
       if (message.isDeleted) {
-        await prisma.chat.delete({
+        await prisma.storedMessage.update({
           where: {
             id: message.id,
+          },
+          data: {
+            isDeleted: true,
           },
         });
 

@@ -97,7 +97,13 @@ const ChatMessageAvatar = React.forwardRef<HTMLDivElement, ChatMessageAvatarProp
     return (
       <div ref={ref} className={cn(chatMessageAvatarVariants({ type, className }))} {...props}>
         {imageSrc ? (
-          <Image src={imageSrc} alt="Avatar" className="h-full w-full object-cover" />
+          <Image
+            src={imageSrc}
+            alt="Avatar"
+            className="h-full w-full object-cover"
+            width={32}
+            height={32}
+          />
         ) : (
           <div className="translate-y-px [&_svg]:size-4 [&_svg]:shrink-0">{icon}</div>
         )}
