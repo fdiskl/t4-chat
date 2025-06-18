@@ -23,6 +23,14 @@ import { db } from "@/lib/db";
 import { Link, NavigateFunction, useLocation, useNavigate } from "react-router";
 import { cn } from "@/lib/utils";
 import { backupToServer } from "@/lib/realdb/real";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 
 export interface SidebarProps {
   nav: NavigateFunction;
@@ -130,13 +138,35 @@ export function Sidebar({
                       </Link>
 
                       {/* Delete Button (always at right) */}
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => handleDeleteChat(e, chat.id)}
-                        className="ml-2 text-white/70 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 hover:text-red-600">
-                        <TrashIcon />
-                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="ml-2 text-white/70 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 hover:text-red-600">
+                            <TrashIcon />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogTitle>Are you sure?</DialogTitle>
+                          <div className="flex flex-row gap-x-1">
+                            Are you sure you want to{" "}
+                            <span className="inline text-red-400">delete</span>{" "}
+                          </div>
+                          <span className="italic">"{chat.title ?? "untitled"}"?</span>{" "}
+                          <DialogFooter>
+                            <DialogClose asChild>
+                              <Button variant="secondary">Cancel</Button>
+                            </DialogClose>
+
+                            <Button
+                              variant="destructive"
+                              onClick={(e) => handleDeleteChat(e, chat.id)}>
+                              Delete
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
