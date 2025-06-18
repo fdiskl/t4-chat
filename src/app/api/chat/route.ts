@@ -10,7 +10,7 @@ import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 const secretKey = process.env.API_KEY_SECRET as string;
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 300;
+export const maxDuration = 60;
 
 function getKey() {
   return crypto.createHash("sha256").update(secretKey).digest();
