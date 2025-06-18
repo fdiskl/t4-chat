@@ -114,7 +114,7 @@ export function Sidebar({
                   <SidebarMenuButton className="w-full justify-start gap-1" asChild>
                     <div
                       className={cn("group flex w-full flex-row items-center", {
-                        "pl-0": chat.parentId != undefined,
+                        "pl-0": chat.parentId != undefined || chat.isShared,
                       })}>
                       {/* Thread Button (if present) */}
                       {chat.parentId && (

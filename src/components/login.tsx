@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import { loginWithGithub } from "@/lib/login";
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
+import { Button } from "./ui/button";
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from "lucide-react";
 
 export default function Login() {
   const nav = useNavigate();
@@ -29,8 +31,16 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="flex flex-col">
-      <button onClick={handleLogin}>Login with GitHub</button>
+    <div className="flex h-screen w-full flex-col">
+      <div className="mx-auto flex h-full w-full max-w-2xl flex-col items-center justify-center gap-y-2">
+        <ArrowDown className="h-16 w-16 text-[#ad4783]" />
+        <div className="flex flex-row items-center justify-center gap-x-2">
+          <ArrowRight className="h-16 w-16 text-[#ad4783]" />
+          <Button onClick={handleLogin}>Login with GitHub</Button>
+          <ArrowLeft className="h-16 w-16 text-[#ad4783]" />
+        </div>
+        <ArrowUp className="h-16 w-16 text-[#ad4783]" />
+      </div>
     </div>
   );
 }
