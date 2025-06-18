@@ -18,7 +18,7 @@ export default function ImagePreview({ url }: { url: string }) {
         <Button variant="outline" size="icon" className="h-8 w-8">
           <div className="">
             {thumbLoading && <Loader2 className="animate-spin" />}
-            <img
+            <Image
               src={url}
               alt="Preview"
               className={`h-8 w-full rounded object-cover ${thumbLoading ? "invisible" : "visible"}`}
@@ -32,7 +32,7 @@ export default function ImagePreview({ url }: { url: string }) {
         <DialogTitle>Image preview</DialogTitle>
         <div className="relative mx-auto h-48 w-full">
           {dialogLoading && <Loader2 className="animate-spin" />}
-          <img
+          <Image
             src={url}
             alt="Preview"
             className={`h-full rounded object-cover ${dialogLoading ? "invisible" : "visible"}`}

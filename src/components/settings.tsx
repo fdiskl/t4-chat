@@ -52,9 +52,9 @@ export function Settings() {
       nav("/login");
     } catch (err) {
       console.error("Logout failed:", err);
-      alert("Logout failed");
+      toast.error("Logout failed");
     }
-  }, []);
+  }, [nav]);
 
   const handleApiKeySave = useCallback(async () => {
     setIsLoading(true);

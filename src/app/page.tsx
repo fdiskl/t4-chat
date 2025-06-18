@@ -10,9 +10,5 @@ export default function Page() {
     router.push("/chat");
   }, [router]);
 
-  useEffect(() => {
-    router.push("/chat");
-  }, []);
-
   return <>Regirecting to /chat ...</>;
 }

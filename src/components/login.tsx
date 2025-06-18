@@ -28,7 +28,7 @@ export default function Login() {
       console.error("Login failed:", err);
       alert("Login failed. ");
     }
-  }, []);
+  }, [nav]);
 
   return (
     <div className="flex h-screen w-full flex-col">

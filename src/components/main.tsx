@@ -55,11 +55,11 @@ export default function Main() {
 
   useEffect(() => {
     getIsShared();
-  }, [id]);
+  }, [id, getIsShared]);
 
   useEffect(() => {
     getFirstIsOpen();
-  }, []);
+  }, [getFirstIsOpen]);
 
   const newChat = async () => {
     await db.deleteEmptyChats();
@@ -97,7 +97,7 @@ export default function Main() {
     if (!id) {
       newChat();
     }
-  }, [id]);
+  }, [id, newChat]);
 
   const title = useLiveQuery(async () => {
     if (!id) return "New chat";

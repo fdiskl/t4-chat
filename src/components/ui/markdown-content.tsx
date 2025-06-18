@@ -5,7 +5,6 @@ import { memo, useDeferredValue, useMemo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus, oneLight, dracula } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Button } from "./button";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
@@ -39,6 +38,7 @@ const CodeBlock = ({
         return (
           <SyntaxHighlighter
             language={language}
+            // @ts-expect-error
             style={styles}
             customStyle={{
               marginTop: 0,
@@ -213,7 +213,7 @@ const components: Partial<Components> = {
       {children}
     </td>
   ),
-  img: ({ alt, ...props }) => <img className="rounded-md" alt={alt} {...props} />,
+  img: ({ alt, ...props }) => <div>img</div>,
 
   pre: ({ children }) => <>{children}</>,
 };

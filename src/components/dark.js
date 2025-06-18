@@ -4,7 +4,6 @@ export default {
     color: "#ffffff", // Keep white for contrast
     fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
     fontSize: "1em",
-    direction: "ltr",
     textAlign: "left",
     whiteSpace: "pre",
     wordSpacing: "normal",
@@ -23,7 +22,6 @@ export default {
     color: "#ffffff", // Keep white for contrast
     fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
     fontSize: "1em",
-    direction: "ltr",
     textAlign: "left",
     whiteSpace: "pre",
     wordSpacing: "normal",

@@ -52,6 +52,10 @@ export function Sidebar({
     nav(`/chat/${c.id}`);
   };
 
+  const newChatCallback = useCallback(() => {
+    newChatHandler();
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (event: any) => {
       if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "o") {
@@ -61,7 +65,7 @@ export function Sidebar({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [newChatHandler]);
+  }, [newChatCallback]);
 
   const handleDeleteChat = useCallback(
     async (e: React.MouseEvent, chatId: string) => {
@@ -93,7 +97,7 @@ export function Sidebar({
           </div>
           {/* New Chat Button */}
           <div className="w-full px-2">
-            <Button className="w-full" onClick={newChatHandler}>
+            <Button className="w-full" onClick={newChatCallback}>
               New chat
             </Button>
           </div>

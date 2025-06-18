@@ -248,7 +248,7 @@ export function usePersistentChat({
         setError(error instanceof Error ? error : new Error("Failed to process message"));
       }
     },
-    [currentChat, chatId, input, persistMessage]
+    [currentChat, chatId, input, persistMessage, attachments, model, nav, setAttachments]
   );
 
   const handleInputChange = React.useCallback(

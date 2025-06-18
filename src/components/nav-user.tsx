@@ -44,9 +44,9 @@ const LoggedInDropdown = ({ nav }: { nav: NavigateFunction }) => {
       nav("/login");
     } catch (err) {
       console.error("Logout failed:", err);
-      alert("Logout failed");
+      toast.error("Logout failed");
     }
-  }, []);
+  }, [nav]);
 
   const handleBackup = async () => {
     try {
