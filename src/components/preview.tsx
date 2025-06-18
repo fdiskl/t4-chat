@@ -14,17 +14,19 @@ export default function ImagePreview({ url }: { url: string }) {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <div className="relative h-16 w-full">
-          {thumbLoading && <Loader2 className="animate-spin" />}
-          <img
-            src={url}
-            alt="Preview"
-            className={`h-8 w-8 rounded object-cover ${thumbLoading ? "invisible" : "visible"}`}
-            onLoad={() => setThumbLoading(false)}
-            onError={() => setThumbLoading(false)}
-          />
-        </div>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="icon" className="h-8 w-8">
+          <div className="">
+            {thumbLoading && <Loader2 className="animate-spin" />}
+            <img
+              src={url}
+              alt="Preview"
+              className={`h-8 w-full rounded object-cover ${thumbLoading ? "invisible" : "visible"}`}
+              onLoad={() => setThumbLoading(false)}
+              onError={() => setThumbLoading(false)}
+            />
+          </div>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>Image preview</DialogTitle>
@@ -47,7 +49,7 @@ export function FilePreview({ url, name }: { url: string; name?: string }) {
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="relative h-16 w-full">
+        <div className="h-8 w-full">
           <File className="h-8 w-8 object-cover" />
         </div>
       </DialogTrigger>

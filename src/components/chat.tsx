@@ -179,9 +179,9 @@ export const Chat: React.FC<ChatProps> = ({ id, isShared }) => {
                     <ChatMessage id={message.id} variant="bubble" type="outgoing">
                       <ChatMessageContent content={message.content} className="max-w-xl" />
                     </ChatMessage>
-                    <div className="mt-2 flex flex-row items-end justify-center gap-x-2">
+                    <div className="mt-2 flex max-h-9 flex-row items-end justify-start gap-x-2">
                       {message.experimental_attachments?.map((f) => (
-                        <div key={f.url}>
+                        <div key={f.url} className="h-8 w-8">
                           {f.contentType?.startsWith("image/") ? (
                             <>
                               <ImagePreview url={f.url} />
@@ -193,6 +193,22 @@ export const Chat: React.FC<ChatProps> = ({ id, isShared }) => {
                           )}
                         </div>
                       ))}
+
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={async () => {
+                          // TODO: make anim instead
+                          try {
+                            await navigator.clipboard.writeText(message.content);
+                            toast.success("Copied", { position: "top-center" });
+                          } catch (e) {
+                            console.error(e);
+                            toast.error("Couldn't copy", { position: "top-center" });
+                          }
+                        }}>
+                        <Copy />
+                      </Button>
                     </div>
                   </div>
                 );
