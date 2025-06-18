@@ -152,12 +152,6 @@ export const Chat: React.FC<ChatProps> = ({ id, isShared }) => {
                               <Copy />
                             </Button>
 
-                            {isLastMessage && (
-                              <Button variant="outline" size="icon" onClick={() => reload()}>
-                                <RefreshCw />
-                              </Button>
-                            )}
-
                             <Button
                               variant="outline"
                               size="icon"
