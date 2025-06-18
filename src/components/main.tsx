@@ -28,6 +28,8 @@ export default function Main() {
 
   const [open, setOpen] = useState(true);
 
+  const [shared, setIsShared] = useState(false);
+
   const changeIsOpen = useCallback((o: boolean) => {
     db.setIsOpen(o);
     setOpen(o);
@@ -36,6 +38,24 @@ export default function Main() {
   const getFirstIsOpen = async () => {
     setOpen(await db.getIsOpen());
   };
+
+  const getIsShared = async () => {
+    if (!id) {
+      setIsShared(false);
+      return;
+    }
+    const c = await db.getChatById(id);
+    if (!c) {
+      setIsShared(false);
+      return;
+    }
+
+    setIsShared(c.isShared);
+  };
+
+  useEffect(() => {
+    getIsShared();
+  }, [id]);
 
   useEffect(() => {
     getFirstIsOpen();
@@ -114,7 +134,7 @@ export default function Main() {
             <Share id={id} title={title} />
           </div>
         </header>
-        <Chat id={id} />
+        <Chat id={id} isShared={shared} />
       </SidebarInset>
     </SidebarProvider>
   );

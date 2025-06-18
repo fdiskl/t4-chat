@@ -30,13 +30,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tool
 interface ModelSelectorProps extends DropdownMenuProps {
   value: modelId;
   onChange: (value: modelId) => void;
+  disabled?: boolean;
 }
 
-export function ModelSelector({ value, onChange, ...props }: ModelSelectorProps) {
+export function ModelSelector({ value, onChange, disabled, ...props }: ModelSelectorProps) {
   const ValueIcon = ModelIcons[idToModelMap[value].provider];
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild disabled={disabled}>
         <Button
           variant="outline"
           className="nodrag flex w-48 flex-row items-center justify-center bg-transparent">
