@@ -218,8 +218,6 @@ class ChatDatabase extends Dexie {
       created_at: new Date(),
     };
 
-    console.log(storedMessage);
-
     await this.messages.add(storedMessage);
     await this.chats.update(message.chatId, {
       updated_at: new Date(),
@@ -239,7 +237,7 @@ class ChatDatabase extends Dexie {
 
   async getChats(): Promise<Chat[]> {
     return await this.chats
-      .orderBy("created_at")
+      .orderBy("updated_at")
       .reverse()
       .filter((c) => c.empty === false && c.isDeleted === false)
       .toArray();

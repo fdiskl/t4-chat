@@ -133,6 +133,7 @@ export function usePersistentChat({
             role,
             model,
             attachments: attachments,
+            isDeleted: false,
           },
           id
         );
