@@ -130,6 +130,7 @@ exports.Prisma.ChatScalarFieldEnum = {
   lastSynced: 'lastSynced',
   empty: 'empty',
   isDeleted: 'isDeleted',
+  isShared: 'isShared',
   parentId: 'parentId'
 };
 

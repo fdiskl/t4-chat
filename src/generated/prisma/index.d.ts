@@ -1331,6 +1331,7 @@ export namespace Prisma {
     lastSynced: Date | null
     empty: boolean | null
     isDeleted: boolean | null
+    isShared: boolean | null
     parentId: string | null
   }
 
@@ -1344,6 +1345,7 @@ export namespace Prisma {
     lastSynced: Date | null
     empty: boolean | null
     isDeleted: boolean | null
+    isShared: boolean | null
     parentId: string | null
   }
 
@@ -1357,6 +1359,7 @@ export namespace Prisma {
     lastSynced: number
     empty: number
     isDeleted: number
+    isShared: number
     parentId: number
     _all: number
   }
@@ -1372,6 +1375,7 @@ export namespace Prisma {
     lastSynced?: true
     empty?: true
     isDeleted?: true
+    isShared?: true
     parentId?: true
   }
 
@@ -1385,6 +1389,7 @@ export namespace Prisma {
     lastSynced?: true
     empty?: true
     isDeleted?: true
+    isShared?: true
     parentId?: true
   }
 
@@ -1398,6 +1403,7 @@ export namespace Prisma {
     lastSynced?: true
     empty?: true
     isDeleted?: true
+    isShared?: true
     parentId?: true
     _all?: true
   }
@@ -1484,6 +1490,7 @@ export namespace Prisma {
     lastSynced: Date | null
     empty: boolean
     isDeleted: boolean
+    isShared: boolean
     parentId: string | null
     _count: ChatCountAggregateOutputType | null
     _min: ChatMinAggregateOutputType | null
@@ -1514,6 +1521,7 @@ export namespace Prisma {
     lastSynced?: boolean
     empty?: boolean
     isDeleted?: boolean
+    isShared?: boolean
     parentId?: boolean
     StoredMessage?: boolean | Chat$StoredMessageArgs<ExtArgs>
     _count?: boolean | ChatCountOutputTypeDefaultArgs<ExtArgs>
@@ -1529,6 +1537,7 @@ export namespace Prisma {
     lastSynced?: boolean
     empty?: boolean
     isDeleted?: boolean
+    isShared?: boolean
     parentId?: boolean
   }, ExtArgs["result"]["chat"]>
 
@@ -1542,6 +1551,7 @@ export namespace Prisma {
     lastSynced?: boolean
     empty?: boolean
     isDeleted?: boolean
+    isShared?: boolean
     parentId?: boolean
   }, ExtArgs["result"]["chat"]>
 
@@ -1555,10 +1565,11 @@ export namespace Prisma {
     lastSynced?: boolean
     empty?: boolean
     isDeleted?: boolean
+    isShared?: boolean
     parentId?: boolean
   }
 
-  export type ChatOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "userEmail" | "title" | "created_at" | "updated_at" | "lastSynced" | "empty" | "isDeleted" | "parentId", ExtArgs["result"]["chat"]>
+  export type ChatOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "userEmail" | "title" | "created_at" | "updated_at" | "lastSynced" | "empty" | "isDeleted" | "isShared" | "parentId", ExtArgs["result"]["chat"]>
   export type ChatInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     StoredMessage?: boolean | Chat$StoredMessageArgs<ExtArgs>
     _count?: boolean | ChatCountOutputTypeDefaultArgs<ExtArgs>
@@ -1581,6 +1592,7 @@ export namespace Prisma {
       lastSynced: Date | null
       empty: boolean
       isDeleted: boolean
+      isShared: boolean
       parentId: string | null
     }, ExtArgs["result"]["chat"]>
     composites: {}
@@ -2015,6 +2027,7 @@ export namespace Prisma {
     readonly lastSynced: FieldRef<"Chat", 'DateTime'>
     readonly empty: FieldRef<"Chat", 'Boolean'>
     readonly isDeleted: FieldRef<"Chat", 'Boolean'>
+    readonly isShared: FieldRef<"Chat", 'Boolean'>
     readonly parentId: FieldRef<"Chat", 'String'>
   }
     
@@ -6647,6 +6660,7 @@ export namespace Prisma {
     lastSynced: 'lastSynced',
     empty: 'empty',
     isDeleted: 'isDeleted',
+    isShared: 'isShared',
     parentId: 'parentId'
   };
 
@@ -6807,6 +6821,7 @@ export namespace Prisma {
     lastSynced?: DateTimeNullableFilter<"Chat"> | Date | string | null
     empty?: BoolFilter<"Chat"> | boolean
     isDeleted?: BoolFilter<"Chat"> | boolean
+    isShared?: BoolFilter<"Chat"> | boolean
     parentId?: StringNullableFilter<"Chat"> | string | null
     StoredMessage?: StoredMessageListRelationFilter
   }
@@ -6821,6 +6836,7 @@ export namespace Prisma {
     lastSynced?: SortOrderInput | SortOrder
     empty?: SortOrder
     isDeleted?: SortOrder
+    isShared?: SortOrder
     parentId?: SortOrderInput | SortOrder
     StoredMessage?: StoredMessageOrderByRelationAggregateInput
   }
@@ -6838,6 +6854,7 @@ export namespace Prisma {
     lastSynced?: DateTimeNullableFilter<"Chat"> | Date | string | null
     empty?: BoolFilter<"Chat"> | boolean
     isDeleted?: BoolFilter<"Chat"> | boolean
+    isShared?: BoolFilter<"Chat"> | boolean
     parentId?: StringNullableFilter<"Chat"> | string | null
     StoredMessage?: StoredMessageListRelationFilter
   }, "id">
@@ -6852,6 +6869,7 @@ export namespace Prisma {
     lastSynced?: SortOrderInput | SortOrder
     empty?: SortOrder
     isDeleted?: SortOrder
+    isShared?: SortOrder
     parentId?: SortOrderInput | SortOrder
     _count?: ChatCountOrderByAggregateInput
     _max?: ChatMaxOrderByAggregateInput
@@ -6871,6 +6889,7 @@ export namespace Prisma {
     lastSynced?: DateTimeNullableWithAggregatesFilter<"Chat"> | Date | string | null
     empty?: BoolWithAggregatesFilter<"Chat"> | boolean
     isDeleted?: BoolWithAggregatesFilter<"Chat"> | boolean
+    isShared?: BoolWithAggregatesFilter<"Chat"> | boolean
     parentId?: StringNullableWithAggregatesFilter<"Chat"> | string | null
   }
 
@@ -7111,6 +7130,7 @@ export namespace Prisma {
     lastSynced?: Date | string | null
     empty: boolean
     isDeleted?: boolean
+    isShared?: boolean
     parentId?: string | null
     StoredMessage?: StoredMessageCreateNestedManyWithoutChatInput
   }
@@ -7125,6 +7145,7 @@ export namespace Prisma {
     lastSynced?: Date | string | null
     empty: boolean
     isDeleted?: boolean
+    isShared?: boolean
     parentId?: string | null
     StoredMessage?: StoredMessageUncheckedCreateNestedManyWithoutChatInput
   }
@@ -7139,6 +7160,7 @@ export namespace Prisma {
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    isShared?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     StoredMessage?: StoredMessageUpdateManyWithoutChatNestedInput
   }
@@ -7153,6 +7175,7 @@ export namespace Prisma {
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    isShared?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
     StoredMessage?: StoredMessageUncheckedUpdateManyWithoutChatNestedInput
   }
@@ -7167,6 +7190,7 @@ export namespace Prisma {
     lastSynced?: Date | string | null
     empty: boolean
     isDeleted?: boolean
+    isShared?: boolean
     parentId?: string | null
   }
 
@@ -7180,6 +7204,7 @@ export namespace Prisma {
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    isShared?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -7193,6 +7218,7 @@ export namespace Prisma {
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    isShared?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -7518,6 +7544,7 @@ export namespace Prisma {
     lastSynced?: SortOrder
     empty?: SortOrder
     isDeleted?: SortOrder
+    isShared?: SortOrder
     parentId?: SortOrder
   }
 
@@ -7531,6 +7558,7 @@ export namespace Prisma {
     lastSynced?: SortOrder
     empty?: SortOrder
     isDeleted?: SortOrder
+    isShared?: SortOrder
     parentId?: SortOrder
   }
 
@@ -7544,6 +7572,7 @@ export namespace Prisma {
     lastSynced?: SortOrder
     empty?: SortOrder
     isDeleted?: SortOrder
+    isShared?: SortOrder
     parentId?: SortOrder
   }
 
@@ -8204,6 +8233,7 @@ export namespace Prisma {
     lastSynced?: Date | string | null
     empty: boolean
     isDeleted?: boolean
+    isShared?: boolean
     parentId?: string | null
   }
 
@@ -8217,6 +8247,7 @@ export namespace Prisma {
     lastSynced?: Date | string | null
     empty: boolean
     isDeleted?: boolean
+    isShared?: boolean
     parentId?: string | null
   }
 
@@ -8273,6 +8304,7 @@ export namespace Prisma {
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    isShared?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -8286,6 +8318,7 @@ export namespace Prisma {
     lastSynced?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     empty?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    isShared?: BoolFieldUpdateOperationsInput | boolean
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 

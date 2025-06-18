@@ -189,6 +189,7 @@ class ChatDatabase extends Dexie {
       empty: true,
       parentId: undefined,
       isDeleted: false,
+      isShared: false,
     };
 
     await this.chats.add(chat);
@@ -284,6 +285,7 @@ class ChatDatabase extends Dexie {
       title: chat.title === null ? undefined : chat.title,
       updated_at: chat.updated_at,
       isDeleted: chat.isDeleted,
+      isShared: chat.isShared,
     };
 
     if (c) {

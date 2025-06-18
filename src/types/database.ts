@@ -9,6 +9,7 @@ export interface Chat {
   empty: boolean;
   parentId?: string;
   isDeleted: boolean;
+  isShared: boolean;
 }
 
 export interface StoredMessage {

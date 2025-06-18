@@ -23,6 +23,7 @@ model Chat {
   lastSynced    DateTime? // New field for last sync timestamp
   empty         Boolean
   isDeleted     Boolean         @default(false)
+  isShared      Boolean         @default(false)
   parentId      String? // optional, can be null
   StoredMessage StoredMessage[]
 }

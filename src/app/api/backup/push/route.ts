@@ -4,8 +4,13 @@ import { Attachment } from "ai";
 
 export async function POST(req: Request) {
   const { chats: allChats, messages: allMessages, tok } = await req.json();
-  const prisma = new PrismaClient();
   const now = new Date();
+
+  if (!tok || !tok.userId) {
+    return new NextResponse("Please log in", { status: 401 });
+  }
+
+  const prisma = new PrismaClient();
 
   // Collect all chat and message IDs from the incoming data
   const incomingChatIds = allChats.map((chat: any) => chat.id);
