@@ -11,8 +11,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { Chat } from "@/components/chat";
 import { Sidebar } from "@/components/sidebar";
 import { Button } from "./ui/button";
-import { Plus, Share } from "lucide-react";
-import { TooltipContent, TooltipTrigger, Tooltip } from "./ui/tooltip";
+import { Plus } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 import { usePersistentChat } from "@/hooks/usePersistentChat";
 import { useCallback, useEffect, useState } from "react";
@@ -22,11 +21,14 @@ import { db } from "@/lib/db";
 import { toast } from "sonner";
 import { backupToServer, updateLocalData } from "@/lib/realdb/real";
 import { setOptions } from "marked";
+import Share from "./share";
 
 export default function Main() {
   const { id } = useParams();
 
   const [open, setOpen] = useState(true);
+
+  const [shared, setIsShared] = useState(false);
 
   const changeIsOpen = useCallback((o: boolean) => {
     db.setIsOpen(o);
@@ -36,6 +38,24 @@ export default function Main() {
   const getFirstIsOpen = async () => {
     setOpen(await db.getIsOpen());
   };
+
+  const getIsShared = async () => {
+    if (!id) {
+      setIsShared(false);
+      return;
+    }
+    const c = await db.getChatById(id);
+    if (!c) {
+      setIsShared(false);
+      return;
+    }
+
+    setIsShared(c.isShared);
+  };
+
+  useEffect(() => {
+    getIsShared();
+  }, [id]);
 
   useEffect(() => {
     getFirstIsOpen();
@@ -111,19 +131,10 @@ export default function Main() {
             </Breadcrumb>
           </div>
           <div className="mr-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button size="icon" variant="outline">
-                  <Share />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Share (only current state)</p>
-              </TooltipContent>
-            </Tooltip>
+            <Share id={id} title={title} />
           </div>
         </header>
-        <Chat id={id} />
+        <Chat id={id} isShared={shared} />
       </SidebarInset>
     </SidebarProvider>
   );

@@ -3,6 +3,11 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const { tok, lastSynced } = await req.json();
+
+  if (!tok || !tok.userId) {
+    return new NextResponse("Please log in", { status: 401 });
+  }
+
   const prisma = new PrismaClient();
 
   try {

@@ -130,6 +130,7 @@ exports.Prisma.ChatScalarFieldEnum = {
   lastSynced: 'lastSynced',
   empty: 'empty',
   isDeleted: 'isDeleted',
+  isShared: 'isShared',
   parentId: 'parentId'
 };
 
@@ -143,6 +144,12 @@ exports.Prisma.StoredMessageScalarFieldEnum = {
   isDeleted: 'isDeleted',
   model: 'model',
   lastModified: 'lastModified'
+};
+
+exports.Prisma.SlugScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  chatId: 'chatId'
 };
 
 exports.Prisma.AttachmentScalarFieldEnum = {
@@ -189,6 +196,7 @@ exports.Role = exports.$Enums.Role = {
 exports.Prisma.ModelName = {
   Chat: 'Chat',
   StoredMessage: 'StoredMessage',
+  Slug: 'Slug',
   Attachment: 'Attachment',
   Keys: 'Keys',
   UserFiles: 'UserFiles'

@@ -140,13 +140,21 @@ class ChatDatabase extends Dexie {
       throw new Error("chat not found");
     }
 
-    const { id: oldId, parentId: _, created_at: __, updated_at: ___, ...rest } = chat;
+    const {
+      id: oldId,
+      parentId: _,
+      created_at: __,
+      updated_at: ___,
+      isShared: ____,
+      ...rest
+    } = chat;
 
     const newId = await db.chats.add({
       id: nanoid(),
       parentId: oldId,
       created_at: new Date(),
       updated_at: new Date(),
+      isShared: false,
       ...rest,
     });
 
@@ -189,6 +197,7 @@ class ChatDatabase extends Dexie {
       empty: true,
       parentId: undefined,
       isDeleted: false,
+      isShared: false,
     };
 
     await this.chats.add(chat);
@@ -284,6 +293,7 @@ class ChatDatabase extends Dexie {
       title: chat.title === null ? undefined : chat.title,
       updated_at: chat.updated_at,
       isDeleted: chat.isDeleted,
+      isShared: chat.isShared,
     };
 
     if (c) {
