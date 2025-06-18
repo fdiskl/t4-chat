@@ -3851,7 +3851,7 @@ export namespace Prisma {
   export type SlugGroupByOutputType = {
     id: string
     slug: string
-    chatId: string
+    chatId: string | null
     _count: SlugCountAggregateOutputType | null
     _min: SlugMinAggregateOutputType | null
     _max: SlugMaxAggregateOutputType | null
@@ -3875,21 +3875,21 @@ export namespace Prisma {
     id?: boolean
     slug?: boolean
     chatId?: boolean
-    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+    Chat?: boolean | Slug$ChatArgs<ExtArgs>
   }, ExtArgs["result"]["slug"]>
 
   export type SlugSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     slug?: boolean
     chatId?: boolean
-    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+    Chat?: boolean | Slug$ChatArgs<ExtArgs>
   }, ExtArgs["result"]["slug"]>
 
   export type SlugSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     slug?: boolean
     chatId?: boolean
-    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+    Chat?: boolean | Slug$ChatArgs<ExtArgs>
   }, ExtArgs["result"]["slug"]>
 
   export type SlugSelectScalar = {
@@ -3900,24 +3900,24 @@ export namespace Prisma {
 
   export type SlugOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "chatId", ExtArgs["result"]["slug"]>
   export type SlugInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+    Chat?: boolean | Slug$ChatArgs<ExtArgs>
   }
   export type SlugIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+    Chat?: boolean | Slug$ChatArgs<ExtArgs>
   }
   export type SlugIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Chat?: boolean | ChatDefaultArgs<ExtArgs>
+    Chat?: boolean | Slug$ChatArgs<ExtArgs>
   }
 
   export type $SlugPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Slug"
     objects: {
-      Chat: Prisma.$ChatPayload<ExtArgs>
+      Chat: Prisma.$ChatPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       slug: string
-      chatId: string
+      chatId: string | null
     }, ExtArgs["result"]["slug"]>
     composites: {}
   }
@@ -4312,7 +4312,7 @@ export namespace Prisma {
    */
   export interface Prisma__SlugClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    Chat<T extends ChatDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChatDefaultArgs<ExtArgs>>): Prisma__ChatClient<$Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    Chat<T extends Slug$ChatArgs<ExtArgs> = {}>(args?: Subset<T, Slug$ChatArgs<ExtArgs>>): Prisma__ChatClient<$Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4738,6 +4738,25 @@ export namespace Prisma {
      * Limit how many Slugs to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Slug.Chat
+   */
+  export type Slug$ChatArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chat
+     */
+    select?: ChatSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Chat
+     */
+    omit?: ChatOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatInclude<ExtArgs> | null
+    where?: ChatWhereInput
   }
 
   /**
@@ -8149,14 +8168,14 @@ export namespace Prisma {
     NOT?: SlugWhereInput | SlugWhereInput[]
     id?: StringFilter<"Slug"> | string
     slug?: StringFilter<"Slug"> | string
-    chatId?: StringFilter<"Slug"> | string
-    Chat?: XOR<ChatScalarRelationFilter, ChatWhereInput>
+    chatId?: StringNullableFilter<"Slug"> | string | null
+    Chat?: XOR<ChatNullableScalarRelationFilter, ChatWhereInput> | null
   }
 
   export type SlugOrderByWithRelationInput = {
     id?: SortOrder
     slug?: SortOrder
-    chatId?: SortOrder
+    chatId?: SortOrderInput | SortOrder
     Chat?: ChatOrderByWithRelationInput
   }
 
@@ -8166,14 +8185,14 @@ export namespace Prisma {
     OR?: SlugWhereInput[]
     NOT?: SlugWhereInput | SlugWhereInput[]
     slug?: StringFilter<"Slug"> | string
-    chatId?: StringFilter<"Slug"> | string
-    Chat?: XOR<ChatScalarRelationFilter, ChatWhereInput>
+    chatId?: StringNullableFilter<"Slug"> | string | null
+    Chat?: XOR<ChatNullableScalarRelationFilter, ChatWhereInput> | null
   }, "id">
 
   export type SlugOrderByWithAggregationInput = {
     id?: SortOrder
     slug?: SortOrder
-    chatId?: SortOrder
+    chatId?: SortOrderInput | SortOrder
     _count?: SlugCountOrderByAggregateInput
     _max?: SlugMaxOrderByAggregateInput
     _min?: SlugMinOrderByAggregateInput
@@ -8185,7 +8204,7 @@ export namespace Prisma {
     NOT?: SlugScalarWhereWithAggregatesInput | SlugScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Slug"> | string
     slug?: StringWithAggregatesFilter<"Slug"> | string
-    chatId?: StringWithAggregatesFilter<"Slug"> | string
+    chatId?: StringNullableWithAggregatesFilter<"Slug"> | string | null
   }
 
   export type AttachmentWhereInput = {
@@ -8533,31 +8552,31 @@ export namespace Prisma {
   export type SlugCreateInput = {
     id?: string
     slug: string
-    Chat: ChatCreateNestedOneWithoutSlugsInput
+    Chat?: ChatCreateNestedOneWithoutSlugsInput
   }
 
   export type SlugUncheckedCreateInput = {
     id?: string
     slug: string
-    chatId: string
+    chatId?: string | null
   }
 
   export type SlugUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    Chat?: ChatUpdateOneRequiredWithoutSlugsNestedInput
+    Chat?: ChatUpdateOneWithoutSlugsNestedInput
   }
 
   export type SlugUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    chatId?: StringFieldUpdateOperationsInput | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SlugCreateManyInput = {
     id?: string
     slug: string
-    chatId: string
+    chatId?: string | null
   }
 
   export type SlugUpdateManyMutationInput = {
@@ -8568,7 +8587,7 @@ export namespace Prisma {
   export type SlugUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
-    chatId?: StringFieldUpdateOperationsInput | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AttachmentCreateInput = {
@@ -9001,6 +9020,11 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
+  export type ChatNullableScalarRelationFilter = {
+    is?: ChatWhereInput | null
+    isNot?: ChatWhereInput | null
+  }
+
   export type SlugCountOrderByAggregateInput = {
     id?: SortOrder
     slug?: SortOrder
@@ -9270,10 +9294,12 @@ export namespace Prisma {
     connect?: ChatWhereUniqueInput
   }
 
-  export type ChatUpdateOneRequiredWithoutSlugsNestedInput = {
+  export type ChatUpdateOneWithoutSlugsNestedInput = {
     create?: XOR<ChatCreateWithoutSlugsInput, ChatUncheckedCreateWithoutSlugsInput>
     connectOrCreate?: ChatCreateOrConnectWithoutSlugsInput
     upsert?: ChatUpsertWithoutSlugsInput
+    disconnect?: ChatWhereInput | boolean
+    delete?: ChatWhereInput | boolean
     connect?: ChatWhereUniqueInput
     update?: XOR<XOR<ChatUpdateToOneWithWhereWithoutSlugsInput, ChatUpdateWithoutSlugsInput>, ChatUncheckedUpdateWithoutSlugsInput>
   }
@@ -9587,7 +9613,7 @@ export namespace Prisma {
     NOT?: SlugScalarWhereInput | SlugScalarWhereInput[]
     id?: StringFilter<"Slug"> | string
     slug?: StringFilter<"Slug"> | string
-    chatId?: StringFilter<"Slug"> | string
+    chatId?: StringNullableFilter<"Slug"> | string | null
   }
 
   export type AttachmentCreateWithoutStoredMessageInput = {

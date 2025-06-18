@@ -5,6 +5,7 @@ import Main from "./main";
 import Login from "./login";
 import { useEffect, useState } from "react";
 import { Settings } from "./settings";
+import Shared from "./shared";
 
 export default function App() {
   const [isAlreadyClient, setIsAlreadyClient] = useState(false);
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="chat" element={<Main />} />
         <Route path="/" element={<Main />} />
         <Route path="chat/:id" element={<Main />} />
+        <Route path="/shared/:slug" element={<Shared />} />
         <Route path="login" element={<Login />} />
         <Route path="settings" element={<Settings />} />
       </Routes>

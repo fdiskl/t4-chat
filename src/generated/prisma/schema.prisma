@@ -45,10 +45,10 @@ model StoredMessage {
 }
 
 model Slug {
-  id     String @id @default(uuid())
+  id     String  @id @default(uuid())
   slug   String
-  Chat   Chat   @relation(fields: [chatId], references: [id])
-  chatId String
+  Chat   Chat?   @relation(fields: [chatId], references: [id])
+  chatId String?
 }
 
 model Attachment {

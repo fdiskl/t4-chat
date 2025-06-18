@@ -41,6 +41,8 @@ export async function POST(req: Request) {
 
     // 3. Upsert chats
     for (const chat of allChats) {
+      if (chat.isShared) continue;
+
       await prisma.chat.upsert({
         where: { id: chat.id, userId: tok.userId },
         update: {

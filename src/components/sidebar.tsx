@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { NavUser } from "@/components/nav-user";
-import { GitBranch, MessageCircle, Pin, SquarePen, TrashIcon } from "lucide-react";
+import { GitBranch, MessageCircle, Pin, Share2, SquarePen, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, type ComponentProps } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
@@ -127,6 +127,18 @@ export function Sidebar({
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>Go to original chat</TooltipContent>
+                        </Tooltip>
+                      )}
+
+                      {/* Shared Button (if present) */}
+                      {chat.isShared && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button size="icon" variant="ghost">
+                              <Share2 className="h-8 w-8 text-white/50" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>This chat is shared</TooltipContent>
                         </Tooltip>
                       )}
 

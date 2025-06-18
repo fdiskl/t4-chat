@@ -27,6 +27,8 @@ export async function POST(req: Request) {
         select: { id: true },
       });
 
+      console.log("PUSHING", chat.id);
+
       const messages = await Promise.all(
         _msgs.map((m: any) =>
           tx.storedMessage.create({
@@ -47,6 +49,8 @@ export async function POST(req: Request) {
           })
         )
       );
+
+      console.log("messgaes push", messages);
 
       let slug: string;
       while (true) {

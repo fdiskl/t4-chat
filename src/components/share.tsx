@@ -46,6 +46,8 @@ export default function Share({
       const chat = await db.chats.get(id);
       const msgs = await db.getChatMessages(id);
 
+      console.log("msgs", msgs);
+
       if (!chat || !msgs || msgs.length === 0) {
         toast.error("Something went wrong :(", { position: "top-center" });
         setIsLoading(false);
