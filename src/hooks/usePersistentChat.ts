@@ -53,15 +53,6 @@ export function usePersistentChat({
     return await db.getChatMessages(chatId);
   }, [chatId]);
 
-  const keys = useLiveQuery(async () => {
-    try {
-      const keys = await db.getKeys();
-      return keys;
-    } catch (e) {
-      toast.error("Can't find your keys");
-    }
-  }, []);
-
   const {
     input,
     handleInputChange: originalHandleInputChange,
@@ -75,10 +66,7 @@ export function usePersistentChat({
     api: "/api/chat",
     id: chatId,
     body: {
-      model,
       systemPromptId: "default",
-      openaiKey: keys?.oai,
-      openRouterKey: keys?.openrouter,
     },
     experimental_throttle: 50,
     initialMessages:
@@ -124,7 +112,7 @@ export function usePersistentChat({
       model: modelId | "user",
       attachments: Attachment[],
       id?: string
-    ): Promise<StoredMessage> => {
+    ): Promise<StoredMessage | null> => {
       try {
         const message = await db.addMessage(
           {
@@ -138,12 +126,11 @@ export function usePersistentChat({
           id
         );
 
-        console.log("persisting msg");
-
         return message;
       } catch (error) {
         console.error(`Error persisting ${role} message:`, error);
-        throw error;
+        toast.error("Couldn't save message");
+        return null;
       }
     },
     []
@@ -200,10 +187,15 @@ export function usePersistentChat({
         // Determine system prompt based on input content
         const systemPromptId = determineSystemPrompt(input);
 
+        const keys = await db.getKeys();
+        console.log("KEYS", keys);
+
         // Update the body with the determined system prompt
         const updatedBody = {
-          model,
           systemPromptId,
+          openaiKey: keys?.oai,
+          openRouterKey: keys?.openrouter,
+          model,
         };
 
         // Call original submit with updated body
@@ -220,13 +212,13 @@ export function usePersistentChat({
           if (!currentChat.title) {
             let title = "";
             try {
-              const k = await db.getKeys();
               const titleResp = await fetch("/api/title", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ msg: input, openaiKey: k?.oai }),
+                body: JSON.stringify({ msg: input, openaiKey: keys?.oai }),
+                // TODO: here
               });
 
               if (titleResp.status != 200 || !titleResp.ok) {

@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   }
 
   if (openrouterKey) {
-    openrouterRes = encryptApiKey(openrouterRes, getKey());
+    openrouterRes = encryptApiKey(openrouterKey, getKey());
   }
 
   const keys = await prisma.keys.findUnique({
