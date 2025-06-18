@@ -205,7 +205,7 @@ class ChatDatabase extends Dexie {
 
   async getChats(): Promise<Chat[]> {
     return await this.chats
-      .orderBy("updated_at")
+      .orderBy("created_at")
       .reverse()
       .filter((c) => c.empty == false)
       .toArray();

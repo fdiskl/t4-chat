@@ -33,12 +33,14 @@ interface ModelSelectorProps extends DropdownMenuProps {
 }
 
 export function ModelSelector({ value, onChange, ...props }: ModelSelectorProps) {
+  const ValueIcon = ModelIcons[idToModelMap[value].provider];
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
           className="nodrag flex w-48 flex-row items-center justify-center bg-transparent">
+          <ValueIcon />
           <span className="overflow-hidden truncate text-ellipsis whitespace-nowrap">
             {idToModelMap[value].name}
           </span>
